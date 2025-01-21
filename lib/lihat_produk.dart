@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/dialog_jual.dart';
 import 'package:myapp/gambar_penuh.dart';
+import 'package:myapp/logo_produk.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/product_controller.dart';
 
@@ -26,13 +26,7 @@ class LihatProduk extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (produk['gambar'].toString() == '[]')
-                  const Center(
-                    child: Icon(
-                      Icons.image,
-                      size: 300,
-                    ),
-                  ),
+                if (produk['gambar'].toString() == '[]') noLogoProduk(300),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -44,17 +38,12 @@ class LihatProduk extends StatelessWidget {
                       ),
                       ...(produk['gambar'] as List<dynamic>).map((picPath) {
                         return InkWell(
-                          onTap: () {
-                            Get.to(() => GambarPenuh(
-                                  gambar: picPath,
-                                ));
-                          },
-                          child: Image.file(
-                            File(picPath),
-                            width: 300,
-                            height: 300,
-                          ),
-                        );
+                            onTap: () {
+                              Get.to(() => GambarPenuh(
+                                    gambar: picPath,
+                                  ));
+                            },
+                            child: logoProduk(picPath, 300, 2.5));
                       })
                     ],
                   ),

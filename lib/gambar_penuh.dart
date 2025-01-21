@@ -11,11 +11,11 @@ class GambarPenuh extends StatelessWidget {
       // appBar: AppBar(
       //   title: Text(gambar.split('/').last),
       // ),
-      body: Center(
-        child: InteractiveViewer(
-          clipBehavior: Clip.none,
-          maxScale: 5,
-          minScale: 1,
+      body: InteractiveViewer(
+        clipBehavior: Clip.none,
+        maxScale: 5,
+        minScale: 1,
+        child: Center(
           child: Image.file(File(gambar), fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
             return const Center(child: Text('Gambar tidak ditemukan'));

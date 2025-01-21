@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/lihat_produk.dart';
+import 'package:myapp/logo_produk.dart';
 import 'package:myapp/product_controller.dart';
 
 class HomeToko extends StatelessWidget {
@@ -47,7 +48,7 @@ class HomeToko extends StatelessWidget {
             itemBuilder: (context, indexProduct) {
               final listProduk =
                   _productController.allProduct[indexProduct].obs;
-              // print(listProduk['gambar']);
+
               return InkWell(
                 onTap: () {
                   if (_productController.showCheckBoxRemove.value) {
@@ -81,25 +82,9 @@ class HomeToko extends StatelessWidget {
                       Expanded(
                         child: Stack(
                           children: [
-                            Card(
-                                clipBehavior: Clip.antiAlias,
-                                child: Center(
-                                  child: listProduk['gambar'].isNotEmpty
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.file(
-                                            File(listProduk['gambar'][0]),
-                                            width: 150,
-                                            height: 150,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : const Icon(
-                                          Icons.image,
-                                          size: 150,
-                                        ),
-                                )),
+                            if (listProduk['gambar'].isNotEmpty)
+                              logoProduk(listProduk['gambar'][0], 200, 2.5),
+                            if (listProduk['gambar'].isEmpty) noLogoProduk(170),
                             if (_productController.showCheckBoxRemove.value)
                               Obx(() {
                                 final isChecked = RxBool(_productController

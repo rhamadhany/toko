@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/logo_produk.dart';
 import 'package:myapp/product_controller.dart';
 import 'package:myapp/tambah_gambar.dart';
 
@@ -19,7 +19,6 @@ class NewProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // print(listPictures);
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -45,17 +44,7 @@ class NewProduct extends StatelessWidget {
                           padding: const EdgeInsets.all(4.0),
                           child: Stack(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: const BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Color.fromARGB(255, 65, 0, 112)),
-                                child: Image.file(
-                                  File(imageFile),
-                                  width: 120,
-                                  height: 120,
-                                ),
-                              ),
+                              logoProduk(imageFile, 120, 2),
                               Positioned(
                                   right: -22,
                                   top: -10,
@@ -81,7 +70,6 @@ class NewProduct extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            // backgroundColor: Colors.green,
                             shape: const CircleBorder(),
                             padding: const EdgeInsets.all(10),
                           ),
@@ -90,7 +78,6 @@ class NewProduct extends StatelessWidget {
                           },
                           child: Icon(
                             Icons.add,
-                            // color: Colors.white,
                             size: listPictures.isEmpty ? 50 : 30,
                           ),
                         ),
@@ -136,7 +123,7 @@ class NewProduct extends StatelessWidget {
               produkEdit['harga'] = harga;
               produkEdit['terjual'] = terjual;
               produkEdit['stok'] = stock;
-              // print(listPictures);
+
               await _productController.updateProduct(produkEdit);
             } else {
               await _productController.addProduct(
@@ -153,7 +140,6 @@ class NewProduct extends StatelessWidget {
 
   Future<void> pickImages() async {
     Get.dialog(AlertDialog(
-        // backgroundColor: Colors.transparent
         content: TambahGambar(
       listPictures: listPictures,
     )));
