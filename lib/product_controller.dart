@@ -6,12 +6,14 @@ import 'package:sqflite/sqflite.dart';
 class ProductController extends GetxController {
   Rx<Database?> database = Rx<Database?>(null);
 
-  final loadingProduct = true.obs;
+  // final loadingProduct = true.obs;
   final showCheckBoxRemove = false.obs;
   final RxList<Map<dynamic, String>> mapCheckBoxRemove =
       <Map<dynamic, String>>[].obs;
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
+  // final searchController = TextEditingController().obs;
+  final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
       RxList<Map<String, dynamic>>([
     {'label': 'Nama Produk', 'controller': TextEditingController()},
@@ -32,11 +34,36 @@ class ProductController extends GetxController {
     },
   ]);
   final RxList<Map<String, dynamic>> allProduct = <Map<String, dynamic>>[].obs;
-
+  final RxList<Map<String, dynamic>> filterProduct =
+      <Map<String, dynamic>>[].obs;
+  final showSearch = false.obs;
   @override
   void onInit() {
     super.onInit();
     initDatabase();
+    filteringProduk();
+  }
+
+  void filteringProduk() {
+    filterProduct.value = allProduct;
+    searchText.listen((data) {
+      // print(data);
+      // print(searchText.value);
+      filterProduct.value = allProduct
+          .where((produk) =>
+              produk['produk'].toLowerCase().contains(data.toLowerCase()))
+          .toList();
+      generateMapCheckBox();
+    });
+    allProduct.listen((data) {
+      filterProduct.value = allProduct
+          .where((produk) => produk['produk']
+              .toLowerCase()
+              .contains(searchText.value.toLowerCase()))
+          .toList();
+
+      generateMapCheckBox();
+    });
   }
 
   String hargaProduk(RxMap<String, dynamic> produk) {
@@ -50,17 +77,19 @@ class ProductController extends GetxController {
   }
 
   Future generateMapCheckBox() async {
-    if (allProduct.isEmpty) {
+    if (filterProduct.isEmpty) {
       showCheckBoxRemove.value = false;
       mapCheckBoxRemove.clear();
     } else {
-      mapCheckBoxRemove.value = List.generate(allProduct.length,
-          (index) => {'isSelected': 'false', 'key': allProduct[index]['key']});
+      mapCheckBoxRemove.value = List.generate(
+          filterProduct.length,
+          (index) =>
+              {'isSelected': 'false', 'key': filterProduct[index]['key']});
     }
   }
 
   Future<void> initDatabase() async {
-    loadingProduct.value = true;
+    // loadingProduct.value = true;
     final pathDatabase = await getDatabasesPath();
     final path = '$pathDatabase/product_database.db';
     database.value =
@@ -78,7 +107,7 @@ class ProductController extends GetxController {
     }, onUpgrade: (db, oldVersion, newVersion) {});
 
     allProduct.value = await loadProducts();
-    loadingProduct.value = false;
+    // loadingProduct.value = false;
     if (allProduct.isEmpty) {}
   }
 

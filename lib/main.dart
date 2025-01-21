@@ -21,28 +21,44 @@ class MyApp extends StatelessWidget {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Toko",
-            style: TextStyle(fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              const Text(
+                "Toko",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              IconButton(
+                  onPressed: () {
+                    _productController.showSearch.value =
+                        !_productController.showSearch.value;
+
+                    if (!_productController.showSearch.value) {
+                      _productController.searchText.value = '';
+                    }
+                  },
+                  icon: const Icon(Icons.search))
+            ],
           ),
         ),
-        body: _productController.loadingProduct.value
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : _productController.allProduct.isEmpty
-                ? const Center(
-                    child: Text(
-                    "Tidak ada produk",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ))
-                : HomeToko(productController: _productController),
+        body:
+
+            // _productController.filterProduct.isEmpty
+            //     ? const Center(
+            //         child: Text(
+            //         "Tidak ada produk",
+            //         style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            //       ))
+            //     :
+            HomeToko(productController: _productController),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             if (_productController.showCheckBoxRemove.value &&
-                _productController.allProduct.isNotEmpty) {
+                _productController.filterProduct.isNotEmpty) {
               List<String> listKey = [];
-              for (int i = 0; i < _productController.allProduct.length; i++) {
+              for (int i = 0;
+                  i < _productController.filterProduct.length;
+                  i++) {
                 if (_productController.mapCheckBoxRemove[i]['isSelected'] ==
                         'true' &&
                     _productController.mapCheckBoxRemove[i]['key'] != "") {
@@ -65,7 +81,7 @@ class MyApp extends StatelessWidget {
             }
           },
           child: Icon(_productController.showCheckBoxRemove.value &&
-                  _productController.allProduct.isNotEmpty
+                  _productController.filterProduct.isNotEmpty
               ? Icons.clear
               : Icons.add),
         ),
