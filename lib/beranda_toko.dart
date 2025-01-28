@@ -144,9 +144,9 @@ class HomeToko extends StatelessWidget {
                                                                 indexProduct]
                                                             ['isSelected'] =
                                                         value.toString();
-                                                    print(_productController
-                                                            .mapCheckBoxRemove[
-                                                        indexProduct]);
+                                                    // print(_productController
+                                                    //         .mapCheckBoxRemove[
+                                                    //     indexProduct]);
                                                     _productController
                                                         .mapCheckBoxRemove
                                                         .refresh();

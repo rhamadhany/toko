@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:myapp/keranjang_controller.dart';
 import 'package:myapp/product_controller.dart';
 
 class DialogJual extends StatelessWidget {
   DialogJual({super.key, required this.produk});
   final ProductController _productController = Get.find();
+  final KeranjangController _keranjangController = Get.find();
   final RxMap<String, dynamic> produk;
   final RxBool showSnackbarStok = false.obs;
   final RxBool finishLongPress = false.obs;
@@ -68,7 +70,19 @@ class DialogJual extends StatelessWidget {
           Tooltip(
             message: "Keranjang",
             child: ElevatedButton(
-                onPressed: () {}, child: const Icon(Icons.shopping_cart)),
+                onPressed: () {
+                  final jumlah = int.tryParse(
+                          _productController.jualController.value.text) ??
+                      1;
+
+                  final gambar = produk['gambar'][0] ?? "";
+
+                  _keranjangController.addProduk(
+                      produk['key'], produk['produk'], jumlah, gambar);
+
+                  Get.back();
+                },
+                child: const Icon(Icons.shopping_cart)),
           ),
           Tooltip(
             message: "Jual",

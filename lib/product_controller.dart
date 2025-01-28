@@ -102,28 +102,34 @@ class ProductController extends GetxController {
   Future<void> initDatabase() async {
     final pathDatabase = await getDatabasesPath();
     final path = '$pathDatabase/product_database.db';
-    database.value =
-        await openDatabase(path, version: 2, onCreate: (db, version) async {
-      await db.execute('''CREATE TABLE products
+    database.value = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''CREATE TABLE products
           (
             key TEXT,
             produk TEXT,
-            harga TEXT,
+            harga_beli TEXT,
+            harga_jual TEXT,
             terjual INTEGER,
             stok INTEGER,
             gambar TEXT
           )
           ''');
-    }, onUpgrade: (db, oldVersion, newVersion) async {
-      if (oldVersion < 2) {
-        if (!await DBHelper.columnExists(db, 'products', 'harga_beli')) {
-          await db.execute('ALTER TABLE products ADD COLUMN harga_beli TEXT');
-        }
-        if (!await DBHelper.columnExists(db, 'products', 'harga_jual')) {
-          await db.execute('ALTER TABLE products ADD COLUMN harga_jual TEXT');
-        }
-      }
-    });
+      },
+
+      // onUpgrade: (db, oldVersion, newVersion) async {
+      //   if (oldVersion < 2) {
+      //     if (!await DBHelper.columnExists(db, 'products', 'harga_beli')) {
+      //       await db.execute('ALTER TABLE products ADD COLUMN harga_beli TEXT');
+      //     }
+      //     if (!await DBHelper.columnExists(db, 'products', 'harga_jual')) {
+      //       await db.execute('ALTER TABLE products ADD COLUMN harga_jual TEXT');
+      //     }
+      //   }
+      // }
+    );
 
     allProduct.value = await DBHelper.loadProducts();
 

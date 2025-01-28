@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:myapp/keranjang_controller.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/product_controller.dart';
 
 void main() {
+  Get.put(
+      KeranjangController()); // Ini sudah permanen karena menggunakan Get.put
+
   runApp(GetMaterialApp(
     home: MyApp(),
     theme: ThemeData(),
@@ -42,16 +46,7 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-        body:
-
-            // _productController.filterProduct.isEmpty
-            //     ? const Center(
-            //         child: Text(
-            //         "Tidak ada produk",
-            //         style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            //       ))
-            //     :
-            HomeToko(productController: _productController),
+        body: HomeToko(productController: _productController),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             if (_productController.showCheckBoxRemove.value &&
