@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/dialog_jual.dart';
 import 'package:myapp/gambar_penuh.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 // import 'package:myapp/keranjang_controller.dart';
 import 'package:myapp/logo_produk.dart';
+// import 'package:myapp/main.dart';
+import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/produk_baru.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 
 class LihatProduk extends StatelessWidget {
   LihatProduk({super.key, required this.produk});
   final RxMap<String, dynamic> produk;
   final ProductController _productController = Get.find();
+  final MainController _mainController = Get.find();
+  final KeranjangController _keranjangController = Get.find();
   @override
   Widget build(BuildContext context) {
     // print('profit: ${nilaiProfit()}');
@@ -20,6 +25,8 @@ class LihatProduk extends StatelessWidget {
       // final terjual = produk['terjual'];
       // final stok = produk['stok'];
       // final sisa = stok - terjual;
+      final sisa = produk['stok'] - produk['terjual'];
+
       return Scaffold(
         appBar: AppBar(
             title: Row(
@@ -82,10 +89,13 @@ class LihatProduk extends StatelessWidget {
                             children: [
                               hargaProduk(),
                               produkTerjual(),
-                              sisaProduk(),
-                              // biayaBeli(),
-                              // omsetJual(),
-                              // profitJual()
+                              if (sisa > 0) sisaProduk(sisa),
+                              if (_mainController.tabIndex.value == 1)
+                                profitJual(),
+                              if (_mainController.tabIndex.value == 1)
+                                biayaBeli(),
+                              if (_mainController.tabIndex.value == 1)
+                                omsetJual(),
                             ],
                           ),
                           const Spacer(),
@@ -99,16 +109,33 @@ class LihatProduk extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: 'Edit'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
+          items: [
+            if (_mainController.tabIndex.value == 1)
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.edit_note), label: 'Edit'),
+            if (_mainController.tabIndex.value == 0)
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart_checkout), label: 'Jual'),
           ],
           currentIndex: _productController.bottomIndex.value,
           onTap: (value) {
             _productController.bottomIndex.value = value;
-            if (value == 0) {
+            if (value == 0 && _mainController.tabIndex.value == 1) {
               editProduk();
+            } else if (value == 0 && _mainController.tabIndex.value == 0) {
+              if (sisa > 0) {
+                _keranjangController.addProduk(
+                    produk['key'], produk['produk'], 1, produk['gambar'][0]);
+                Get.back();
+                Get.snackbar(
+                    "Keranjang", '${produk['produk']} ditambahkan ke keranjang',
+                    snackPosition: SnackPosition.BOTTOM);
+              } else {
+                Get.snackbar("Stok", "${produk['produk']} kosong",
+                    snackPosition: SnackPosition.BOTTOM);
+              }
             } else {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
@@ -157,8 +184,7 @@ class LihatProduk extends StatelessWidget {
     }
   }
 
-  Text sisaProduk() {
-    final sisa = produk['stok'] - produk['terjual'];
+  Text sisaProduk(int sisa) {
     return Text(
       sisa > 0 ? "Sisa: $sisa" : "",
       style: const TextStyle(fontSize: 18),
@@ -182,12 +208,14 @@ class LihatProduk extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          "Harga Jual: ",
+          "Omset: ",
           style: TextStyle(fontSize: 18),
         ),
         Text(
           "Rp $omsetFinal",
-          style: const TextStyle(color: Colors.green, fontSize: 18),
+          style: const TextStyle(
+              // color: Colors.green,
+              fontSize: 18),
         ),
       ],
     );
@@ -199,12 +227,14 @@ class LihatProduk extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          "Harga Beli: ",
+          "Modal: ",
           style: TextStyle(fontSize: 18),
         ),
         Text(
           "Rp $nilaiFinal",
-          style: const TextStyle(color: Colors.red, fontSize: 18),
+          style: const TextStyle(
+              // color: Colors.red,
+              fontSize: 18),
         ),
       ],
     );
@@ -235,9 +265,11 @@ class LihatProduk extends StatelessWidget {
     final profitFinal = _productController.regexNominal(profitNormal);
     return Row(
       children: [
-        const Text("Total Profit: ", style: TextStyle(fontSize: 18)),
+        const Text("Laba  : ", style: TextStyle(fontSize: 18)),
         Text('Rp $profitFinal',
-            style: const TextStyle(color: Colors.deepPurple, fontSize: 18)),
+            style: const TextStyle(
+                // color: Color.fromARGB(255, 167, 117, 255),
+                fontSize: 18)),
       ],
     );
   }

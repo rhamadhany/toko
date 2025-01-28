@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/logo_produk.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/tambah_gambar.dart';
 
 class NewProduct extends StatelessWidget {

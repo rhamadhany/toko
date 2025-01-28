@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {

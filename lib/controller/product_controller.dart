@@ -118,17 +118,6 @@ class ProductController extends GetxController {
           )
           ''');
       },
-
-      // onUpgrade: (db, oldVersion, newVersion) async {
-      //   if (oldVersion < 2) {
-      //     if (!await DBHelper.columnExists(db, 'products', 'harga_beli')) {
-      //       await db.execute('ALTER TABLE products ADD COLUMN harga_beli TEXT');
-      //     }
-      //     if (!await DBHelper.columnExists(db, 'products', 'harga_jual')) {
-      //       await db.execute('ALTER TABLE products ADD COLUMN harga_jual TEXT');
-      //     }
-      //   }
-      // }
     );
 
     allProduct.value = await DBHelper.loadProducts();

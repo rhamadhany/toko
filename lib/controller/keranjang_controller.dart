@@ -60,7 +60,6 @@ CREATE TABLE keranjang (
   Future<void> removeProduk(String key) async {
     const query = 'DELETE FROM keranjang WHERE key = ?';
     await database!.rawDelete(query, [key]);
-    await loadProduk();
   }
 
   Future<void> updateJumlah(String key, int jumlahUpdate) async {

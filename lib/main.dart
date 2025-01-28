@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-import 'package:myapp/keranjang_controller.dart';
+import 'package:myapp/controller/keranjang_controller.dart';
+import 'package:myapp/laporan_penjualan.dart';
+import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/produk_baru.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 
 void main() {
   Get.put(
@@ -20,6 +22,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
+  final MainController _mainController = Get.put(MainController());
   final ProductController _productController = Get.put(ProductController());
 
   @override
@@ -29,9 +32,13 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Row(
             children: [
-              const Text(
-                "Toko",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                _mainController.tabIndex.value == 0
+                    ? "Toko"
+                    : _mainController.tabIndex.value == 1
+                        ? "Rincian"
+                        : "Laporan",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               IconButton(
@@ -52,42 +59,90 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-        body: HomeToko(productController: _productController),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            if (_productController.showCheckBoxRemove.value &&
-                _productController.filterProduct.isNotEmpty) {
-              List<String> listKey = [];
-              for (int i = 0;
-                  i < _productController.filterProduct.length;
-                  i++) {
-                if (_productController.mapCheckBoxRemove[i]['isSelected'] ==
-                        'true' &&
-                    _productController.mapCheckBoxRemove[i]['key'] != "") {
-                  listKey.add(_productController.mapCheckBoxRemove[i]['key']!);
-                }
-              }
+        body: TabBarView(controller: _mainController.tabController, children: [
+          HomeToko(
+            productController: _productController,
+            mainController: _mainController,
+          ),
+          HomeToko(
+            productController: _productController,
+            mainController: _mainController,
+          ),
+          const LaporanPenjualan()
+        ]),
+        bottomNavigationBar:
+            TabBar(controller: _mainController.tabController, tabs: const [
+          Tab(text: "Beranda", icon: Icon(Icons.home)),
+          Tab(text: "Rincian", icon: Icon(Icons.list)),
+          Tab(
+            text: "Laporan",
+            icon: Icon(Icons.bar_chart),
+          )
+        ]),
+        floatingActionButton: _mainController.tabIndex.value == 1
+            ? FloatingActionButton(
+                onPressed: () async {
+                  bool? confirm = await confirmationDelete();
+                  if (!confirm) {
+                    return;
+                  }
+                  if (_productController.showCheckBoxRemove.value &&
+                      _productController.filterProduct.isNotEmpty) {
+                    List<String> listKey = [];
+                    for (int i = 0;
+                        i < _productController.filterProduct.length;
+                        i++) {
+                      if (_productController.mapCheckBoxRemove[i]
+                                  ['isSelected'] ==
+                              'true' &&
+                          _productController.mapCheckBoxRemove[i]['key'] !=
+                              "") {
+                        listKey.add(
+                            _productController.mapCheckBoxRemove[i]['key']!);
+                      }
+                    }
 
-              await DBHelper.deleteProduct(listKey);
-              await _productController.generateMapCheckBox();
-            } else {
-              for (final controller in _productController.listTextField) {
-                if (controller['label'] != 'Terjual') {
-                  controller['controller'].clear();
-                } else {
-                  controller['controller'].text = "0";
-                }
-              }
+                    await DBHelper.deleteProduct(listKey);
+                    await _productController.generateMapCheckBox();
+                  } else {
+                    for (final controller in _productController.listTextField) {
+                      if (controller['label'] != 'Terjual') {
+                        controller['controller'].clear();
+                      } else {
+                        controller['controller'].text = "0";
+                      }
+                    }
 
-              Get.to(() => NewProduct());
-            }
-          },
-          child: Icon(_productController.showCheckBoxRemove.value &&
-                  _productController.filterProduct.isNotEmpty
-              ? Icons.clear
-              : Icons.add),
-        ),
+                    Get.to(() => NewProduct());
+                  }
+                },
+                child: Icon(_productController.showCheckBoxRemove.value &&
+                        _productController.filterProduct.isNotEmpty
+                    ? Icons.clear
+                    : Icons.add),
+              )
+            : null,
       );
     });
+  }
+
+  Future<bool> confirmationDelete() async {
+    final bool? confirm = await Get.dialog<bool?>(AlertDialog(
+      title: const Text("Konfirmasi"),
+      content: const Text("Anda yakin untuk menghapus produk ini?"),
+      actions: [
+        ElevatedButton(
+            onPressed: () {
+              Get.back(result: false);
+            },
+            child: const Text("Batal")),
+        ElevatedButton(
+            onPressed: () {
+              Get.back(result: true);
+            },
+            child: const Text("Ya")),
+      ],
+    ));
+    return confirm ?? false;
   }
 }

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
-import 'package:myapp/keranjang_controller.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/keranjang_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 
 class DialogJual extends StatelessWidget {
   DialogJual({super.key, required this.produk});

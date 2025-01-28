@@ -1,18 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/main_controller.dart';
+// import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/lihat_produk.dart';
 import 'package:myapp/logo_produk.dart';
-import 'package:myapp/product_controller.dart';
+import 'package:myapp/controller/product_controller.dart';
 
 class HomeToko extends StatelessWidget {
-  const HomeToko({
-    super.key,
-    required ProductController productController,
-  }) : _productController = productController;
+  const HomeToko(
+      {super.key,
+      required ProductController productController,
+      required MainController mainController})
+      : _productController = productController,
+        _mainController = mainController;
 
   final ProductController _productController;
-
+  final MainController _mainController;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -103,10 +107,15 @@ class HomeToko extends StatelessWidget {
                               }
                             },
                             onLongPress: () async {
-                              _productController.showCheckBoxRemove.value =
-                                  !_productController.showCheckBoxRemove.value;
-                              if (_productController.showCheckBoxRemove.value) {
-                                await _productController.generateMapCheckBox();
+                              if (_mainController.tabIndex.value == 1) {
+                                _productController.showCheckBoxRemove.value =
+                                    !_productController
+                                        .showCheckBoxRemove.value;
+                                if (_productController
+                                    .showCheckBoxRemove.value) {
+                                  await _productController
+                                      .generateMapCheckBox();
+                                }
                               }
                             },
                             child: Padding(
@@ -124,7 +133,8 @@ class HomeToko extends StatelessWidget {
                                         if (listProduk['gambar'].isEmpty)
                                           noLogoProduk(170, sisa),
                                         if (_productController
-                                            .showCheckBoxRemove.value)
+                                                .showCheckBoxRemove.value &&
+                                            _mainController.tabIndex.value == 1)
                                           Obx(() {
                                             final isChecked = RxBool(
                                                 _productController
