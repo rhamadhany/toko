@@ -65,7 +65,14 @@ class DialogJual extends StatelessWidget {
                 Get.back();
               },
               child: const Text("Batal")),
-          ElevatedButton(
+          Tooltip(
+            message: "Keranjang",
+            child: ElevatedButton(
+                onPressed: () {}, child: const Icon(Icons.shopping_cart)),
+          ),
+          Tooltip(
+            message: "Jual",
+            child: ElevatedButton(
               onPressed: () async {
                 final count = _productController.jualController.value.text;
                 int countInt = int.parse(count);
@@ -88,7 +95,11 @@ class DialogJual extends StatelessWidget {
                   // print(sisa);
                 }
               },
-              child: const Text("Jual"))
+              child: const Icon(
+                Icons.shopping_cart_checkout,
+              ),
+            ),
+          )
         ],
       );
     });

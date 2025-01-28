@@ -16,9 +16,17 @@ class LihatProduk extends StatelessWidget {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-            title: Text(
-          '${produk['produk']}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+            title: Row(
+          children: [
+            Text(
+              '${produk['produk']}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.shopping_cart_checkout))
+          ],
         )),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -81,7 +89,7 @@ class LihatProduk extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: 'Edit'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.add_shopping_cart), label: 'Jual'),
+                icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
           ],
           currentIndex: _productController.bottomIndex.value,
           onTap: (value) {
