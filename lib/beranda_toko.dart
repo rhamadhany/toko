@@ -45,7 +45,6 @@ class HomeToko extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    // controller: _productController.searchController.value,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Cari Produk",
@@ -78,7 +77,10 @@ class HomeToko extends StatelessWidget {
                         itemBuilder: (context, indexProduct) {
                           final listProduk = _productController
                               .filterProduct[indexProduct].obs;
-
+                          // print(listProduk['terjual'].runtimeType);
+                          final terjual = listProduk['terjual'];
+                          final stok = listProduk['stok'];
+                          final sisa = stok - terjual;
                           return InkWell(
                             onTap: () {
                               if (_productController.showCheckBoxRemove.value) {
@@ -118,9 +120,9 @@ class HomeToko extends StatelessWidget {
                                       children: [
                                         if (listProduk['gambar'].isNotEmpty)
                                           logoProduk(listProduk['gambar'][0],
-                                              200, 2.5),
+                                              sisa, 200, 2.5),
                                         if (listProduk['gambar'].isEmpty)
-                                          noLogoProduk(170),
+                                          noLogoProduk(170, sisa),
                                         if (_productController
                                             .showCheckBoxRemove.value)
                                           Obx(() {
@@ -144,9 +146,7 @@ class HomeToko extends StatelessWidget {
                                                                 indexProduct]
                                                             ['isSelected'] =
                                                         value.toString();
-                                                    // print(_productController
-                                                    //         .mapCheckBoxRemove[
-                                                    //     indexProduct]);
+
                                                     _productController
                                                         .mapCheckBoxRemove
                                                         .refresh();

@@ -16,6 +16,10 @@ class LihatProduk extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('profit: ${nilaiProfit()}');
     return Obx(() {
+      // final sisa =
+      // final terjual = produk['terjual'];
+      // final stok = produk['stok'];
+      // final sisa = stok - terjual;
       return Scaffold(
         appBar: AppBar(
             title: Row(
@@ -39,7 +43,7 @@ class LihatProduk extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (produk['gambar'].toString() == '[]') noLogoProduk(300),
+                if (produk['gambar'].toString() == '[]') noLogoProduk(300, 10),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -56,7 +60,7 @@ class LihatProduk extends StatelessWidget {
                                     gambar: picPath,
                                   ));
                             },
-                            child: logoProduk(picPath, 300, 2.5));
+                            child: logoProduk(picPath, 10, 300, 2.5));
                       })
                     ],
                   ),

@@ -74,13 +74,27 @@ class DialogJual extends StatelessWidget {
                   final jumlah = int.tryParse(
                           _productController.jualController.value.text) ??
                       1;
+                  final sisa = produk['stok'] - produk['terjual'];
 
-                  final gambar = produk['gambar'][0] ?? "";
+                  // print(sisa);
+                  if (jumlah <= sisa) {
+                    final gambar = produk['gambar'][0] ?? "";
 
-                  _keranjangController.addProduk(
-                      produk['key'], produk['produk'], jumlah, gambar);
+                    _keranjangController.addProduk(
+                        produk['key'], produk['produk'], jumlah, gambar);
 
-                  Get.back();
+                    Get.back(closeOverlays: true);
+                    Get.back(closeOverlays: true);
+                    Get.snackbar('Keranjang',
+                        '$jumlah ${produk['produk']} ditambahkan ke keranjang',
+                        snackPosition: SnackPosition.BOTTOM);
+                  } else {
+                    Get.snackbar("Tidak Cukup",
+                        "${produk['produk']} hanya tersisa $sisa",
+                        snackPosition: SnackPosition.BOTTOM);
+                    _productController.jualController.value.text =
+                        sisa.toString();
+                  }
                 },
                 child: const Icon(Icons.shopping_cart)),
           ),
@@ -101,8 +115,12 @@ class DialogJual extends StatelessWidget {
                       int.parse(_productController.jualController.value.text);
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
-                  Get.back();
+                  Get.back(closeOverlays: true);
+                  Get.back(closeOverlays: true);
                   await DBHelper.updateProduct(produk);
+                  Get.snackbar('Terjual',
+                      '$terjualBaru ${produk['produk']} telah dijual',
+                      snackPosition: SnackPosition.BOTTOM);
                 } else {
                   await stokTidakCukup(true);
                   // _productController.jualController.value.clear();

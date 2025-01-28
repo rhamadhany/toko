@@ -62,19 +62,25 @@ class HalamanKeranjang extends StatelessWidget {
                                     valueBox[indexKeranjang] = value ?? false;
                                   });
                             }),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: produkKeranjang['gambar'] != ""
-                                      ? Image.file(
-                                          File(produkKeranjang['gambar']),
-                                          width: 80,
-                                          height: 80,
-                                        )
-                                      : const Icon(Icons.image),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: produkKeranjang['gambar'] != ""
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.file(
+                                              File(produkKeranjang['gambar']),
+                                              width: 80,
+                                              height: 80,
+                                            ),
+                                          )
+                                        : const Icon(Icons.image),
+                                  ),
                                 ),
                               ),
                             ),
@@ -120,7 +126,22 @@ class HalamanKeranjang extends StatelessWidget {
                       const Spacer(),
                       IconButton(
                           iconSize: 50,
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.dialog(AlertDialog(
+                              title: const Text('Konfirmasi'),
+                              content:
+                                  const Text("Anda yakin menjual produk ini?"),
+                              actions: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: const Text("Batal")),
+                                ElevatedButton(
+                                    onPressed: () {}, child: const Text("Ya")),
+                              ],
+                            ));
+                          },
                           icon: const Icon(
                             Icons.shopping_cart_checkout,
                             color: Colors.white,
@@ -162,7 +183,7 @@ class HalamanKeranjang extends StatelessWidget {
     hargaJual.add(harga);
     return Text(
       "Rp $hargaFinal",
-      style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 8),
+      style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 12),
     );
   }
 }

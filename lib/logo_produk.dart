@@ -2,9 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-Card logoProduk(dynamic gambar, double size, double scale) {
+Card logoProduk(dynamic gambar, int sisa, double size, double scale) {
+  // print(sisa);
   return Card(
+    // color: sisa <= 0 ? Colors.red : null,
     // color: Colors.blue,
+    shape: RoundedRectangleBorder(
+      side: BorderSide(
+        color: sisa <= 0 ? Colors.red : Colors.transparent,
+        width: 2,
+      ),
+      borderRadius: BorderRadius.circular(20),
+    ),
     child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
@@ -22,9 +31,16 @@ Card logoProduk(dynamic gambar, double size, double scale) {
   );
 }
 
-Center noLogoProduk(double size) {
+Center noLogoProduk(double size, int sisa) {
   return Center(
     child: Card(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: sisa <= 0 ? Colors.red : Colors.transparent,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Transform.scale(
         scale: 1.25,
         child: Icon(

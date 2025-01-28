@@ -45,7 +45,7 @@ class NewProduct extends StatelessWidget {
                           padding: const EdgeInsets.all(4.0),
                           child: Stack(
                             children: [
-                              logoProduk(imageFile, 120, 2),
+                              logoProduk(imageFile, 10, 120, 2),
                               Positioned(
                                   right: -22,
                                   top: -10,
