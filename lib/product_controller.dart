@@ -46,6 +46,13 @@ class ProductController extends GetxController {
     super.onInit();
     initDatabase();
     filteringProduk();
+    allProductListener();
+  }
+
+  void allProductListener() {
+    allProduct.listen((_) {
+      update();
+    });
   }
 
   void filteringProduk() {
@@ -69,13 +76,15 @@ class ProductController extends GetxController {
   }
 
   String hargaProduk(RxMap<String, dynamic> produk) {
-    final hargaJual = produk['harga_jual']
-        .toString()
-        .replaceAll(".", "")
-        .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
+    final hargaProduk = produk['harga_jual'].toString();
+    final hargaJual = regexNominal(hargaProduk);
 
     return hargaJual.trim() == "" ? "0" : hargaJual;
+  }
+
+  String regexNominal(String value) {
+    return value.replaceAll(".", "").replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
   }
 
   Future generateMapCheckBox() async {

@@ -12,6 +12,7 @@ class LihatProduk extends StatelessWidget {
   final ProductController _productController = Get.find();
   @override
   Widget build(BuildContext context) {
+    // print('profit: ${nilaiProfit()}');
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
@@ -49,26 +50,27 @@ class LihatProduk extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 50,
+                  padding:
+                      // const EdgeInsets.only(top: 30.0, left: 30, right: 30),
+                      const EdgeInsets.all(16),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          hargaProduk(),
+                          produkTerjual(),
+                          sisaProduk(),
+                          biayaBeli(),
+                          omsetJual(),
+                          profitJual()
+                        ],
                       ),
-                      Text(
-                        "Rp ${_productController.hargaProduk(produk)}",
-                        style: const TextStyle(
-                            fontSize: 26,
-                            color: Colors.deepOrangeAccent,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Terjual: ${produk['terjual']}/${produk['stok']}',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      sisaProduk()
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -134,11 +136,110 @@ class LihatProduk extends StatelessWidget {
     }
   }
 
-  sisaProduk() {
+  Text sisaProduk() {
     final sisa = produk['stok'] - produk['terjual'];
     return Text(
       sisa > 0 ? "Sisa: $sisa" : "",
       style: const TextStyle(fontSize: 18),
+    );
+  }
+
+  int nilaiOmset() {
+    final terjual = produk['terjual'] ?? 0;
+    final int hargaJual = int.tryParse(produk['harga_jual']) ?? 0;
+    int omset = 0;
+
+    if (terjual != 0) {
+      omset = terjual * hargaJual;
+    }
+    return omset;
+  }
+
+  Row omsetJual() {
+    final omsetNormal = nilaiOmset().toString();
+    final omsetFinal = _productController.regexNominal(omsetNormal);
+    return Row(
+      children: [
+        const Text(
+          "Harga Jual: ",
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          "Rp $omsetFinal",
+          style: const TextStyle(color: Colors.green, fontSize: 18),
+        ),
+      ],
+    );
+  }
+
+  Row biayaBeli() {
+    final nilaiNormal = nilaiBeli().toString();
+    final nilaiFinal = _productController.regexNominal(nilaiNormal);
+    return Row(
+      children: [
+        const Text(
+          "Harga Beli: ",
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          "Rp $nilaiFinal",
+          style: const TextStyle(color: Colors.red, fontSize: 18),
+        ),
+      ],
+    );
+  }
+
+  int nilaiBeli() {
+    final terjual = produk['terjual'] ?? 0;
+    final int hargaBeli = int.tryParse(produk['harga_beli']) ?? 0;
+    int biaya = 0;
+
+    if (terjual != 0) {
+      biaya = terjual * hargaBeli;
+    }
+    return biaya;
+  }
+
+  int nilaiProfit() {
+    final terjual = produk['terjual'] ?? 0;
+    final hargaBeli = int.tryParse(produk['harga_beli'] ?? '') ?? 0;
+
+    final int nilaiBeli = terjual * hargaBeli;
+    final int profit = nilaiOmset() - nilaiBeli;
+    return profit;
+  }
+
+  Row profitJual() {
+    final profitNormal = nilaiProfit().toString();
+    final profitFinal = _productController.regexNominal(profitNormal);
+    return Row(
+      children: [
+        const Text("Total Profit: ", style: TextStyle(fontSize: 18)),
+        Text('Rp $profitFinal',
+            style: const TextStyle(color: Colors.deepPurple, fontSize: 18)),
+      ],
+    );
+  }
+
+  Padding hargaProduk() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        "Rp ${_productController.hargaProduk(produk)}",
+        style: const TextStyle(
+            fontSize: 35,
+            color: Colors.deepOrangeAccent,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Text produkTerjual() {
+    return Text(
+      'Terjual: ${produk['terjual']}/${produk['stok']}',
+      style: const TextStyle(
+        fontSize: 18,
+      ),
     );
   }
 }
