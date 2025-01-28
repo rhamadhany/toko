@@ -10,8 +10,25 @@ class HalamanKeranjang extends StatelessWidget {
   final KeranjangController _keranjangController = Get.find();
   final ProductController _productController = Get.find();
   final List<TextEditingController> jumlahControllers = [];
+  final RxList<bool> valueBox = RxList<bool>();
+  final hargaJual = [];
+  final _loadingKeranjang = true.obs;
+  void _initValueBox() {
+    _loadingKeranjang.value = true;
+    valueBox.clear();
+    for (int i = 0; i < _keranjangController.keranjangProduk.length; i++) {
+      valueBox.add(false);
+      final jumlahController = TextEditingController();
+      jumlahController.text =
+          _keranjangController.keranjangProduk[i]['jumlah'].toString();
+      jumlahControllers.add(jumlahController);
+    }
+    _loadingKeranjang.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _initValueBox();
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
@@ -20,80 +37,132 @@ class HalamanKeranjang extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-              itemCount: _keranjangController.keranjangProduk.length,
-              itemBuilder: (context, indexKeranjang) {
-                final produkKeranjang =
-                    _keranjangController.keranjangProduk[indexKeranjang];
-                final jumlahController = TextEditingController();
-                jumlahController.text = produkKeranjang['jumlah'].toString();
-                jumlahControllers.add(jumlahController);
+        body: _loadingKeranjang.value
+            ? const CircularProgressIndicator(
+                color: Colors.blue,
+              )
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                    itemCount: _keranjangController.keranjangProduk.length,
+                    itemBuilder: (context, indexKeranjang) {
+                      final produkKeranjang =
+                          _keranjangController.keranjangProduk[indexKeranjang];
 
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                  child: Card(
-                      child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 2.0, vertical: 2),
                         child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: produkKeranjang['gambar'] != ""
-                                ? Image.file(
-                                    File(produkKeranjang['gambar']),
-                                    width: 100,
-                                    height: 100,
-                                  )
-                                : const Icon(Icons.image),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                           children: [
-                            Text(
-                              produkKeranjang['produk'],
-                              style: const TextStyle(fontSize: 16),
+                            Obx(() {
+                              return Checkbox(
+                                  value: valueBox[indexKeranjang],
+                                  onChanged: (value) {
+                                    valueBox[indexKeranjang] = value ?? false;
+                                  });
+                            }),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: produkKeranjang['gambar'] != ""
+                                      ? Image.file(
+                                          File(produkKeranjang['gambar']),
+                                          width: 80,
+                                          height: 80,
+                                        )
+                                      : const Icon(Icons.image),
+                                ),
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                hargaBarang(produkKeranjang['key']),
-                                // textFieldJumlah(indexKeranjang),
-                                JumlahKeranjang(
-                                  jumlahControllers: jumlahControllers,
-                                  indexKeranjang: indexKeranjang,
-                                )
-                              ],
-                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    produkKeranjang['produk'],
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      hargaBarang(produkKeranjang['key']),
+                                      JumlahKeranjang(
+                                        jumlahControllers: jumlahControllers,
+                                        indexKeranjang: indexKeranjang,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
-                        ),
-                      )
+                        )),
+                      );
+                    }),
+              ),
+        bottomNavigationBar: _loadingKeranjang.value
+            ? null
+            : Container(
+                decoration: const BoxDecoration(color: Colors.blue),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Spacer(),
+                      totalHargaJual(),
+                      const Spacer(),
+                      IconButton(
+                          iconSize: 50,
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.shopping_cart_checkout,
+                            color: Colors.white,
+                          ))
                     ],
-                  )),
-                );
-              }),
-        ),
+                  ),
+                ),
+              ),
       );
     });
   }
 
+  Text totalHargaJual() {
+    int totalHarga = 0;
+    for (int i = 0; i < valueBox.length; i++) {
+      if (valueBox[i] == true) {
+        final harga = int.tryParse(hargaJual[i]) ?? 0;
+        final jumlah = int.tryParse(jumlahControllers[i].text) ?? 1;
+        final hargaJumlah = harga * jumlah;
+        totalHarga = totalHarga + hargaJumlah;
+      }
+    }
+
+    final convertHarga = _productController.regexNominal(totalHarga.toString());
+
+    return Text(
+      "Rp $convertHarga",
+      style: const TextStyle(color: Colors.white, fontSize: 24),
+    );
+  }
+
   Text hargaBarang(String keyKeranjang) {
-    final product = _productController.allProduct
-        .firstWhereOrNull((product) => product['key'] == keyKeranjang);
-    final harga = product != null ? product['harga_jual'] : 0;
+    final indexKeys = _productController.allProduct
+        .indexWhere((product) => product['key'] == keyKeranjang);
+    final harga = indexKeys != -1
+        ? _productController.allProduct[indexKeys]['harga_jual']
+        : 0;
     final hargaFinal = _productController.regexNominal(harga);
+    hargaJual.add(harga);
     return Text(
       "Rp $hargaFinal",
-      style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 10),
+      style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 8),
     );
   }
 }

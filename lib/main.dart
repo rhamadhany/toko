@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/keranjang_controller.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/product_controller.dart';
@@ -42,7 +43,12 @@ class MyApp extends StatelessWidget {
                       _productController.searchText.value = '';
                     }
                   },
-                  icon: const Icon(Icons.search))
+                  icon: const Icon(Icons.search)),
+              IconButton(
+                  onPressed: () {
+                    Get.to(() => HalamanKeranjang());
+                  },
+                  icon: const Icon(Icons.shopping_cart_checkout))
             ],
           ),
         ),
