@@ -6,19 +6,23 @@ import 'package:sqflite/sqflite.dart';
 class ProductController extends GetxController {
   Rx<Database?> database = Rx<Database?>(null);
 
-  // final loadingProduct = true.obs;
   final showCheckBoxRemove = false.obs;
   final RxList<Map<dynamic, String>> mapCheckBoxRemove =
       <Map<dynamic, String>>[].obs;
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
-  // final searchController = TextEditingController().obs;
+
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
       RxList<Map<String, dynamic>>([
     {'label': 'Nama Produk', 'controller': TextEditingController()},
     {
-      'label': 'Harga',
+      'label': 'Harga Beli',
+      'controller': TextEditingController(),
+      'keyboardType': TextInputType.number
+    },
+    {
+      'label': 'Harga Jual',
       'controller': TextEditingController(),
       'keyboardType': TextInputType.number
     },
@@ -47,8 +51,6 @@ class ProductController extends GetxController {
   void filteringProduk() {
     filterProduct.value = allProduct;
     searchText.listen((data) {
-      // print(data);
-      // print(searchText.value);
       filterProduct.value = allProduct
           .where((produk) =>
               produk['produk'].toLowerCase().contains(data.toLowerCase()))
@@ -67,13 +69,13 @@ class ProductController extends GetxController {
   }
 
   String hargaProduk(RxMap<String, dynamic> produk) {
-    final harga = produk['harga']
+    final hargaJual = produk['harga_jual']
         .toString()
         .replaceAll(".", "")
         .replaceAllMapped(
             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
-    // print('harga $harga');
-    return harga.trim() == "" ? "0" : harga;
+
+    return hargaJual.trim() == "" ? "0" : hargaJual;
   }
 
   Future generateMapCheckBox() async {
@@ -89,11 +91,10 @@ class ProductController extends GetxController {
   }
 
   Future<void> initDatabase() async {
-    // loadingProduct.value = true;
     final pathDatabase = await getDatabasesPath();
     final path = '$pathDatabase/product_database.db';
     database.value =
-        await openDatabase(path, version: 1, onCreate: (db, version) async {
+        await openDatabase(path, version: 2, onCreate: (db, version) async {
       await db.execute('''CREATE TABLE products
           (
             key TEXT,
@@ -104,11 +105,32 @@ class ProductController extends GetxController {
             gambar TEXT
           )
           ''');
-    }, onUpgrade: (db, oldVersion, newVersion) {});
+    }, onUpgrade: (db, oldVersion, newVersion) async {
+      if (oldVersion < 2) {
+        if (!await columnExists(db, 'products', 'harga_beli')) {
+          await db.execute('ALTER TABLE products ADD COLUMN harga_beli TEXT');
+        }
+        if (!await columnExists(db, 'products', 'harga_jual')) {
+          await db.execute('ALTER TABLE products ADD COLUMN harga_jual TEXT');
+        }
+      }
+    });
 
     allProduct.value = await loadProducts();
-    // loadingProduct.value = false;
+
     if (allProduct.isEmpty) {}
+  }
+
+  Future<bool> columnExists(
+      Database db, String tableName, String columnName) async {
+    final List<Map<String, dynamic>> result =
+        await db.rawQuery('PRAGMA table_info($tableName)');
+    for (var column in result) {
+      if (column['name'] == columnName) {
+        return true; // Kolom ada
+      }
+    }
+    return false; // Kolom tidak ada
   }
 
   Future<List<Map<String, dynamic>>> loadProducts() async {
@@ -129,8 +151,8 @@ class ProductController extends GetxController {
     return processedResult;
   }
 
-  Future<void> addProduct(String product, String harga, int terjual, int stock,
-      RxList<dynamic> pictures) async {
+  Future<void> addProduct(String product, String hargaBeli, String hargaJual,
+      int terjual, int stock, RxList<dynamic> pictures) async {
     final db = database.value;
     if (db == null) {
       throw Exception('Database not initialized');
@@ -141,7 +163,8 @@ class ProductController extends GetxController {
     await db.insert('products', {
       'key': key,
       'produk': product,
-      'harga': harga,
+      'harga_beli': hargaBeli,
+      'harga_jual': hargaJual,
       'terjual': terjual,
       'stok': stock,
       'gambar': jsonPictures,

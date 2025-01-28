@@ -94,8 +94,10 @@ class NewProduct extends StatelessWidget {
                           textField['keyboardType'] ?? TextInputType.text,
                       decoration: InputDecoration(
                           labelText: textField['label'],
-                          prefixText:
-                              textField['label'] == 'Harga' ? 'Rp ' : "",
+                          prefixText: textField['label'] == 'Harga Beli' ||
+                                  textField['label'] == 'Harga Jual'
+                              ? 'Rp '
+                              : "",
                           border: const OutlineInputBorder()),
                     ),
                   );
@@ -108,26 +110,29 @@ class NewProduct extends StatelessWidget {
           onPressed: () async {
             String product =
                 _productController.listTextField[0]['controller'].text;
-            String harga =
+            String hargaBeli =
                 _productController.listTextField[1]['controller'].text;
+            String hargaJual =
+                _productController.listTextField[2]['controller'].text;
             int? terjual = int.tryParse(
-                    _productController.listTextField[2]['controller'].text) ??
+                    _productController.listTextField[3]['controller'].text) ??
                 0;
             int? stock = int.tryParse(
-                    _productController.listTextField[3]['controller'].text) ??
+                    _productController.listTextField[4]['controller'].text) ??
                 0;
 
             if (produkEdit.isNotEmpty) {
               produkEdit['gambar'] = listPictures;
               produkEdit['produk'] = product;
-              produkEdit['harga'] = harga;
+              produkEdit['harga_beli'] = hargaBeli;
+              produkEdit['harga_jual'] = hargaJual;
               produkEdit['terjual'] = terjual;
               produkEdit['stok'] = stock;
 
               await _productController.updateProduct(produkEdit);
             } else {
               await _productController.addProduct(
-                  product, harga, terjual, stock, listPictures);
+                  product, hargaBeli, hargaJual, terjual, stock, listPictures);
             }
 
             Get.back();

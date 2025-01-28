@@ -110,8 +110,11 @@ class LihatProduk extends StatelessWidget {
         case 'Nama Produk':
           controller['controller'].text = produk['produk'];
           break;
-        case 'Harga':
-          controller['controller'].text = produk['harga'];
+        case 'Harga Beli':
+          controller['controller'].text = produk['harga_beli'];
+          break;
+        case 'Harga Jual':
+          controller['controller'].text = produk['harga_jual'];
           break;
         case 'Terjual':
           controller['controller'].text = produk['terjual'].toString();
