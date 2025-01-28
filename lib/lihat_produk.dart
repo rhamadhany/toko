@@ -74,16 +74,21 @@ class LihatProduk extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Row(
                         children: [
-                          hargaProduk(),
-                          produkTerjual(),
-                          sisaProduk(),
-                          biayaBeli(),
-                          omsetJual(),
-                          profitJual()
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              hargaProduk(),
+                              produkTerjual(),
+                              sisaProduk(),
+                              // biayaBeli(),
+                              // omsetJual(),
+                              // profitJual()
+                            ],
+                          ),
+                          const Spacer(),
                         ],
                       ),
                     ),

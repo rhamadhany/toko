@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/jumlah_keranjang.dart';
 import 'package:myapp/keranjang_controller.dart';
 import 'package:myapp/product_controller.dart';
@@ -12,9 +13,9 @@ class HalamanKeranjang extends StatelessWidget {
   final List<TextEditingController> jumlahControllers = [];
   final RxList<bool> valueBox = RxList<bool>();
   final hargaJual = [];
-  final _loadingKeranjang = true.obs;
+  // final _loadingKeranjang = true.obs;
   void _initValueBox() {
-    _loadingKeranjang.value = true;
+    // _loadingKeranjang.value = true;
     valueBox.clear();
     for (int i = 0; i < _keranjangController.keranjangProduk.length; i++) {
       valueBox.add(false);
@@ -23,7 +24,7 @@ class HalamanKeranjang extends StatelessWidget {
           _keranjangController.keranjangProduk[i]['jumlah'].toString();
       jumlahControllers.add(jumlahController);
     }
-    _loadingKeranjang.value = false;
+    // _loadingKeranjang.value = false;
   }
 
   @override
@@ -37,119 +38,118 @@ class HalamanKeranjang extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        body: _loadingKeranjang.value
-            ? const CircularProgressIndicator(
-                color: Colors.blue,
-              )
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                    itemCount: _keranjangController.keranjangProduk.length,
-                    itemBuilder: (context, indexKeranjang) {
-                      final produkKeranjang =
-                          _keranjangController.keranjangProduk[indexKeranjang];
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+              itemCount: _keranjangController.keranjangProduk.length,
+              itemBuilder: (context, indexKeranjang) {
+                final produkKeranjang =
+                    _keranjangController.keranjangProduk[indexKeranjang];
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 2.0, vertical: 2),
-                        child: Card(
-                            child: Row(
-                          children: [
-                            Obx(() {
-                              return Checkbox(
-                                  value: valueBox[indexKeranjang],
-                                  onChanged: (value) {
-                                    valueBox[indexKeranjang] = value ?? false;
-                                  });
-                            }),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: produkKeranjang['gambar'] != ""
-                                        ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Image.file(
-                                              File(produkKeranjang['gambar']),
-                                              width: 80,
-                                              height: 80,
-                                            ),
-                                          )
-                                        : const Icon(Icons.image),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    produkKeranjang['produk'],
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      hargaBarang(produkKeranjang['key']),
-                                      JumlahKeranjang(
-                                        jumlahControllers: jumlahControllers,
-                                        indexKeranjang: indexKeranjang,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
-                      );
-                    }),
-              ),
-        bottomNavigationBar: _loadingKeranjang.value
-            ? null
-            : Container(
-                decoration: const BoxDecoration(color: Colors.blue),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2),
+                  child: Card(
+                      child: Row(
                     children: [
-                      const Spacer(),
-                      totalHargaJual(),
-                      const Spacer(),
-                      IconButton(
-                          iconSize: 50,
-                          onPressed: () {
-                            Get.dialog(AlertDialog(
-                              title: const Text('Konfirmasi'),
-                              content:
-                                  const Text("Anda yakin menjual produk ini?"),
-                              actions: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: const Text("Batal")),
-                                ElevatedButton(
-                                    onPressed: () {}, child: const Text("Ya")),
+                      Obx(() {
+                        return Checkbox(
+                            value: valueBox[indexKeranjang],
+                            onChanged: (value) {
+                              valueBox[indexKeranjang] = value ?? false;
+                            });
+                      }),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: produkKeranjang['gambar'] != ""
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.file(
+                                        File(produkKeranjang['gambar']),
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                    )
+                                  : const Icon(Icons.image),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              produkKeranjang['produk'],
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                hargaBarang(produkKeranjang['key']),
+                                JumlahKeranjang(
+                                  jumlahControllers: jumlahControllers,
+                                  indexKeranjang: indexKeranjang,
+                                )
                               ],
-                            ));
-                          },
-                          icon: const Icon(
-                            Icons.shopping_cart_checkout,
-                            color: Colors.white,
-                          ))
+                            ),
+                          ],
+                        ),
+                      )
                     ],
-                  ),
-                ),
-              ),
+                  )),
+                );
+              }),
+        ),
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(color: Colors.blue),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Spacer(),
+                totalHargaJual(),
+                const Spacer(),
+                IconButton(
+                    iconSize: 50,
+                    onPressed: () {
+                      if (!valueBox.toString().contains('true')) {
+                        Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
+                            snackPosition: SnackPosition.BOTTOM);
+                        return;
+                      }
+                      Get.dialog(AlertDialog(
+                        title: const Text('Konfirmasi'),
+                        content: const Text("Anda yakin menjual produk ini?"),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: const Text("Batal")),
+                          ElevatedButton(
+                              onPressed: () {
+                                confirmJual();
+                              },
+                              child: const Text("Ya")),
+                        ],
+                      ));
+                    },
+                    icon: const Icon(
+                      Icons.shopping_cart_checkout,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
+          ),
+        ),
       );
     });
   }
@@ -185,5 +185,28 @@ class HalamanKeranjang extends StatelessWidget {
       "Rp $hargaFinal",
       style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 12),
     );
+  }
+
+  Future<void> confirmJual() async {
+    if (valueBox.toString().contains('true')) {
+      for (int i = 0; i < valueBox.length; i++) {
+        if (valueBox[i] == true) {
+          // final harga = int.tryParse(hargaJual[i]) ?? 0;
+          final key = _keranjangController.keranjangProduk[i]['key'];
+          final jumlah = int.tryParse(jumlahControllers[i].text) ?? 1;
+          await DBHelper.updateTerjual(key, jumlah);
+          await _keranjangController.removeProduk(key);
+        }
+      }
+      _initValueBox();
+      Get.back();
+
+      Get.snackbar("Terjual", "Penjualan Selesai",
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.back();
+      Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 }

@@ -63,6 +63,20 @@ class DBHelper {
     _productController.allProduct.value = await loadProducts();
   }
 
+  static Future updateTerjual(String key, int terjual) async {
+    final db = _productController.database.value;
+    if (db != null) {
+      const queryBaca = 'SELECT terjual FROM products WHERE key = ?';
+      final result = await db.rawQuery(queryBaca, [key]);
+      final int terjualSebelumnya = (result.first['terjual'] as int?) ?? 0;
+
+      final int updateTerjual = terjualSebelumnya + terjual;
+      const query = 'UPDATE products SET terjual = ? WHERE key = ?';
+      await db.rawUpdate(query, [updateTerjual, key]);
+      _productController.allProduct.value = await loadProducts();
+    }
+  }
+
   static Future updateProduct(RxMap<String, dynamic> produk) async {
     final db = _productController.database.value;
     if (db == null) {
