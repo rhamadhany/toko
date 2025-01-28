@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/db_helper.dart';
 import 'package:myapp/product_controller.dart';
 
 class DialogJual extends StatelessWidget {
@@ -80,7 +81,7 @@ class DialogJual extends StatelessWidget {
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
                   Get.back();
-                  await _productController.updateProduct(produk);
+                  await DBHelper.updateProduct(produk);
                 } else {
                   await stokTidakCukup(true);
                   // _productController.jualController.value.clear();

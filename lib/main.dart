@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
+import 'package:myapp/db_helper.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/product_controller.dart';
 
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
                 }
               }
 
-              await _productController.deleteProduct(listKey);
+              await DBHelper.deleteProduct(listKey);
               await _productController.generateMapCheckBox();
             } else {
               for (final controller in _productController.listTextField) {

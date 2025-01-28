@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/db_helper.dart';
 import 'package:myapp/logo_produk.dart';
 import 'package:myapp/product_controller.dart';
 import 'package:myapp/tambah_gambar.dart';
@@ -129,9 +130,9 @@ class NewProduct extends StatelessWidget {
               produkEdit['terjual'] = terjual;
               produkEdit['stok'] = stock;
 
-              await _productController.updateProduct(produkEdit);
+              await DBHelper.updateProduct(produkEdit);
             } else {
-              await _productController.addProduct(
+              await DBHelper.addProduct(
                   product, hargaBeli, hargaJual, terjual, stock, listPictures);
             }
 

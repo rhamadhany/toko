@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/db_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProductController extends GetxController {
@@ -107,100 +107,17 @@ class ProductController extends GetxController {
           ''');
     }, onUpgrade: (db, oldVersion, newVersion) async {
       if (oldVersion < 2) {
-        if (!await columnExists(db, 'products', 'harga_beli')) {
+        if (!await DBHelper.columnExists(db, 'products', 'harga_beli')) {
           await db.execute('ALTER TABLE products ADD COLUMN harga_beli TEXT');
         }
-        if (!await columnExists(db, 'products', 'harga_jual')) {
+        if (!await DBHelper.columnExists(db, 'products', 'harga_jual')) {
           await db.execute('ALTER TABLE products ADD COLUMN harga_jual TEXT');
         }
       }
     });
 
-    allProduct.value = await loadProducts();
+    allProduct.value = await DBHelper.loadProducts();
 
     if (allProduct.isEmpty) {}
-  }
-
-  Future<bool> columnExists(
-      Database db, String tableName, String columnName) async {
-    final List<Map<String, dynamic>> result =
-        await db.rawQuery('PRAGMA table_info($tableName)');
-    for (var column in result) {
-      if (column['name'] == columnName) {
-        return true; // Kolom ada
-      }
-    }
-    return false; // Kolom tidak ada
-  }
-
-  Future<List<Map<String, dynamic>>> loadProducts() async {
-    final db = database.value;
-    if (db == null) {
-      throw Exception('Database not initialized');
-    }
-    final result = await db.query('products');
-    final processedResult = result.map((row) {
-      final newRow = Map<String, dynamic>.from(row);
-      try {
-        newRow['gambar'] = jsonDecode(row['gambar'].toString());
-      } catch (e) {
-        newRow['gambar'] = "";
-      }
-      return newRow;
-    }).toList();
-    return processedResult;
-  }
-
-  Future<void> addProduct(String product, String hargaBeli, String hargaJual,
-      int terjual, int stock, RxList<dynamic> pictures) async {
-    final db = database.value;
-    if (db == null) {
-      throw Exception('Database not initialized');
-    }
-    final jsonPictures = jsonEncode(pictures);
-    DateTime now = DateTime.now();
-    String key = base64Encode(utf8.encode(now.toString()));
-    await db.insert('products', {
-      'key': key,
-      'produk': product,
-      'harga_beli': hargaBeli,
-      'harga_jual': hargaJual,
-      'terjual': terjual,
-      'stok': stock,
-      'gambar': jsonPictures,
-    });
-    allProduct.value = await loadProducts();
-  }
-
-  Future updateProduct(RxMap<String, dynamic> produk) async {
-    final db = database.value;
-    if (db == null) {
-      throw Exception('Database not initialized');
-    }
-
-    final gambarJson = jsonEncode(produk['gambar']);
-
-    await db.update(
-      'products',
-      {
-        ...produk,
-        'gambar': gambarJson,
-      },
-      where: 'key = ?',
-      whereArgs: [produk['key']],
-    );
-    allProduct.value = await loadProducts();
-  }
-
-  Future<void> deleteProduct(List<String> key) async {
-    final db = database.value;
-    if (db == null) {
-      throw Exception('Database not initialized');
-    }
-    for (var id in key) {
-      await db.delete('products', where: 'key = ?', whereArgs: [id]);
-    }
-
-    allProduct.value = await loadProducts();
   }
 }
