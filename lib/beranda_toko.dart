@@ -1,7 +1,7 @@
 // import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/biometrik.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 // import 'package:myapp/controller/main_controller.dart';
 // import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/lihat_produk.dart';

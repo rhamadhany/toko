@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:myapp/settings.dart';
+import 'package:myapp/pengaturan/settings.dart';
 
 class BiometrikController extends GetxController {
   final LocalAuthentication auth = LocalAuthentication();

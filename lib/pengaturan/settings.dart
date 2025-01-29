@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:myapp/biometrik.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:archive/archive_io.dart';

@@ -1,8 +1,8 @@
-// import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/db_helper.dart';
 import 'package:myapp/gambar_penuh.dart';
+import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
+import 'package:myapp/keranjang/dialog_hapus_keranjang.dart';
 import 'package:myapp/keranjang/jumlah_keranjang.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -13,12 +13,11 @@ class HalamanKeranjang extends StatelessWidget {
   final KeranjangController _keranjangController = Get.find();
   final ProductController _productController = Get.find();
   final List<TextEditingController> jumlahControllers = [];
-  final RxList<bool> valueBox = RxList<bool>();
+  static final RxList<bool> valueBox = RxList<bool>();
   final boxAll = false.obs;
   final hargaJual = [];
-  // final _loadingKeranjang = true.obs;
+
   void _initValueBox() {
-    // _loadingKeranjang.value = true;
     hargaJual.clear();
     valueBox.clear();
     jumlahControllers.clear();
@@ -36,7 +35,6 @@ class HalamanKeranjang extends StatelessWidget {
           _keranjangController.keranjangProduk[i]['jumlah'].toString();
       jumlahControllers.add(jumlahController);
     }
-    // _loadingKeranjang.value = false;
   }
 
   @override
@@ -45,9 +43,22 @@ class HalamanKeranjang extends StatelessWidget {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Keranjang",
-            style: TextStyle(fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              const Text(
+                "Keranjang",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              if (haveValueBox())
+                IconButton(
+                    onPressed: () {
+                      Get.dialog(DialogHapusKeranjang(
+                        initValueBox: _initValueBox,
+                      ));
+                    },
+                    icon: const Icon(Icons.delete_forever))
+            ],
           ),
         ),
         body: Padding(
@@ -92,15 +103,6 @@ class HalamanKeranjang extends StatelessWidget {
                           itemCount:
                               _keranjangController.keranjangProduk.length,
                           itemBuilder: (context, indexKeranjang) {
-                            // if (indexKeranjang == 0) {
-                            //   CheckboxListTile(
-                            //       title: Text("Pilih Semua"),
-                            //       value: boxAll.value,
-                            //       onChanged: (value) {
-                            //         boxAll.value = value ?? false;
-                            //       });
-                            // }
-
                             final produkKeranjang = _keranjangController
                                 .keranjangProduk[indexKeranjang];
 
@@ -231,23 +233,10 @@ class HalamanKeranjang extends StatelessWidget {
                                   snackPosition: SnackPosition.BOTTOM);
                               return;
                             }
-                            Get.dialog(AlertDialog(
-                              title: const Text('Konfirmasi'),
-                              content:
-                                  const Text("Anda yakin menjual produk ini?"),
-                              actions: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: const Text("Batal")),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      confirmJual();
-                                    },
-                                    child: const Text("Ya")),
-                              ],
-                            ));
+                            Get.dialog(DialogCheckoutKeranjang(
+                                valueBox: valueBox,
+                                jumlahControllers: jumlahControllers,
+                                initValueBox: _initValueBox));
                           },
                           icon: const Icon(
                             Icons.shopping_cart_checkout,
@@ -293,31 +282,7 @@ class HalamanKeranjang extends StatelessWidget {
     );
   }
 
-  Future<void> confirmJual() async {
-    if (valueBox.toString().contains('true')) {
-      for (int i = 0; i < valueBox.length; i++) {
-        // print("valueBox: ${valueBox[i]}");
-        if (valueBox[i] == true) {
-          // final harga = int.tryParse(hargaJual[i]) ?? 0;
-          final key = _keranjangController.keranjangProduk[i]['key'];
-          final jumlah = int.tryParse(jumlahControllers[i].text) ?? 1;
-          await DBHelper.updateTerjual(key, jumlah);
-          await _keranjangController.removeProduk(key);
-          // valueBox.removeAt(i);
-          // hargaJual.removeAt(i);
-          // jumlahControllers.removeAt(i);
-        }
-      }
-
-      _initValueBox();
-      Get.back();
-
-      Get.snackbar("Terjual", "Penjualan Selesai",
-          snackPosition: SnackPosition.BOTTOM);
-    } else {
-      Get.back();
-      Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
-          snackPosition: SnackPosition.BOTTOM);
-    }
+  static bool haveValueBox() {
+    return valueBox.any((any) => any == true);
   }
 }

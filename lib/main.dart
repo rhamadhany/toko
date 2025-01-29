@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
-import 'package:myapp/biometrik.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
@@ -13,7 +13,7 @@ import 'package:myapp/laporan_penjualan.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/settings.dart';
+import 'package:myapp/pengaturan/settings.dart';
 
 void main() {
   Get.put(BiometrikController());

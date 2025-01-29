@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/biometrik.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/dialog_jual.dart';
 import 'package:myapp/gambar_penuh.dart';

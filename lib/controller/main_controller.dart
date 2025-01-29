@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/biometrik.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/settings.dart';
+import 'package:myapp/pengaturan/settings.dart';
 // import 'package:myapp/settings.dart';
 
 class MainController extends GetxController with GetTickerProviderStateMixin {
