@@ -1,6 +1,9 @@
+// import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
+import 'package:myapp/biometrik.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
@@ -8,10 +11,14 @@ import 'package:myapp/laporan_penjualan.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/settings.dart';
 
 void main() {
+  Get.put(BiometrikController());
   Get.put(
       KeranjangController()); // Ini sudah permanen karena menggunakan Get.put
+  Get.put(ProductController());
+  Get.put(MainController());
 
   runApp(GetMaterialApp(
     home: MyApp(),
@@ -22,8 +29,9 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  final MainController _mainController = Get.put(MainController());
-  final ProductController _productController = Get.put(ProductController());
+  final BiometrikController _biometrikController = Get.find();
+
+  final ProductController _productController = Get.find();
   final KeranjangController _keranjangController =
       Get.put(KeranjangController());
   @override
@@ -34,24 +42,30 @@ class MyApp extends StatelessWidget {
           title: Row(
             children: [
               Text(
-                _mainController.tabIndex.value == 0
+                _biometrikController.tabIndex.value == 0
                     ? "Toko"
-                    : _mainController.tabIndex.value == 1
+                    : _biometrikController.tabIndex.value == 1
                         ? "Rincian"
-                        : "Laporan",
+                        : _biometrikController.tabIndex.value == 2
+                            ? "Laporan"
+                            : "Pengaturan",
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              IconButton(
-                  onPressed: () {
-                    _productController.showSearch.value =
-                        !_productController.showSearch.value;
+              if (_biometrikController.tabIndex.value == 0 ||
+                  (_biometrikController.tabIndex.value == 1 &&
+                      (_biometrikController.hasAuthenticated.value ||
+                          !Settings.autentikasiAktif.value)))
+                IconButton(
+                    onPressed: () {
+                      _productController.showSearch.value =
+                          !_productController.showSearch.value;
 
-                    if (!_productController.showSearch.value) {
-                      _productController.searchText.value = '';
-                    }
-                  },
-                  icon: const Icon(Icons.search)),
+                      if (!_productController.showSearch.value) {
+                        _productController.searchText.value = '';
+                      }
+                    },
+                    icon: const Icon(Icons.search)),
               IconButton(
                   onPressed: () {
                     Get.to(() => HalamanKeranjang());
@@ -60,28 +74,44 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(controller: _mainController.tabController, children: [
-          HomeToko(
-            productController: _productController,
-            mainController: _mainController,
-          ),
-          HomeToko(
-            productController: _productController,
-            mainController: _mainController,
-          ),
-          const LaporanPenjualan()
-        ]),
+        body: TabBarView(
+            controller: _biometrikController.tabController,
+            children: [
+              HomeToko(
+                productController: _productController,
+                biometrikController: _biometrikController,
+              ),
+              !_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : HomeToko(
+                      productController: _productController,
+                      biometrikController: _biometrikController,
+                    ),
+              !_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : const LaporanPenjualan(),
+              const Settings()
+            ]),
         bottomNavigationBar:
-            TabBar(controller: _mainController.tabController, tabs: const [
+            TabBar(controller: _biometrikController.tabController, tabs: const [
           Tab(text: "Beranda", icon: Icon(Icons.home)),
           Tab(text: "Rincian", icon: Icon(Icons.list)),
           Tab(
             text: "Laporan",
             icon: Icon(Icons.bar_chart),
+          ),
+          Tab(
+            text: "Pengaturan",
+            icon: Icon(Icons.settings),
           )
         ]),
-        floatingActionButton: _mainController.tabIndex.value == 1
-            ? FloatingActionButton(
+        floatingActionButton: (!_biometrikController.hasAuthenticated.value &&
+                    Settings.autentikasiAktif.value) ||
+                _biometrikController.tabIndex.value != 1
+            ? null
+            : FloatingActionButton(
                 onPressed: () async {
                   if (_productController.showCheckBoxRemove.value &&
                       _productController.filterProduct.isNotEmpty) {
@@ -134,8 +164,7 @@ class MyApp extends StatelessWidget {
                         _productController.filterProduct.isNotEmpty
                     ? Icons.clear
                     : Icons.add),
-              )
-            : null,
+              ),
       );
     });
   }

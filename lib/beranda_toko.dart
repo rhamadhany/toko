@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/controller/main_controller.dart';
+import 'package:myapp/biometrik.dart';
+// import 'package:myapp/controller/main_controller.dart';
 // import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/lihat_produk.dart';
 import 'package:myapp/logo_produk.dart';
@@ -11,12 +12,12 @@ class HomeToko extends StatelessWidget {
   const HomeToko(
       {super.key,
       required ProductController productController,
-      required MainController mainController})
+      required BiometrikController biometrikController})
       : _productController = productController,
-        _mainController = mainController;
-
+        _biometrikController = biometrikController;
+  final BiometrikController _biometrikController;
   final ProductController _productController;
-  final MainController _mainController;
+  // final MainController _mainController;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -107,7 +108,7 @@ class HomeToko extends StatelessWidget {
                               }
                             },
                             onLongPress: () async {
-                              if (_mainController.tabIndex.value == 1) {
+                              if (_biometrikController.tabIndex.value == 1) {
                                 _productController.showCheckBoxRemove.value =
                                     !_productController
                                         .showCheckBoxRemove.value;
@@ -134,7 +135,9 @@ class HomeToko extends StatelessWidget {
                                           noLogoProduk(170, sisa),
                                         if (_productController
                                                 .showCheckBoxRemove.value &&
-                                            _mainController.tabIndex.value == 1)
+                                            _biometrikController
+                                                    .tabIndex.value ==
+                                                1)
                                           Obx(() {
                                             final isChecked = RxBool(
                                                 _productController
