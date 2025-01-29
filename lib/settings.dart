@@ -1,7 +1,12 @@
+// import 'package:archive/archive_io.dart';
+// import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myapp/biometrik.dart';
+import 'package:myapp/data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:archive/archive_io.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -17,37 +22,60 @@ class Settings extends StatelessWidget {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: () async {
-                    final hasAuth = await _biometrikController.authReuired();
-                    if (hasAuth) {
-                      autentikasiAktif.value = !autentikasiAktif.value;
-                      saveSettingsPrefs();
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.lock),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Aktifkan Auntentikasi",
-                          style: TextStyle(fontSize: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          final hasAuth =
+                              await _biometrikController.authReuired();
+                          if (hasAuth) {
+                            autentikasiAktif.value = !autentikasiAktif.value;
+                            saveSettingsPrefs();
+                          }
+                        },
+                        title: const Text("Aktifkan Autentikasi"),
+                        leading: Icon(
+                          autentikasiAktif.value ? Icons.lock : Icons.lock_open,
                         ),
                       ),
-                      const Spacer(),
-                      Checkbox(
-                          value: autentikasiAktif.value,
-                          onChanged: (value) async {
-                            final hasAuth =
-                                await _biometrikController.authReuired();
-                            if (hasAuth) {
-                              autentikasiAktif.value = value ?? false;
-                              saveSettingsPrefs();
-                            }
-                          })
-                    ],
-                  ),
+                    ),
+                    Checkbox(
+                      value: autentikasiAktif.value,
+                      onChanged: (value) async {
+                        final hasAuth =
+                            await _biometrikController.authReuired();
+                        if (hasAuth) {
+                          autentikasiAktif.value = value ?? false;
+                          saveSettingsPrefs();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListTile(
+                  title: const Text("Import Data"),
+                  leading: const Icon(Icons.download),
+                  onTap: () {
+                    DataSettings.importData();
+                  },
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListTile(
+                  title: const Text("Backup Data"),
+                  leading: const Icon(Icons.backup),
+                  onTap: () {
+                    DataSettings.backupData();
+                  },
                 ),
               ),
             ),

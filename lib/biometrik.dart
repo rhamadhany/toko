@@ -40,6 +40,10 @@ class BiometrikController extends GetxController {
           options: const AuthenticationOptions(useErrorDialogs: false));
     } catch (e) {
       // hasAuthenticated.value = false;
+      // print(e);
+      Get.snackbar("Error", "$e", snackPosition: SnackPosition.BOTTOM);
+      Settings.autentikasiAktif.value = false;
+      Settings.saveSettingsPrefs();
       return false;
     }
 

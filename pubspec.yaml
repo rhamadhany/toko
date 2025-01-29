@@ -28,13 +28,19 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  archive: ^4.0.2
   cupertino_icons: ^1.0.8
+  device_info_plus: ^11.2.2
   flutter:
     sdk: flutter
   get: ^4.6.6
   image_picker: ^1.1.2
   local_auth: ^2.3.0
-  path: ^1.9.0
+  package_info_plus: ^8.1.4
+  path_provider: ^2.1.5
+  permission_handler: ^11.3.1
+  pick_or_save: ^2.2.4
+  restart_app: ^1.3.2
   shared_preferences: ^2.4.0
   sqflite: ^2.4.1
 
