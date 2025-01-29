@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 Card logoProduk(dynamic gambar, int sisa, double size, double scale) {
-  // print(sisa);
   return Card(
-    // color: sisa <= 0 ? Colors.red : null,
-    // color: Colors.blue,
     shape: RoundedRectangleBorder(
       side: BorderSide(
         color: sisa <= 0 ? Colors.red : Colors.transparent,

@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:myapp/gambar_penuh.dart';
 import 'package:myapp/keranjang/jumlah_keranjang.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/logo_produk.dart';
 
 class HalamanKeranjang extends StatelessWidget {
   HalamanKeranjang({super.key});
@@ -120,23 +122,57 @@ class HalamanKeranjang extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
-                                      child: Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: produkKeranjang['gambar'] != ""
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.file(
-                                                    File(produkKeranjang[
-                                                        'gambar']),
-                                                    width: 80,
-                                                    height: 80,
-                                                  ),
-                                                )
-                                              : const Icon(Icons.image),
-                                        ),
-                                      ),
+                                      child: produkKeranjang['gambar'] != ""
+                                          ? InkWell(
+                                              onTap: () {
+                                                final indexGambar =
+                                                    _productController
+                                                        .allProduct
+                                                        .indexWhere((all) =>
+                                                            all['key'] ==
+                                                            produkKeranjang[
+                                                                'key']);
+                                                if (indexGambar != -1) {
+                                                  Get.dialog(AlertDialog(
+                                                    content:
+                                                        SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Row(
+                                                        children: (_productController
+                                                                            .allProduct[
+                                                                        indexGambar]
+                                                                    ['gambar']
+                                                                as List<
+                                                                    dynamic>)
+                                                            .map(
+                                                                (gambar) =>
+                                                                    InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        Get.to(() =>
+                                                                            GambarPenuh(gambar: gambar));
+                                                                      },
+                                                                      child: logoProduk(
+                                                                          gambar,
+                                                                          10,
+                                                                          Get.height *
+                                                                              0.5,
+                                                                          1),
+                                                                    ))
+                                                            .toList(),
+                                                      ),
+                                                    ),
+                                                  ));
+                                                }
+                                              },
+                                              child: logoProduk(
+                                                  produkKeranjang['gambar'],
+                                                  10,
+                                                  Get.height * 0.1,
+                                                  2.5),
+                                            )
+                                          : const Icon(Icons.image),
                                     ),
                                   ),
                                   Padding(
