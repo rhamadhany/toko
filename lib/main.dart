@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
   final MainController _mainController = Get.put(MainController());
   final ProductController _productController = Get.put(ProductController());
-
+  final KeranjangController _keranjangController =
+      Get.put(KeranjangController());
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -82,12 +83,21 @@ class MyApp extends StatelessWidget {
         floatingActionButton: _mainController.tabIndex.value == 1
             ? FloatingActionButton(
                 onPressed: () async {
-                  bool? confirm = await confirmationDelete();
-                  if (!confirm) {
-                    return;
-                  }
                   if (_productController.showCheckBoxRemove.value &&
                       _productController.filterProduct.isNotEmpty) {
+                    final existSelect = _productController.mapCheckBoxRemove
+                        .any((any) => any['isSelected'] == 'true');
+
+                    if (!existSelect) {
+                      Get.snackbar("Error", "Pilih setidaknya 1 produk",
+                          snackPosition: SnackPosition.BOTTOM);
+                      return;
+                    }
+
+                    bool? confirm = await confirmationDelete();
+                    if (!confirm) {
+                      return;
+                    }
                     List<String> listKey = [];
                     for (int i = 0;
                         i < _productController.filterProduct.length;
@@ -101,8 +111,12 @@ class MyApp extends StatelessWidget {
                             _productController.mapCheckBoxRemove[i]['key']!);
                       }
                     }
+                    for (int k = 0; k < listKey.length; k++) {
+                      await _keranjangController.removeProduk(listKey[k]);
+                    }
 
                     await DBHelper.deleteProduct(listKey);
+                    await _keranjangController.loadProduk();
                     await _productController.generateMapCheckBox();
                   } else {
                     for (final controller in _productController.listTextField) {
