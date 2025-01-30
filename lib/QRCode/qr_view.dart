@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -26,13 +27,27 @@ class QRView extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Card(
-                color: Colors.blue,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    produk['key'],
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+              child: InkWell(
+                onTap: () async {
+                  await Clipboard.setData(ClipboardData(text: produk['key']));
+                  Get.snackbar(
+                    'Berhasil',
+                    'Kode QR berhasil disalin ke clipboard',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                },
+                child: const Card(
+                  color: Colors.blue,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'Salin Kode', // Mengganti teks dengan "Salin Kode" agar lebih informatif
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ),

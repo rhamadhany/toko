@@ -10,9 +10,9 @@ import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 void main() {
-  Get.put(LaporanController());
   Get.put(BiometrikController());
   Get.put(ProductController());
+  Get.put(LaporanController());
 
   Get.put(
       KeranjangController()); // Ini sudah permanen karena menggunakan Get.put

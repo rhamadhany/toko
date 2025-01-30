@@ -100,37 +100,42 @@ class AppBarMyApp extends StatelessWidget {
 
   void dialogSwitchOpsi() {
     Get.dialog(AlertDialog(
-      // title: Text('Pilih Opsi'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ListTile(
+            leading: const Icon(Icons.calendar_view_day),
             title: const Text('Tahun'),
             trailing: _laporanController.viewMode.value == 'Tahun'
                 ? const Icon(Icons.check)
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Tahun';
+              Get.back(); // Menutup dialog setelah pilihan
             },
           ),
           ListTile(
+            leading: const Icon(Icons.calendar_month),
             title: const Text('Bulan'),
             trailing: _laporanController.viewMode.value == 'Bulan'
                 ? const Icon(Icons.check)
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Bulan';
+              Get.back(); // Menutup dialog setelah pilihan
             },
           ),
           ListTile(
+            leading: const Icon(Icons.calendar_today),
             title: const Text('Hari'),
             trailing: _laporanController.viewMode.value == 'Hari'
                 ? const Icon(Icons.check)
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Hari';
+              Get.back(); // Menutup dialog setelah pilihan
             },
           ),
         ],

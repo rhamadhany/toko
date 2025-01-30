@@ -8,7 +8,6 @@ import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
-import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -50,7 +49,7 @@ class MyApp extends StatelessWidget {
                 !_biometrikController.hasAuthenticated.value &&
                         Settings.autentikasiAktif.value
                     ? const Center(child: CircularProgressIndicator())
-                    : const LaporanPenjualan(),
+                    : LaporanPenjualan(),
                 const Settings()
               ]),
           bottomNavigationBar: TabBar(

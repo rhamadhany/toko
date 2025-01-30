@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/lihat_produk.dart';
 
 class QRScanner extends StatelessWidget {
   QRScanner({super.key});
@@ -59,17 +60,10 @@ class QRScanner extends StatelessWidget {
                                               onDetect: (barcodeCapture) {
                                                 _qrScannerController.sideColors
                                                     .value = Colors.green;
-                                                // _productController
-                                                //         .pencarianController.text =
-                                                //     barcodeCapture
-                                                //         .barcodes.first.rawValue!;
+
                                                 final keyScan = barcodeCapture
                                                     .barcodes.first.rawValue;
                                                 updateKePencarian(keyScan);
-
-                                                // final code = barcodeCapture
-                                                //     .barcodes.first.rawBytes;
-                                                // print(code);
                                               },
                                               onDetectError: (barcode, error) {
                                                 _qrScannerController.sideColors
@@ -132,28 +126,25 @@ class QRScanner extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: IconButton(
                           onPressed: () async {
-                            // _qrScannerController.mobileScannerController.stop();
                             _qrScannerController.fromGallery.value = true;
                             final ImagePicker picker = ImagePicker();
                             final XFile? image = await picker.pickImage(
                                 source: ImageSource.gallery);
 
                             if (image != null) {
-                              // try {
-
                               final data = await _qrScannerController
                                   .mobileScannerController
                                   .analyzeImage(image.path);
                               if (data != null) {
                                 final keyScan = data.barcodes.first.rawValue;
-                                // updateKePencarian(keyScan);
-                                _productController.pencarianController.text =
-                                    keyScan!;
+                                updateKePencarian(keyScan);
+                                // _productController.pencarianController.text =
+                                //     keyScan!;
+                              } else {
+                                _qrScannerController.fromGallery.value = false;
                               }
-                              // } catch (e) {
-                              //   Get.snackbar(
-                              //       'Error', 'Error analyzing image: $e');
-                              // }
+                            } else {
+                              _qrScannerController.fromGallery.value = false;
                             }
                           },
                           icon: const Icon(
@@ -173,19 +164,20 @@ class QRScanner extends StatelessWidget {
   }
 
   updateKePencarian(String? keyScan) {
-    Get.back();
-
     final indexKey =
         _productController.allProduct.indexWhere((pr) => pr['key'] == keyScan);
+    // Get.back();
 
     if (indexKey != -1) {
-      final produk = _productController.allProduct[indexKey]['produk'];
-      // Get.snackbar('id', produk);
-      // Get.back();
-      _productController.pencarianController.text = produk;
+      final produk = _productController.allProduct[indexKey];
+      Get.back();
+      Get.to(() => LihatProduk(
+            produk: produk.obs,
+          ));
+      // _productController.pencarianController.text = produk;
     } else {
       Get.snackbar('Gagal', '$keyScan tidak ditemukan pada daftar produk',
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
     }
   }
 }
@@ -215,8 +207,7 @@ class QRScannerController extends GetxController
 
   scannerListener() {
     mobileScannerController.addListener(() {
-      final torchState =
-          mobileScannerController.torchEnabled; // Ambil state torch saat ini
+      final torchState = mobileScannerController.torchEnabled;
       if (torchState) {
         flashCamera.value = true;
       } else {
