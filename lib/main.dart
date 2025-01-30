@@ -2,13 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/my_app.dart';
+import 'package:myapp/controller/laporan_controller.dart';
+import 'package:myapp/home/my_app.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 void main() {
+  Get.put(LaporanController());
   Get.put(BiometrikController());
   Get.put(ProductController());
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
+import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
@@ -14,6 +15,7 @@ class DialogCheckoutKeranjang extends StatelessWidget {
   final KeranjangController _keranjangController = Get.find();
   final List<TextEditingController> jumlahControllers;
   final VoidCallback initValueBox;
+  final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -44,6 +46,7 @@ class DialogCheckoutKeranjang extends StatelessWidget {
           final key = _keranjangController.keranjangProduk[i]['key'];
           final jumlah = int.tryParse(jumlahControllers[i].text) ?? 1;
           await DBHelper.updateTerjual(key, jumlah);
+          _laporanController.tambahJual(key, jumlah, 'penjualan');
           await _keranjangController.removeProduk(key);
         }
       }

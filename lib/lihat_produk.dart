@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/QRCode/qr_view.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
@@ -12,6 +13,7 @@ import 'package:myapp/logo_produk.dart';
 // import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
+// import 'package:qr_flutter/qr_flutter.dart';
 
 class LihatProduk extends StatelessWidget {
   LihatProduk({super.key, required this.produk});
@@ -39,6 +41,13 @@ class LihatProduk extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const Spacer(),
+            IconButton(
+                onPressed: () {
+                  Get.to(() => QRView(
+                        produk: produk,
+                      ));
+                },
+                icon: const Icon(Icons.qr_code)),
             IconButton(
                 onPressed: () {
                   Get.to(() => HalamanKeranjang());
@@ -85,6 +94,8 @@ class LihatProduk extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,6 +113,7 @@ class LihatProduk extends StatelessWidget {
                             ],
                           ),
                           const Spacer(),
+                          // idProduk(),
                         ],
                       ),
                     ),
@@ -211,6 +223,21 @@ class LihatProduk extends StatelessWidget {
     }
     return omset;
   }
+
+  // idProduk() {
+  //   final key = produk['key'];
+
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //     child: Card(
+  //         color: Colors.blue,
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(8.0),
+  //           child: Text(key,
+  //               style: const TextStyle(color: Colors.white, fontSize: 16)),
+  //         )),
+  //   );
+  // }
 
   Row omsetJual() {
     final omsetNormal = nilaiOmset().toString();

@@ -1,6 +1,7 @@
 // import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 // import 'package:myapp/controller/main_controller.dart';
 // import 'package:myapp/controller/main_controller.dart';
@@ -9,16 +10,12 @@ import 'package:myapp/logo_produk.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 class HomeToko extends StatelessWidget {
-  const HomeToko(
-      {super.key,
-      required ProductController productController,
-      required BiometrikController biometrikController})
-      : _productController = productController,
-        _biometrikController = biometrikController;
-  final BiometrikController _biometrikController;
-  final ProductController _productController;
+  HomeToko({
+    super.key,
+  });
+  final BiometrikController _biometrikController = Get.find();
+  final ProductController _productController = Get.find();
   static final focusPencarian = FocusNode();
-  // final MainController _mainController;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -31,25 +28,37 @@ class HomeToko extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   autofocus: true,
+                  controller: _productController.pencarianController,
                   focusNode: focusPencarian,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () async {
+                          focusPencarian.unfocus();
+                          await Future.delayed(const Duration(seconds: 1));
+                          Get.to(() => QRScanner());
+                        },
+                        icon: const Icon(
+                          Icons.qr_code_scanner,
+                        ),
+                      ),
+                      border: const OutlineInputBorder(),
                       hintText: "Cari Produk",
-                      label: Text("Cari Produk")),
+                      labelText: "Cari Produk"),
                   onChanged: (value) {
                     _productController.searchText.value = value;
                   },
                 ),
               ),
             if (_productController.filterProduct.isEmpty)
-              SizedBox(
-                  height: _productController.showSearch.value &&
-                          !focusPencarian.hasFocus
-                      ? Get.height * 0.325
-                      : _productController.showSearch.value &&
-                              focusPencarian.hasFocus
-                          ? Get.height * 0.1
-                          : Get.height * 0.4),
+              // SizedBox(
+              //     height: _productController.showSearch.value &&
+              //             !_mainController.showKeyboard.value
+              //         ? Get.height * 0.325
+              //         : _productController.showSearch.value &&
+              //                 _mainController.showKeyboard.value
+              //             ? Get.height * 0.1
+              //             : Get.height * 0.4),
+              const Spacer(),
             _productController.filterProduct.isEmpty
                 ? const Center(
                     child: Text(
@@ -184,6 +193,7 @@ class HomeToko extends StatelessWidget {
                       },
                     ),
                   ),
+            if (_productController.filterProduct.isEmpty) const Spacer()
           ],
         ),
       );

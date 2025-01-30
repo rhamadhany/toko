@@ -107,18 +107,16 @@ class DataSettings {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: Get.height * 0.15,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (!progressFinish.value)
-                        const LinearProgressIndicator(color: Colors.blue),
-                      if (!progressFinish.value) const SizedBox(height: 30),
-                      Text(progress.value),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!progressFinish.value)
+                      const LinearProgressIndicator(color: Colors.blue),
+                    if (!progressFinish.value) const SizedBox(height: 30),
+                    Text(progress.value),
+                  ],
                 ),
               ),
             ),

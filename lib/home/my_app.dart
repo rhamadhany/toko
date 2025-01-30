@@ -7,6 +7,7 @@ import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
@@ -28,21 +29,24 @@ class MyApp extends StatelessWidget {
         canPop: false,
         onPopInvokedWithResult: dialogTutup,
         child: Scaffold(
-          appBar: appBar(),
+          appBar: AppBar(
+            title: AppBarMyApp(),
+          ),
           body: TabBarView(
+              // physics: NeverScrollableScrollPhysics(),
               controller: _biometrikController.tabController,
               children: [
                 HomeToko(
-                  productController: _productController,
-                  biometrikController: _biometrikController,
-                ),
+                    // productController: _productController,
+                    // biometrikController: _biometrikController,
+                    ),
                 !_biometrikController.hasAuthenticated.value &&
                         Settings.autentikasiAktif.value
                     ? const Center(child: CircularProgressIndicator())
                     : HomeToko(
-                        productController: _productController,
-                        biometrikController: _biometrikController,
-                      ),
+                        // productController: _productController,
+                        // biometrikController: _biometrikController,
+                        ),
                 !_biometrikController.hasAuthenticated.value &&
                         Settings.autentikasiAktif.value
                     ? const Center(child: CircularProgressIndicator())
@@ -52,8 +56,8 @@ class MyApp extends StatelessWidget {
           bottomNavigationBar: TabBar(
               controller: _biometrikController.tabController,
               tabs: const [
-                Tab(text: "Beranda", icon: Icon(Icons.home)),
-                Tab(text: "Rincian", icon: Icon(Icons.list)),
+                Tab(text: "Produk", icon: Icon(Icons.home)),
+                Tab(text: "Admin", icon: Icon(Icons.people)),
                 Tab(
                   text: "Laporan",
                   icon: Icon(Icons.bar_chart),
@@ -131,64 +135,6 @@ class MyApp extends StatelessWidget {
     });
   }
 
-  AppBar appBar() {
-    return AppBar(
-      title: Row(
-        children: [
-          Text(
-            _biometrikController.tabIndex.value == 0
-                ? "Toko"
-                : _biometrikController.tabIndex.value == 1
-                    ? "Rincian"
-                    : _biometrikController.tabIndex.value == 2
-                        ? "Laporan"
-                        : "Pengaturan",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const Spacer(),
-          if (_biometrikController.tabIndex.value == 0 ||
-              (_biometrikController.tabIndex.value == 1 &&
-                      (_biometrikController.hasAuthenticated.value ||
-                          !Settings.autentikasiAktif.value)) &&
-                  !_productController.showCheckBoxRemove.value)
-            IconButton(
-                onPressed: () {
-                  _productController.showSearch.value =
-                      !_productController.showSearch.value;
-
-                  if (!_productController.showSearch.value) {
-                    _productController.searchText.value = '';
-                    HomeToko.focusPencarian.requestFocus();
-                  }
-                },
-                icon: const Icon(Icons.search)),
-          if (!_productController.showCheckBoxRemove.value)
-            IconButton(
-                onPressed: () {
-                  Get.to(() => HalamanKeranjang());
-                },
-                icon: const Icon(Icons.shopping_cart_checkout)),
-          if (_productController.showCheckBoxRemove.value)
-            IconButton(
-                onPressed: () {
-                  for (int i = 0;
-                      i < _productController.mapCheckBoxRemove.length;
-                      i++) {
-                    _productController.mapCheckBoxRemove[i]['isSelected'] =
-                        _productController.mapCheckBoxRemove[i]['isSelected'] ==
-                                'true'
-                            ? 'false'
-                            : 'true';
-                    // print(
-                    // _productController.mapCheckBoxRemove[i]['isSelected']);
-                  }
-                },
-                icon: const Icon(Icons.select_all)),
-        ],
-      ),
-    );
-  }
-
   void dialogTutup(didPop, result) {
     if (_productController.showCheckBoxRemove.value) {
       _productController.showCheckBoxRemove.value = false;
@@ -228,3 +174,18 @@ class MyApp extends StatelessWidget {
     return confirm ?? false;
   }
 }
+
+List<String> namaBulan = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+];

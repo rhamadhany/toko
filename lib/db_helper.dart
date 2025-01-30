@@ -48,9 +48,13 @@ class DBHelper {
     if (db == null) {
       throw Exception('Database not initialized');
     }
+    _productController.allProduct.value = await loadProducts();
     final jsonPictures = jsonEncode(pictures);
-    DateTime now = DateTime.now();
-    String key = base64Encode(utf8.encode(now.toString()));
+    final year = DateTime.now().year;
+    // String key = base64Encode(utf8.encode(now.toString()));
+    final keyString = 'ID${year}_${_productController.allProduct.length + 1}';
+    final key = base64Encode(utf8.encode(keyString));
+
     await db.insert('products', {
       'key': key,
       'produk': product,

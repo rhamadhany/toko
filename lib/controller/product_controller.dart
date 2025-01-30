@@ -11,6 +11,7 @@ class ProductController extends GetxController {
       <Map<dynamic, String>>[].obs;
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
+  final pencarianController = TextEditingController();
 
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
@@ -47,6 +48,11 @@ class ProductController extends GetxController {
     initDatabase();
     filteringProduk();
     allProductListener();
+    pencarianController.addListener(() {
+      // update();
+      // filteringProduk();
+      searchText.value = pencarianController.text;
+    });
   }
 
   void allProductListener() {
@@ -60,17 +66,19 @@ class ProductController extends GetxController {
     searchText.listen((data) {
       filterProduct.value = allProduct
           .where((produk) =>
-              produk['produk'].toLowerCase().contains(data.toLowerCase()))
+              produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
+              produk['key'] == data)
           .toList();
       generateMapCheckBox();
     });
-    allProduct.listen((data) {
+    allProduct.listen((_) {
       filterProduct.value = allProduct
-          .where((produk) => produk['produk']
-              .toLowerCase()
-              .contains(searchText.value.toLowerCase()))
+          .where((produk) =>
+              produk['produk']
+                  .toLowerCase()
+                  .contains(searchText.value.toLowerCase()) ||
+              produk['key'] == searchText.value)
           .toList();
-
       generateMapCheckBox();
     });
   }

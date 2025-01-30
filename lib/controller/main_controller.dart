@@ -8,6 +8,7 @@ import 'package:myapp/pengaturan/settings.dart';
 class MainController extends GetxController with GetTickerProviderStateMixin {
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
+
   @override
   void onInit() {
     super.onInit();
