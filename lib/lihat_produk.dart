@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/dialog_jual.dart';
@@ -132,7 +133,10 @@ class LihatProduk extends StatelessWidget {
                     produk['gambar'].isEmpty ? "" : produk['gambar'][0];
                 _keranjangController.addProduk(
                     produk['key'], produk['produk'], 1, gambar);
+
                 Get.back();
+                HomeToko.focusPencarian.unfocus();
+
                 Get.snackbar(
                     "Keranjang", '${produk['produk']} ditambahkan ke keranjang',
                     snackPosition: SnackPosition.BOTTOM,

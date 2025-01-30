@@ -17,6 +17,7 @@ class HomeToko extends StatelessWidget {
         _biometrikController = biometrikController;
   final BiometrikController _biometrikController;
   final ProductController _productController;
+  static final focusPencarian = FocusNode();
   // final MainController _mainController;
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,8 @@ class HomeToko extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  autofocus: true,
+                  focusNode: focusPencarian,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Cari Produk",
@@ -40,9 +43,13 @@ class HomeToko extends StatelessWidget {
               ),
             if (_productController.filterProduct.isEmpty)
               SizedBox(
-                  height: _productController.showSearch.value
+                  height: _productController.showSearch.value &&
+                          !focusPencarian.hasFocus
                       ? Get.height * 0.325
-                      : Get.height * 0.4),
+                      : _productController.showSearch.value &&
+                              focusPencarian.hasFocus
+                          ? Get.height * 0.1
+                          : Get.height * 0.4),
             _productController.filterProduct.isEmpty
                 ? const Center(
                     child: Text(

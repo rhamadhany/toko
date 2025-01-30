@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -88,6 +89,7 @@ class DialogJual extends StatelessWidget {
 
                     Get.back(closeOverlays: true);
                     Get.back(closeOverlays: true);
+                    HomeToko.focusPencarian.unfocus();
                     Get.snackbar('Keranjang',
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
                         snackPosition: SnackPosition.BOTTOM,
@@ -128,6 +130,7 @@ class DialogJual extends StatelessWidget {
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
                   Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
+                  HomeToko.focusPencarian.unfocus();
                   await DBHelper.updateProduct(produk);
                   Get.snackbar('Terjual',
                       '$terjualBaru ${produk['produk']} telah dijual',
