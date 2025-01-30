@@ -12,7 +12,8 @@ class HalamanKeranjang extends StatelessWidget {
   HalamanKeranjang({super.key});
   final KeranjangController _keranjangController = Get.find();
   final ProductController _productController = Get.find();
-  final List<TextEditingController> jumlahControllers = [];
+  static final RxList<TextEditingController> jumlahControllers =
+      RxList<TextEditingController>();
   static final RxList<bool> valueBox = RxList<bool>();
   final boxAll = false.obs;
   final hargaJual = [];
@@ -174,7 +175,7 @@ class HalamanKeranjang extends StatelessWidget {
                                                   Get.height * 0.1,
                                                   2.5),
                                             )
-                                          : const Icon(Icons.image),
+                                          : noLogoProduk(Get.height * 0.1, 10),
                                     ),
                                   ),
                                   Padding(
@@ -227,16 +228,23 @@ class HalamanKeranjang extends StatelessWidget {
                       const Spacer(),
                       IconButton(
                           iconSize: 50,
-                          onPressed: () {
-                            if (!valueBox.toString().contains('true')) {
-                              Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
-                                  snackPosition: SnackPosition.BOTTOM);
-                              return;
+                          onPressed: () async {
+                            if (!haveValueBox()) {
+                              if (!_keranjangController.hasSnackbar.value) {
+                                _keranjangController.hasSnackbar.value = true;
+                                Get.snackbar(
+                                    "Gagal", "Pilih setidaknya 1 produk",
+                                    snackPosition: SnackPosition.BOTTOM);
+                                await Future.delayed(
+                                    const Duration(seconds: 3));
+                                _keranjangController.hasSnackbar.value = false;
+                              }
+                            } else {
+                              Get.dialog(DialogCheckoutKeranjang(
+                                  valueBox: valueBox,
+                                  jumlahControllers: jumlahControllers,
+                                  initValueBox: _initValueBox));
                             }
-                            Get.dialog(DialogCheckoutKeranjang(
-                                valueBox: valueBox,
-                                jumlahControllers: jumlahControllers,
-                                initValueBox: _initValueBox));
                           },
                           icon: const Icon(
                             Icons.shopping_cart_checkout,

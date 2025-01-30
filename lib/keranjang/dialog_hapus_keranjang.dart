@@ -25,15 +25,16 @@ class DialogHapusKeranjang extends StatelessWidget {
             child: const Text("Batal")),
         ElevatedButton(
             onPressed: () {
+              Get.back();
+
               for (int i = 0; i < HalamanKeranjang.valueBox.length; i++) {
                 if (HalamanKeranjang.valueBox[i] == true) {
                   final key = _keranjangController.keranjangProduk[i]['key'];
                   _keranjangController.removeProduk(key);
-                  Get.back();
                   // _keranjangController.loadProduk();
-                  initValueBox();
                 }
               }
+              initValueBox();
             },
             child: const Text("Ya"))
       ],

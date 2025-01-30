@@ -128,15 +128,19 @@ class LihatProduk extends StatelessWidget {
               editProduk();
             } else if (value == 0 && _biometrikController.tabIndex.value == 0) {
               if (sisa > 0) {
+                final gambar =
+                    produk['gambar'].isEmpty ? "" : produk['gambar'][0];
                 _keranjangController.addProduk(
-                    produk['key'], produk['produk'], 1, produk['gambar'][0]);
+                    produk['key'], produk['produk'], 1, gambar);
                 Get.back();
                 Get.snackbar(
                     "Keranjang", '${produk['produk']} ditambahkan ke keranjang',
-                    snackPosition: SnackPosition.BOTTOM);
+                    snackPosition: SnackPosition.BOTTOM,
+                    duration: const Duration(seconds: 1));
               } else {
                 Get.snackbar("Stok", "${produk['produk']} kosong",
-                    snackPosition: SnackPosition.BOTTOM);
+                    snackPosition: SnackPosition.BOTTOM,
+                    duration: const Duration(seconds: 1));
               }
             } else {
               final sisa = produk['stok'] - produk['terjual'];

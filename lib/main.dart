@@ -17,9 +17,10 @@ import 'package:myapp/pengaturan/settings.dart';
 
 void main() {
   Get.put(BiometrikController());
+  Get.put(ProductController());
+
   Get.put(
       KeranjangController()); // Ini sudah permanen karena menggunakan Get.put
-  Get.put(ProductController());
   Get.put(MainController());
 
   runApp(GetMaterialApp(

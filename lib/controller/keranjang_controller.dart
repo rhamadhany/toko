@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:myapp/controller/product_controller.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -6,6 +7,9 @@ class KeranjangController extends GetxController {
   Database? database;
   final RxList<Map<String, dynamic>> keranjangProduk =
       <Map<String, dynamic>>[].obs;
+  final hasSnackbar = false.obs;
+
+  final ProductController _productController = Get.find();
 
   @override
   void onInit() {
@@ -39,6 +43,7 @@ CREATE TABLE keranjang (
       keranjangProduk.value =
           result.map((e) => e as Map<String, dynamic>).toList();
     });
+    // update();
   }
 
   Future<void> addProduk(key, produk, jumlah, gambar) async {
@@ -63,9 +68,44 @@ CREATE TABLE keranjang (
   }
 
   Future<void> updateJumlah(String key, int jumlahUpdate) async {
-    // print(key);
-    const query = 'UPDATE keranjang SET jumlah = ? WHERE key = ?';
-    await database!.rawUpdate(query, [jumlahUpdate, key]);
-    await loadProduk();
+    final index = indexKey(key);
+
+    if (index != -1) {
+      final stok = _productController.allProduct[index]['stok'];
+      final terjual = _productController.allProduct[index]['terjual'];
+      final produk = _productController.allProduct[index]['produk'];
+      final sisa = stok - terjual;
+
+      if (jumlahUpdate > sisa) {
+        jumlahUpdate = sisa;
+        if (!hasSnackbar.value) {
+          hasSnackbar.value = true;
+          Get.snackbar("Stok", "$produk hanya tersisa $sisa",
+              snackPosition: SnackPosition.BOTTOM);
+          await Future.delayed(const Duration(seconds: 3));
+          hasSnackbar.value = false;
+        }
+      }
+
+      const query = 'UPDATE keranjang SET jumlah = ? WHERE key = ?';
+      await database!.rawUpdate(query, [jumlahUpdate, key]);
+      await loadProduk();
+    }
+  }
+
+  int indexKey(String key) {
+    return _productController.allProduct.indexWhere((pro) => pro['key'] == key);
+  }
+
+  int sisaPadaAllProduk(String key) {
+    int sisa = -1;
+    final indexkey = _productController.allProduct
+        .indexWhere((produk) => produk['key'] == key);
+    if (indexkey != -1) {
+      final stok = _productController.allProduct[indexkey]['stok'];
+      final terjual = _productController.allProduct[indexkey]['terjual'];
+      sisa = stok - terjual;
+    }
+    return sisa;
   }
 }

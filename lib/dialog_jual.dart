@@ -71,15 +71,18 @@ class DialogJual extends StatelessWidget {
             message: "Keranjang",
             child: ElevatedButton(
                 onPressed: () {
-                  final jumlah = int.tryParse(
+                  int jumlah = int.tryParse(
                           _productController.jualController.value.text) ??
                       1;
                   final sisa = produk['stok'] - produk['terjual'];
 
                   // print(sisa);
                   if (jumlah <= sisa) {
-                    final gambar = produk['gambar'][0] ?? "";
-
+                    if (jumlah == 0) {
+                      jumlah = 1;
+                    }
+                    final gambar =
+                        produk['gambar'].isEmpty ? "" : produk['gambar'][0];
                     _keranjangController.addProduk(
                         produk['key'], produk['produk'], jumlah, gambar);
 
@@ -87,11 +90,13 @@ class DialogJual extends StatelessWidget {
                     Get.back(closeOverlays: true);
                     Get.snackbar('Keranjang',
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
-                        snackPosition: SnackPosition.BOTTOM);
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(seconds: 1));
                   } else {
                     Get.snackbar("Tidak Cukup",
                         "${produk['produk']} hanya tersisa $sisa",
-                        snackPosition: SnackPosition.BOTTOM);
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(seconds: 1));
                     _productController.jualController.value.text =
                         sisa.toString();
                   }
@@ -113,6 +118,12 @@ class DialogJual extends StatelessWidget {
 
                   final terjualBaru =
                       int.parse(_productController.jualController.value.text);
+                  if (terjualBaru <= 0) {
+                    Get.snackbar('Gagal', 'Masukkan jumlah yang dijual',
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(seconds: 1));
+                    return;
+                  }
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
                   Get.back(closeOverlays: true);
@@ -120,7 +131,8 @@ class DialogJual extends StatelessWidget {
                   await DBHelper.updateProduct(produk);
                   Get.snackbar('Terjual',
                       '$terjualBaru ${produk['produk']} telah dijual',
-                      snackPosition: SnackPosition.BOTTOM);
+                      snackPosition: SnackPosition.BOTTOM,
+                      duration: const Duration(seconds: 1));
                 } else {
                   await stokTidakCukup(true);
                   // _productController.jualController.value.clear();
@@ -205,7 +217,8 @@ class DialogJual extends StatelessWidget {
     if (!showSnackbarStok.value) {
       Get.snackbar("Stok",
           "${produk['produk']} hanya tersisa ${produk['stok'] - produk['terjual']} produk",
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 1));
       showSnackbarStok.value = true;
       if (isJual) {
         _productController.jualController.value.text =
