@@ -19,6 +19,7 @@ class QRView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             QrImageView(
+              backgroundColor: Colors.white,
               // embeddedImage: Icon(icon),
               data: produk['key'],
               version: QrVersions.auto,

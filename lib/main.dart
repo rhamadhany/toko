@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/home/my_app.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
@@ -17,6 +18,8 @@ void main() {
   Get.put(
       KeranjangController()); // Ini sudah permanen karena menggunakan Get.put
   Get.put(MainController());
+
+  Get.put(QRScannerController());
 
   runApp(GetMaterialApp(
     home: MyApp(),

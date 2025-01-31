@@ -79,7 +79,7 @@ CREATE TABLE penambahan (
             break;
           case 'penjualan':
             penjualan.value = data;
-            print(penjualan);
+            // print(penjualan);
             break;
           case 'penambahan':
             penambahan.value = data;

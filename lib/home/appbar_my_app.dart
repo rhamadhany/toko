@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -10,7 +11,8 @@ import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
 class AppBarMyApp extends StatelessWidget {
-  AppBarMyApp({Key? key}) : super(key: key);
+  AppBarMyApp({super.key});
+
   final BiometrikController _biometrikController = Get.find();
 
   final ProductController _productController = Get.find();

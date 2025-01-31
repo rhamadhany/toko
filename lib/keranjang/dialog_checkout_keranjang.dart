@@ -8,13 +8,14 @@ import 'package:myapp/keranjang/halaman_keranjang.dart';
 class DialogCheckoutKeranjang extends StatelessWidget {
   DialogCheckoutKeranjang(
       {super.key,
-      required this.valueBox,
-      required this.jumlahControllers,
-      required this.initValueBox});
-  final RxList<bool> valueBox;
+      // required this.valueBox,
+      // required this.jumlahControllers,
+      // required this.initValueBo
+      x});
+  // final RxList<bool> valueBox;
   final KeranjangController _keranjangController = Get.find();
-  final List<TextEditingController> jumlahControllers;
-  final VoidCallback initValueBox;
+  // final List<TextEditingController> jumlahControllers;
+  // final VoidCallback initValueBox;
   final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -41,17 +42,20 @@ class DialogCheckoutKeranjang extends StatelessWidget {
 
   Future<void> confirmJual() async {
     if (HalamanKeranjang.haveValueBox()) {
-      for (int i = 0; i < valueBox.length; i++) {
-        if (valueBox[i] == true) {
+      for (int i = 0; i < _keranjangController.valueBox.length; i++) {
+        if (_keranjangController.valueBox[i] == true) {
           final key = _keranjangController.keranjangProduk[i]['key'];
-          final jumlah = int.tryParse(jumlahControllers[i].text) ?? 1;
+          final jumlah =
+              int.tryParse(_keranjangController.jumlahControllers[i].text) ?? 1;
           await DBHelper.updateTerjual(key, jumlah);
           _laporanController.tambahJual(key, jumlah, 'penjualan');
           await _keranjangController.removeProduk(key);
         }
       }
 
-      initValueBox();
+      // _keranjangController.refreshProduk();
+
+      await _keranjangController.initValueBox();
       Get.back();
 
       Get.snackbar("Terjual", "Penjualan Selesai",

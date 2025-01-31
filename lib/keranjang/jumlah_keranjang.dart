@@ -6,10 +6,10 @@ import 'package:myapp/controller/keranjang_controller.dart';
 class JumlahKeranjang extends StatelessWidget {
   JumlahKeranjang(
       {super.key,
-      required this.jumlahControllers,
+      // required this.jumlahControllers,
       required this.indexKeranjang});
   final KeranjangController _keranjangController = Get.find();
-  final RxList<TextEditingController> jumlahControllers;
+  // final RxList<TextEditingController> jumlahControllers;
   final int indexKeranjang;
 
   @override
@@ -35,7 +35,8 @@ class JumlahKeranjang extends StatelessWidget {
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 keyboardType: TextInputType.number,
-                controller: jumlahControllers[indexKeranjang],
+                controller:
+                    _keranjangController.jumlahControllers[indexKeranjang],
                 decoration: const InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.all(5),
@@ -53,10 +54,12 @@ class JumlahKeranjang extends StatelessWidget {
                     final sisa =
                         _keranjangController.sisaPadaAllProduk(keyUpdate);
                     if (newJumlah > sisa) {
-                      jumlahControllers[indexKeranjang].text =
+                      _keranjangController
+                              .jumlahControllers[indexKeranjang].text =
                           _keranjangController.keranjangProduk[indexKeranjang]
                                   ['jumlah']
                               .toString();
+                      _keranjangController.jumlahControllers.refresh();
                     }
                   }
                 },
@@ -77,7 +80,9 @@ class JumlahKeranjang extends StatelessWidget {
   }
 
   Future<void> jumlahCount(int indexKeranjang, bool tambah) async {
-    int jumlah = int.tryParse(jumlahControllers[indexKeranjang].text) ?? 1;
+    int jumlah = int.tryParse(
+            _keranjangController.jumlahControllers[indexKeranjang].text) ??
+        1;
     int newJumlah = 0;
     if (tambah) {
       newJumlah = jumlah + 1;
@@ -88,8 +93,8 @@ class JumlahKeranjang extends StatelessWidget {
     final keyUpdate =
         _keranjangController.keranjangProduk[indexKeranjang]['key'];
     await _keranjangController.updateJumlah(keyUpdate, newJumlah);
-    jumlahControllers[indexKeranjang].text = _keranjangController
-        .keranjangProduk[indexKeranjang]['jumlah']
-        .toString();
+    _keranjangController.jumlahControllers[indexKeranjang].text =
+        _keranjangController.keranjangProduk[indexKeranjang]['jumlah']
+            .toString();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_view.dart';
-import 'package:myapp/beranda_toko.dart';
+// import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/dialog_jual.dart';
@@ -50,7 +50,7 @@ class LihatProduk extends StatelessWidget {
                 icon: const Icon(Icons.qr_code)),
             IconButton(
                 onPressed: () {
-                  Get.to(() => HalamanKeranjang());
+                  Get.to(() => const HalamanKeranjang());
                 },
                 icon: const Icon(Icons.shopping_cart_checkout))
           ],
@@ -140,24 +140,7 @@ class LihatProduk extends StatelessWidget {
             if (value == 0 && _biometrikController.tabIndex.value == 1) {
               editProduk();
             } else if (value == 0 && _biometrikController.tabIndex.value == 0) {
-              if (sisa > 0) {
-                final gambar =
-                    produk['gambar'].isEmpty ? "" : produk['gambar'][0];
-                _keranjangController.addProduk(
-                    produk['key'], produk['produk'], 1, gambar);
-
-                Get.back();
-                HomeToko.focusPencarian.unfocus();
-
-                Get.snackbar(
-                    "Keranjang", '${produk['produk']} ditambahkan ke keranjang',
-                    snackPosition: SnackPosition.BOTTOM,
-                    duration: const Duration(seconds: 1));
-              } else {
-                Get.snackbar("Stok", "${produk['produk']} kosong",
-                    snackPosition: SnackPosition.BOTTOM,
-                    duration: const Duration(seconds: 1));
-              }
+              _keranjangController.langsungtambahkeKeranjang(sisa, produk);
             } else {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {

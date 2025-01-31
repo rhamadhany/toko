@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class TambahGambar extends StatelessWidget {
   TambahGambar({super.key, required this.listPictures});
@@ -25,7 +29,10 @@ class TambahGambar extends StatelessWidget {
                     final XFile? images =
                         await picker.pickImage(source: ImageSource.camera);
                     if (images != null) {
-                      listPictures.add(images.path);
+                      final outputFile = await newPath(images);
+                      await File(images.path).copy(outputFile);
+                      // print('newPath: $outputFile');
+                      listPictures.add(outputFile);
                     }
                     Get.back();
                   },
@@ -42,12 +49,23 @@ class TambahGambar extends StatelessWidget {
             children: [
               IconButton(
                   onPressed: () async {
-                    List<XFile> images = await picker.pickMultiImage();
+                    final pickedImages = await picker.pickMultiImage();
 
-                    for (var img in images) {
-                      final path = img.path;
-                      listPictures.add(path);
+                    for (final XFile image in pickedImages) {
+                      // final imageName = image.path.split('/').last;
+                      // final newPath = '$outputDirectory/$imageName';
+                      // final outputName = await image.copy(outputDirectory.path);
+
+                      try {
+                        final outputFile = await newPath(image);
+                        await File(image.path).copy(outputFile);
+                        // print('newPath: $outputFile');
+                        listPictures.add(outputFile);
+                      } catch (e) {
+                        print('Error moving image: $e');
+                      }
                     }
+
                     Get.back();
                   },
                   icon: const Icon(
@@ -60,5 +78,25 @@ class TambahGambar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<String> newPath(XFile image) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    final packageName = packageInfo.packageName;
+
+    final outputDirectory = Directory('/data/user/0/$packageName/images/');
+
+    // Ensure directory exists
+    if (!outputDirectory.existsSync()) {
+      outputDirectory.createSync(recursive: true);
+    }
+
+    final ext = image.path.split('.').last;
+    final date = DateTime.now();
+    final random = Random();
+
+    final newName = '$date${random.nextInt(1000)}.$ext';
+    return outputDirectory.path + newName;
   }
 }

@@ -47,17 +47,11 @@ class ProductController extends GetxController {
     super.onInit();
     initDatabase();
     filteringProduk();
-    allProductListener();
+    // allProductListener();
     pencarianController.addListener(() {
       // update();
       // filteringProduk();
       searchText.value = pencarianController.text;
-    });
-  }
-
-  void allProductListener() {
-    allProduct.listen((_) {
-      update();
     });
   }
 
@@ -79,6 +73,8 @@ class ProductController extends GetxController {
                   .contains(searchText.value.toLowerCase()) ||
               produk['key'] == searchText.value)
           .toList();
+      filterProduct.refresh();
+      update();
       generateMapCheckBox();
     });
   }

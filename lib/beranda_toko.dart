@@ -16,6 +16,8 @@ class HomeToko extends StatelessWidget {
   final BiometrikController _biometrikController = Get.find();
   final ProductController _productController = Get.find();
   static final focusPencarian = FocusNode();
+  // final QRScannerController _qrScannerController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -35,7 +37,9 @@ class HomeToko extends StatelessWidget {
                         onPressed: () async {
                           focusPencarian.unfocus();
                           await Future.delayed(const Duration(seconds: 1));
-                          Get.to(() => QRScanner());
+                          Get.to(() => QRScanner(
+                                dariKeranjang: false,
+                              ));
                         },
                         icon: const Icon(
                           Icons.qr_code_scanner,
