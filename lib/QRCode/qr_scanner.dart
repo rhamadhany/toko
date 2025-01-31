@@ -113,6 +113,8 @@ class QRScanner extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(
                         onPressed: () {
+                          _qrScannerController.flashCamera.value =
+                              !_qrScannerController.flashCamera.value;
                           _qrScannerController.mobileScannerController
                               .toggleTorch();
                         },
@@ -212,20 +214,16 @@ class QRScannerController extends GetxController
 
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
 
-    scannerListener();
+    // scannerListener();
   }
 
-  scannerListener() {
-    mobileScannerController.addListener(() {
-      final torchState = mobileScannerController.torchEnabled;
-      if (torchState) {
-        flashCamera.value = true;
-      } else {
-        flashCamera.value = false;
-      }
-      update();
-    });
-  }
+  // scannerListener() {
+  //   mobileScannerController.addListener(() {
+  //     // final torchState = mobileScannerController.torchState;
+  //     flashCamera.value = mobileScannerController.torchEnabled;
+  //     update();
+  //   });
+  // }
 
   @override
   void onClose() {

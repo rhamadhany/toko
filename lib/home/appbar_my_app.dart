@@ -88,14 +88,13 @@ class AppBarMyApp extends StatelessWidget {
         //   TextButton(
         //       onPressed: () {},
         //       child: Text((DateTime.now().year).toString())),
+
         if (_biometrikController.tabIndex.value == 2)
           IconButton(
               onPressed: () {
                 dialogSwitchOpsi();
               },
-              icon: const Icon(Icons.expand)),
-        if (_biometrikController.tabIndex.value == 2)
-          IconButton(onPressed: () {}, icon: const Icon(Icons.calendar_month)),
+              icon: const Icon(Icons.calendar_month)),
       ],
     );
   }
