@@ -62,7 +62,7 @@ class TambahGambar extends StatelessWidget {
                         // print('newPath: $outputFile');
                         listPictures.add(outputFile);
                       } catch (e) {
-                        print('Error moving image: $e');
+                        // print('Error moving image: $e');
                       }
                     }
 

@@ -10,10 +10,36 @@ class LaporanController extends GetxController {
   final RxList<Map<String, dynamic>> penambahan = <Map<String, dynamic>>[].obs;
   final viewMode = 'Hari'.obs;
   final ProductController _productController = Get.find();
+  final bulanTerpilih = ''.obs;
+  final bulan = (DateTime.now().month - 1).obs;
+  final tahunTerpilih = DateTime.now().year.obs;
+  List<String> namaBulan = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ];
+
   @override
   void onInit() {
     super.onInit();
+    bulanTerpilih.value = namaBulan[bulan.value];
     inisiasiDatabase();
+    // bulanListener();
+  }
+
+  void bulanListener() {
+    bulanTerpilih.listen((_) {
+      refresh();
+    });
   }
 
   Future<void> inisiasiDatabase() async {
@@ -100,6 +126,8 @@ CREATE TABLE penambahan (
       final formattedDate =
           '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
       // print(formattedDate);
+
+      // print(formattedDate)
 
       final values = {
         'key': key,

@@ -32,7 +32,9 @@ class MyApp extends StatelessWidget {
             title: AppBarMyApp(),
           ),
           body: TabBarView(
-              // physics: NeverScrollableScrollPhysics(),
+              physics: _biometrikController.tabIndex.value == 2
+                  ? const NeverScrollableScrollPhysics()
+                  : null,
               controller: _biometrikController.tabController,
               children: [
                 HomeToko(
@@ -173,18 +175,3 @@ class MyApp extends StatelessWidget {
     return confirm ?? false;
   }
 }
-
-List<String> namaBulan = [
-  'Januari',
-  'Februari',
-  'Maret',
-  'April',
-  'Mei',
-  'Juni',
-  'Juli',
-  'Agustus',
-  'September',
-  'Oktober',
-  'November',
-  'Desember',
-];

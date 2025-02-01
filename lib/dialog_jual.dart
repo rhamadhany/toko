@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
+import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -11,6 +12,7 @@ class DialogJual extends StatelessWidget {
   DialogJual({super.key, required this.produk});
   final ProductController _productController = Get.find();
   final KeranjangController _keranjangController = Get.find();
+  final LaporanController _laporanController = Get.find();
   final RxMap<String, dynamic> produk;
   final RxBool showSnackbarStok = false.obs;
   final RxBool finishLongPress = false.obs;
@@ -128,10 +130,12 @@ class DialogJual extends StatelessWidget {
                   }
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
+                  final key = produk['key'];
                   Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
                   await DBHelper.updateProduct(produk);
+                  _laporanController.tambahJual(key, terjualBaru, 'penjualan');
                   Get.snackbar('Terjual',
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,

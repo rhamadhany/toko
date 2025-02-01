@@ -1,12 +1,15 @@
 // import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// import 'package:month_year_picker/month_year_picker.dart';
 // import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
+import 'package:myapp/laporan/kalender_picker.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
@@ -20,83 +23,133 @@ class AppBarMyApp extends StatelessWidget {
   // final KeranjangController _keranjangController =
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          _biometrikController.tabIndex.value == 0
-              ? "Toko"
-              : _biometrikController.tabIndex.value == 1
-                  ? "Rincian"
-                  : _biometrikController.tabIndex.value == 2
-                      ? "Laporan"
-                      : "Pengaturan",
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const Spacer(),
-        if (_biometrikController.tabIndex.value == 0 ||
-            (_biometrikController.tabIndex.value == 1 &&
-                    (_biometrikController.hasAuthenticated.value ||
-                        !Settings.autentikasiAktif.value)) &&
-                !_productController.showCheckBoxRemove.value)
-          IconButton(
-              onPressed: () {
-                _productController.showSearch.value =
-                    !_productController.showSearch.value;
+    return Obx(() {
+      return Row(
+        children: [
+          Text(
+            _biometrikController.tabIndex.value == 0
+                ? "Toko"
+                : _biometrikController.tabIndex.value == 1
+                    ? "Rincian"
+                    : _biometrikController.tabIndex.value == 2
+                        ? "Laporan"
+                        : "Pengaturan",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          if (_biometrikController.tabIndex.value == 0 ||
+              (_biometrikController.tabIndex.value == 1 &&
+                      (_biometrikController.hasAuthenticated.value ||
+                          !Settings.autentikasiAktif.value)) &&
+                  !_productController.showCheckBoxRemove.value)
+            IconButton(
+                onPressed: () {
+                  _productController.showSearch.value =
+                      !_productController.showSearch.value;
 
-                if (!_productController.showSearch.value) {
-                  _productController.searchText.value = '';
-                  HomeToko.focusPencarian.requestFocus();
-                }
-              },
-              icon: const Icon(Icons.search)),
-        if (!_productController.showCheckBoxRemove.value &&
-            (_biometrikController.tabIndex.value == 0 ||
-                _biometrikController.tabIndex.value == 1))
-          IconButton(
-              onPressed: () {
-                Get.to(() => HalamanKeranjang());
-              },
-              icon: const Icon(Icons.shopping_cart_checkout)),
-        if (_productController.showCheckBoxRemove.value)
-          IconButton(
-              onPressed: () {
-                for (int i = 0;
-                    i < _productController.mapCheckBoxRemove.length;
-                    i++) {
-                  _productController.mapCheckBoxRemove[i]['isSelected'] =
-                      _productController.mapCheckBoxRemove[i]['isSelected'] ==
-                              'true'
-                          ? 'false'
-                          : 'true';
-                  // print(
-                  // _productController.mapCheckBoxRemove[i]['isSelected']);
-                  // _productController.update();
+                  if (!_productController.showSearch.value) {
+                    _productController.searchText.value = '';
+                    HomeToko.focusPencarian.requestFocus();
+                  }
+                },
+                icon: const Icon(Icons.search)),
+          if (!_productController.showCheckBoxRemove.value &&
+              (_biometrikController.tabIndex.value == 0 ||
+                  _biometrikController.tabIndex.value == 1))
+            IconButton(
+                onPressed: () {
+                  Get.to(() => HalamanKeranjang());
+                },
+                icon: const Icon(Icons.shopping_cart_checkout)),
+          if (_productController.showCheckBoxRemove.value)
+            IconButton(
+                onPressed: () {
+                  for (int i = 0;
+                      i < _productController.mapCheckBoxRemove.length;
+                      i++) {
+                    _productController.mapCheckBoxRemove[i]['isSelected'] =
+                        _productController.mapCheckBoxRemove[i]['isSelected'] ==
+                                'true'
+                            ? 'false'
+                            : 'true';
+                    // print(
+                    // _productController.mapCheckBoxRemove[i]['isSelected']);
+                    // _productController.update();
 
-                  _productController.mapCheckBoxRemove.refresh();
-                }
-              },
-              icon: const Icon(Icons.select_all)),
-        // if (_biometrikController.tabIndex.value == 2)
-        //   TextButton(
-        //       onPressed: () {},
-        //       child: Text((DateTime.now().day + 1).toString())),
-        // if (_biometrikController.tabIndex.value == 2)
-        //   TextButton(
-        //       onPressed: () {},
-        //       child: Text(namaBulan[DateTime.now().month - 1])),
-        // if (_biometrikController.tabIndex.value == 2)
-        //   TextButton(
-        //       onPressed: () {},
-        //       child: Text((DateTime.now().year).toString())),
+                    _productController.mapCheckBoxRemove.refresh();
+                  }
+                },
+                icon: const Icon(Icons.select_all)),
+          // if (_biometrikController.tabIndex.value == 2)
+          //   TextButton(
+          //       onPressed: () {},
+          //       child: Text((DateTime.now().day + 1).toString())),
+          // if (_biometrikController.tabIndex.value == 2)
+          //   TextButton(
+          //       onPressed: () {},
+          //       child: Text(namaBulan[DateTime.now().month - 1])),
+          // if (_biometrikController.tabIndex.value == 2)
+          //   TextButton(
+          //       onPressed: () {},
+          //       child: Text((DateTime.now().year).toString())),
 
-        if (_biometrikController.tabIndex.value == 2)
-          IconButton(
-              onPressed: () {
-                dialogSwitchOpsi();
-              },
-              icon: const Icon(Icons.calendar_month)),
-      ],
-    );
+          if (_biometrikController.tabIndex.value == 2)
+            TextButton(
+                onPressed: () async {
+                  final bulan = _laporanController.bulan.value;
+                  int tahun = _laporanController.tahunTerpilih.value;
+
+                  // int bulanIndex = [
+                  //       'Januari',
+                  //       'Februari',
+                  //       'Maret',
+                  //       'April',
+                  //       'Mei',
+                  //       'Juni',
+                  //       'Juli',
+                  //       'Agustus',
+                  //       'September',
+                  //       'Oktober',
+                  //       'November',
+                  //       'Desember'
+                  //     ].indexOf(bulan.toString()) +
+                  1;
+
+                  // DateTime initialDate = DateTime(tahun, bulan, 1);
+
+                  Get.dialog(KalenderPicker());
+                  // final selected = await showMonthYearPicker(
+                  //   context: context,
+                  //   initialDate: DateTime.now(),
+                  //   firstDate: DateTime(2019),
+                  //   lastDate: DateTime(DateTime.now().year + 1),
+                  // );
+
+// pilihBulan();
+                  // showDatePicker(
+                  //   context: context,
+                  //   initialDate: initialDate,
+                  //   firstDate: DateTime(2000),
+                  //   lastDate: DateTime(2100),
+                  // ).then((value) {
+                  //   if (value != null) {
+                  //     // _laporanController.bulanIni.value = value;
+                  //   }
+                  // });
+                },
+                child: Text(_laporanController.viewMode.value == 'Hari'
+                    ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
+                    : _laporanController.tahunTerpilih.value.toString())),
+
+          if (_biometrikController.tabIndex.value == 2)
+            IconButton(
+                onPressed: () {
+                  dialogSwitchOpsi();
+                },
+                icon: const Icon(Icons.calendar_month)),
+        ],
+      );
+    });
   }
 
   void dialogSwitchOpsi() {
@@ -140,6 +193,20 @@ class AppBarMyApp extends StatelessWidget {
             },
           ),
         ],
+      ),
+    ));
+  }
+
+  pilihBulan() {
+    Get.dialog(AlertDialog(
+      content: SizedBox(
+        height: 200,
+        child: CupertinoPicker(
+            itemExtent: 30,
+            onSelectedItemChanged: (int value) {},
+            children: List.generate(12, (index) {
+              return Text(index.toString());
+            })),
       ),
     ));
   }
