@@ -55,7 +55,7 @@ class AppBarMyApp extends StatelessWidget {
                   _biometrikController.tabIndex.value == 1))
             IconButton(
                 onPressed: () {
-                  Get.to(() => HalamanKeranjang());
+                  Get.to(() => const HalamanKeranjang());
                 },
                 icon: const Icon(Icons.shopping_cart_checkout)),
           if (_productController.showCheckBoxRemove.value)
@@ -74,7 +74,8 @@ class AppBarMyApp extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.select_all)),
-          if (_biometrikController.tabIndex.value == 2)
+          if (_biometrikController.tabIndex.value == 2 &&
+              _laporanController.viewMode.value != 'Tahun')
             TextButton(
                 onPressed: () async {
                   if (_laporanController.viewMode.value == 'Hari') {

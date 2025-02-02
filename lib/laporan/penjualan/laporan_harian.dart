@@ -23,6 +23,7 @@ class LaporanHarian extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (_biometrikController.tabIndex.value == 2) {
+        tahunSekarang.value = _laporanController.tahunTerpilih.value;
         penjualanHarian.value = hitungPenjualanHarian();
 
         final bulanTerpilih = _laporanController.bulanTerpilih.split(' ')[0];
@@ -90,7 +91,7 @@ class LaporanHarian extends StatelessWidget {
         1;
     // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
     final jumlahHari = DateTime(tahunTerpilih, indexBulan + 1, 0).day;
-    print('indexBulan: $indexBulan');
+    // print('indexBulan: $indexBulan');
 
     for (var i = 1; i <= jumlahHari; i++) {
       final tanggal = DateTime(tahunTerpilih, indexBulan, i);

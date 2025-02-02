@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
-import 'package:myapp/controller/product_controller.dart';
+// import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
 import 'package:myapp/laporan/penjualan/laporan_harian.dart';
 import 'package:myapp/laporan/penjualan/laporan_tahunan.dart';
 
 class LaporanPenjualan extends StatelessWidget {
   final LaporanController _laporanController = Get.find();
-  final ProductController _productController = Get.find();
+  // final ProductController _productController = Get.find();
   static final indexLaporan = 1.obs;
   static final headList = ['Tanggal', 'Terjual', 'Modal', 'Omset', 'Laba'].obs;
 
