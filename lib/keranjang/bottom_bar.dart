@@ -38,11 +38,7 @@ class BottomBar extends StatelessWidget {
                               _keranjangController.hasSnackbar.value = false;
                             }
                           } else {
-                            Get.dialog(DialogCheckoutKeranjang(
-                                // valueBox: valueBox,
-                                // jumlahControllers: jumlahControllers,
-                                // initValueBox: initValueBox)
-                                ));
+                            Get.dialog(DialogCheckoutKeranjang());
                           }
                         },
                         icon: const Icon(
@@ -71,7 +67,7 @@ class BottomBar extends StatelessWidget {
     final convertHarga = _productController.regexNominal(totalHarga.toString());
 
     return Text(
-      "Rp $convertHarga",
+      totalHarga == 0 ? '' : "Rp $convertHarga",
       style: const TextStyle(color: Colors.white, fontSize: 24),
     );
   }

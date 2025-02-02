@@ -66,10 +66,8 @@ class LaporanBulanan extends StatelessWidget {
                     _laporanController.viewMode.value = 'Hari';
                   },
                   cells: [
-                    DataCell(Center(
-                      child: Text(
-                          '${_laporanController.namaBulan[index]} ${_laporanController.tahunTerpilih}'),
-                    )),
+                    DataCell(Text(
+                        '${_laporanController.namaBulan[index]} ${_laporanController.tahunTerpilih}')),
                     DataCell(Center(child: Text(terjual))),
                     DataCell(Text(modal)),
                     DataCell(Text(omset)),
