@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
           bottomNavigationBar: TabBar(
               controller: _biometrikController.tabController,
               tabs: const [
-                Tab(text: "Produk", icon: Icon(Icons.home)),
-                Tab(text: "Admin", icon: Icon(Icons.people)),
+                Tab(text: "Produk", icon: Icon(Icons.shop)),
+                Tab(text: "Admin", icon: Icon(Icons.home)),
                 Tab(
                   text: "Laporan",
                   icon: Icon(Icons.bar_chart),
@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
                           await _keranjangController.loadProduk();
                           await _productController.generateMapCheckBox();
                         } else {
-                          _productController.kategoriTerpilih.value = 'Semua';
+                          _productController.kategoriAdd.value = 'Semua';
                           for (final controller
                               in _productController.listTextField) {
                             if (controller['label'] != 'Terjual') {

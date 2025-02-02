@@ -33,7 +33,6 @@ class LaporanController extends GetxController {
     super.onInit();
     bulanTerpilih.value = namaBulan[bulan.value];
     inisiasiDatabase();
-    // bulanListener();
   }
 
   void bulanListener() {
@@ -56,7 +55,6 @@ CREATE TABLE perubahan (
   produk TEXT,
   lama TEXT,
   baru TEXT
-  
 )
 ''');
 
@@ -68,8 +66,6 @@ CREATE TABLE penjualan (
   jumlah INTEGER,
   harga_beli TEXT,
   harga_jual TEXT
-  
-  
 )
 ''');
 
@@ -82,7 +78,9 @@ CREATE TABLE penambahan (
             harga_jual TEXT,
             terjual INTEGER,
             stok INTEGER,
-            gambar TEXT
+            gambar TEXT, 
+            kategori TEXT,
+            deskripsi TEXT
 )
 ''');
       },
@@ -105,14 +103,13 @@ CREATE TABLE penambahan (
             break;
           case 'penjualan':
             penjualan.value = data;
-            // print(penjualan);
+
             break;
           case 'penambahan':
             penambahan.value = data;
             break;
         }
       } catch (e) {
-        // Penanganan kesalahan
         debugPrint('Error: $e');
       }
     }
@@ -125,10 +122,7 @@ CREATE TABLE penambahan (
       final date = DateTime.now();
       final formattedDate =
           '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
-      // print(formattedDate);
 
-      // print(formattedDate);
-// final formatDate = '2023-05-12 04:29:26';
       final values = {
         'key': key,
         'tanggal': formattedDate,

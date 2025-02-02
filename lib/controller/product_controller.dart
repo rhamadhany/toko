@@ -15,7 +15,7 @@ class ProductController extends GetxController {
   final jualController = TextEditingController(text: '0').obs;
   final pencarianController = TextEditingController();
   final daftarKategori = ['Semua', 'TV', 'kulkas', 'dinamo'].obs;
-  final kategoriTerpilih = 'Semua'.obs;
+  final kategoriAdd = 'Semua'.obs;
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
       RxList<Map<String, dynamic>>([
@@ -49,7 +49,8 @@ class ProductController extends GetxController {
   final RxList<Map<String, dynamic>> filterProduct =
       <Map<String, dynamic>>[].obs;
   final showSearch = false.obs;
-  final keyboardVisible = false.obs;
+  // final keyboardVisible = false.obs;
+  final kategoriAktif = 'Semua'.obs;
 
   // final keyboardVisibilityController = KeyboardVisibilityController();
   @override
@@ -149,7 +150,9 @@ class ProductController extends GetxController {
             harga_jual TEXT,
             terjual INTEGER,
             stok INTEGER,
-            gambar TEXT
+            gambar TEXT,
+            kategori TEXT,
+            deskripsi TEXT
           )
           ''');
       },

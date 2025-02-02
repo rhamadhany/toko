@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/logo_produk.dart';
@@ -74,16 +75,14 @@ class BodyProduk extends StatelessWidget {
                   ],
                 ),
               ),
-              // KategoriProduk(),
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 child: ListTile(
                     onTap: () {
-                      // KategoriProduk();
                       Get.dialog(KategoriProduk());
                     },
-                    title: Text(_productController.kategoriTerpilih.value)),
+                    title: Text(_productController.kategoriAdd.value)),
               ),
               ..._productController.listTextField.map((textField) {
                 return Padding(
@@ -94,20 +93,17 @@ class BodyProduk extends StatelessWidget {
                       : TextField(
                           textAlign: TextAlign.start,
                           textAlignVertical: TextAlignVertical.top,
-                          // expands: textField['label'] == 'Deskripsi' ? true : false,
-                          // maxLines: textField['label'] == 'Deskripsi' ? null : 1,
                           controller: textField['controller'],
                           keyboardType: textField['keyboardType'],
+                          inputFormatters:
+                              textField['label'] == 'Nama Produk' ||
+                                      textField['label'] == 'Deskripsi'
+                                  ? null
+                                  : [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9]'))
+                                    ],
                           decoration: InputDecoration(
-                              // suffix: textField['label'] != 'Deskripsi'
-                              //     ? null
-                              //     : Align(alignment: Alignment.centerRight,
-                              //       child: IconButton(
-                              //           onPressed: () {
-                              //             Get.to(() => EditDeskripsi());
-                              //           },
-                              //           icon: const Icon(Icons.expand)),
-                              //     ),
                               labelText: textField['label'],
                               prefixText: textField['label'] == 'Harga Beli' ||
                                       textField['label'] == 'Harga Jual'
@@ -117,7 +113,6 @@ class BodyProduk extends StatelessWidget {
                         ),
                 );
               }),
-
               Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),

@@ -44,7 +44,9 @@ class DBHelper {
       String hargaJual,
       int terjual,
       int stock,
-      RxList<dynamic> pictures) async {
+      RxList<dynamic> pictures,
+      String kategori,
+      String deskripsi) async {
     final db = _productController.database.value;
     if (db == null) {
       throw Exception('Database not initialized');
@@ -68,6 +70,8 @@ class DBHelper {
       'terjual': terjual,
       'stok': stock,
       'gambar': jsonPictures,
+      'kategori': kategori,
+      'deskripsi': deskripsi,
     });
     _productController.allProduct.value = await loadProducts();
   }

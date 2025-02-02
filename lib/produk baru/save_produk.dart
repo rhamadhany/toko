@@ -30,6 +30,9 @@ class IconSave extends StatelessWidget {
         int? stock = int.tryParse(
                 _productController.listTextField[4]['controller'].text) ??
             0;
+        final kategori = _productController.kategoriAdd.value;
+        final deskripsi =
+            _productController.listTextField[5]['controller'].text;
 
         if (produkEdit.isNotEmpty) {
           produkEdit['gambar'] = listPictures;
@@ -38,11 +41,13 @@ class IconSave extends StatelessWidget {
           produkEdit['harga_jual'] = hargaJual;
           produkEdit['terjual'] = terjual;
           produkEdit['stok'] = stock;
+          produkEdit['kategori'] = kategori;
+          produkEdit['deskripsi'] = deskripsi;
 
           await DBHelper.updateProduct(produkEdit);
         } else {
-          await DBHelper.addProduct(
-              product, hargaBeli, hargaJual, terjual, stock, listPictures);
+          await DBHelper.addProduct(product, hargaBeli, hargaJual, terjual,
+              stock, listPictures, kategori, deskripsi);
         }
 
         Get.back();

@@ -1,10 +1,8 @@
-// import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
-// import 'package:myapp/controller/main_controller.dart';
-// import 'package:myapp/controller/main_controller.dart';
+
 import 'package:myapp/lihat_produk.dart';
 import 'package:myapp/logo_produk.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -16,7 +14,6 @@ class HomeToko extends StatelessWidget {
   final BiometrikController _biometrikController = Get.find();
   final ProductController _productController = Get.find();
   static final focusPencarian = FocusNode();
-  // final QRScannerController _qrScannerController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class HomeToko extends StatelessWidget {
           children: [
             if (_productController.showSearch.value)
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0, right: 8, left: 8),
                 child: TextField(
                   autofocus: true,
                   controller: _productController.pencarianController,
@@ -53,16 +50,40 @@ class HomeToko extends StatelessWidget {
                   },
                 ),
               ),
-            if (_productController.filterProduct.isEmpty)
-              // SizedBox(
-              //     height: _productController.showSearch.value &&
-              //             !_mainController.showKeyboard.value
-              //         ? Get.height * 0.325
-              //         : _productController.showSearch.value &&
-              //                 _mainController.showKeyboard.value
-              //             ? Get.height * 0.1
-              //             : Get.height * 0.4),
-              const Spacer(),
+            if (_productController.allProduct.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: SizedBox(
+                  height: Get.height * 0.06,
+                  child: Row(
+                    children: [
+                      ..._productController.daftarKategori.map((kategori) =>
+                          Card(
+                              color: kategori ==
+                                      _productController.kategoriAktif.value
+                                  ? Colors.blue
+                                  : null,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: TextButton(
+                                  onPressed: () {
+                                    _productController.kategoriAktif.value =
+                                        kategori;
+                                  },
+                                  child: Text(
+                                    kategori,
+                                    style: TextStyle(
+                                        color: kategori ==
+                                                _productController
+                                                    .kategoriAktif.value
+                                            ? Colors.white
+                                            : null),
+                                  ))))
+                    ],
+                  ),
+                ),
+              ),
+            if (_productController.filterProduct.isEmpty) const Spacer(),
             _productController.filterProduct.isEmpty
                 ? const Center(
                     child: Text(
@@ -80,7 +101,7 @@ class HomeToko extends StatelessWidget {
                       itemBuilder: (context, indexProduct) {
                         final listProduk =
                             _productController.filterProduct[indexProduct].obs;
-                        // print(listProduk['terjual'].runtimeType);
+
                         final terjual = listProduk['terjual'];
                         final stok = listProduk['stok'];
                         final sisa = stok - terjual;

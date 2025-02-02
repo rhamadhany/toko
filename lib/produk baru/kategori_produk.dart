@@ -65,8 +65,7 @@ class KategoriProduk extends StatelessWidget {
                                         // print(item)
                                       },
                                       onTap: () {
-                                        _productController
-                                                .kategoriTerpilih.value =
+                                        _productController.kategoriAdd.value =
                                             _productController
                                                 .daftarKategori[index];
                                         Get.back();
@@ -83,7 +82,7 @@ class KategoriProduk extends StatelessWidget {
                                               },
                                               icon: const Icon(Icons.remove))
                                           : _productController
-                                                      .kategoriTerpilih.value ==
+                                                      .kategoriAdd.value ==
                                                   _productController
                                                       .daftarKategori[index]
                                               ? const Icon(Icons.circle)

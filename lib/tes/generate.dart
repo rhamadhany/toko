@@ -60,8 +60,15 @@ class GenerateItem extends StatelessWidget {
       final hargaJualRandom = hargaBeliRandom + (hargaBeliRandom * 0.2).toInt();
       final stokRandom = Random().nextInt(100);
 
-      await DBHelper.addProduct(namaRandom, hargaBeliRandom.toString(),
-          hargaJualRandom.toString(), 0, stokRandom, RxList<dynamic>.empty());
+      await DBHelper.addProduct(
+          namaRandom,
+          hargaBeliRandom.toString(),
+          hargaJualRandom.toString(),
+          0,
+          stokRandom,
+          RxList<dynamic>.empty(),
+          'Semua',
+          '');
     }
     Get.back();
     Get.snackbar("Berhasil", "$nilaiRandom random ditambahkan ke daftar produk",

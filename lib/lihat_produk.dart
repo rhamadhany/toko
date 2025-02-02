@@ -31,10 +31,14 @@ class LihatProduk extends StatelessWidget {
             backgroundColor: Colors.blue,
             title: Row(
               children: [
-                Text(
-                  '${produk['produk']}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
+                Expanded(
+                  child: Text(
+                    '${produk['produk']}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        overflow: TextOverflow.ellipsis),
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
@@ -81,41 +85,40 @@ class LihatProduk extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              hargaProduk(),
-                              produkTerjual(),
-                              if (sisa > 0) sisaProduk(sisa),
-                              if (_biometrikController.tabIndex.value == 1 ||
-                                  _biometrikController.tabIndex.value == 2)
-                                profitJual(),
-                              if (_biometrikController.tabIndex.value == 1 ||
-                                  _biometrikController.tabIndex.value == 2)
-                                biayaBeli(),
-                              if (_biometrikController.tabIndex.value == 1 ||
-                                  _biometrikController.tabIndex.value == 2)
-                                omsetJual(),
-                            ],
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            hargaProduk(),
+                            produkTerjual(),
+                            if (sisa > 0) sisaProduk(sisa),
+                            if (_biometrikController.tabIndex.value == 1 ||
+                                _biometrikController.tabIndex.value == 2)
+                              profitJual(),
+                            if (_biometrikController.tabIndex.value == 1 ||
+                                _biometrikController.tabIndex.value == 2)
+                              biayaBeli(),
+                            if (_biometrikController.tabIndex.value == 1 ||
+                                _biometrikController.tabIndex.value == 2)
+                              omsetJual(),
+                          ],
+                        ),
+                        const Spacer(),
+                        kategoriView(),
+                      ],
                     ),
                   ),
                 ),
+                deskripsiView(),
               ],
             ),
           ),
@@ -290,6 +293,48 @@ class LihatProduk extends StatelessWidget {
       'Terjual: ${produk['terjual']}/${produk['stok']}',
       style: const TextStyle(
         fontSize: 18,
+      ),
+    );
+  }
+
+  kategoriView() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        color: Colors.blue,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            produk['kategori'],
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
+  deskripsiView() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              'Deskripsi',
+              softWrap: true,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            Text(
+              produk['deskripsi'],
+              softWrap: true,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
       ),
     );
   }
