@@ -96,46 +96,22 @@ class AppBarMyApp extends StatelessWidget {
           if (_biometrikController.tabIndex.value == 2)
             TextButton(
                 onPressed: () async {
-                  final bulan = _laporanController.bulan.value;
-                  int tahun = _laporanController.tahunTerpilih.value;
+                  // final bulan = _laporanController.bulan.value;
+                  // int tahun = _laporanController.tahunTerpilih.value;
 
-                  // int bulanIndex = [
-                  //       'Januari',
-                  //       'Februari',
-                  //       'Maret',
-                  //       'April',
-                  //       'Mei',
-                  //       'Juni',
-                  //       'Juli',
-                  //       'Agustus',
-                  //       'September',
-                  //       'Oktober',
-                  //       'November',
-                  //       'Desember'
-                  //     ].indexOf(bulan.toString()) +
-                  1;
+                  // 1;
 
-                  // DateTime initialDate = DateTime(tahun, bulan, 1);
-
-                  Get.dialog(KalenderPicker());
-                  // final selected = await showMonthYearPicker(
-                  //   context: context,
-                  //   initialDate: DateTime.now(),
-                  //   firstDate: DateTime(2019),
-                  //   lastDate: DateTime(DateTime.now().year + 1),
-                  // );
-
-// pilihBulan();
-                  // showDatePicker(
-                  //   context: context,
-                  //   initialDate: initialDate,
-                  //   firstDate: DateTime(2000),
-                  //   lastDate: DateTime(2100),
-                  // ).then((value) {
-                  //   if (value != null) {
-                  //     // _laporanController.bulanIni.value = value;
-                  //   }
-                  // });
+                  if (_laporanController.viewMode.value == 'Hari') {
+                    Get.dialog(KalenderPicker(
+                      tampilkandaftarTahun: false.obs,
+                      dariHari: true.obs,
+                    ));
+                  } else {
+                    Get.dialog(KalenderPicker(
+                      tampilkandaftarTahun: true.obs,
+                      dariHari: false.obs,
+                    ));
+                  }
                 },
                 child: Text(_laporanController.viewMode.value == 'Hari'
                     ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'

@@ -4,16 +4,23 @@ import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/laporan/laporan_harian.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 
 class LaporanBulanan extends StatelessWidget {
   LaporanBulanan({super.key});
   final headList = ['Bulan', 'Terjual', 'Modal', 'Omset', 'Laba'];
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
+  final BiometrikController _biometrikController = Get.find();
+  final penjualan = RxMap<String, Map<String, dynamic>>().obs;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final penjualan = hitungBulanan();
+      if (_biometrikController.tabIndex.value == 2) {
+        penjualan.value = hitungBulanan();
+      }
+      // final penjualan = hitungBulanan();
 
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -28,7 +35,7 @@ class LaporanBulanan extends StatelessWidget {
             rows: List.generate(_laporanController.namaBulan.length, (index) {
               // print(penjualan);
               final tahunTerpilih = _laporanController.tahunTerpilih.value;
-              final penjualanBulan = penjualan[
+              final penjualanBulan = penjualan.value[
                   '${(index + 1).toString().padLeft(2, '0')}-$tahunTerpilih'];
               final terjual =
                   penjualanBulan != null && penjualanBulan['terjual'] != null
@@ -52,6 +59,7 @@ class LaporanBulanan extends StatelessWidget {
                     // print(index);
                     // print(_laporanController.namaBulan[index]);
                     // print(_laporanController.bulanTerpilih);
+                    LaporanHarian.dariBulan.value = true;
                     _laporanController.bulanTerpilih.value =
                         _laporanController.namaBulan[index];
                     _laporanController.viewMode.value = 'Hari';
@@ -73,7 +81,7 @@ class LaporanBulanan extends StatelessWidget {
     });
   }
 
-  hitungBulanan() {
+  RxMap<String, Map<String, dynamic>> hitungBulanan() {
     Map<String, Map<String, dynamic>> daftarPenjualan = {};
     final penjualan = _laporanController.penjualan;
     final tahunTerpilih = _laporanController.tahunTerpilih.value;
@@ -108,6 +116,6 @@ class LaporanBulanan extends StatelessWidget {
       daftarPenjualan[tanggalFormat] = dataPenjualanBulanan;
     }
     // print(daftarPenjualan);
-    return daftarPenjualan;
+    return daftarPenjualan.obs;
   }
 }

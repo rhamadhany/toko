@@ -5,77 +5,81 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/laporan/rincian_harian.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
 
 class LaporanHarian extends StatelessWidget {
   LaporanHarian({super.key});
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
+  final BiometrikController _biometrikController = Get.find();
   // final int indexBulan;
   static final dariBulan = false.obs;
+  final penjualanHarian = RxMap<String, Map<String, dynamic>>().obs;
+  final jumlahHari = 0.obs;
+  final indexBulan = 0.obs;
+  final tahunSekarang = DateTime.now().year.obs;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final penjualanHarian = hitungPenjualanHarian();
-      final tahunSekarang = DateTime.now().year;
+      if (_biometrikController.tabIndex.value == 2) {
+        penjualanHarian.value = hitungPenjualanHarian();
 
-      final bulanTerpilih = _laporanController.bulanTerpilih.split(' ')[0];
-      final indexBulan = _laporanController.namaBulan
-              .indexWhere((item) => item == bulanTerpilih) +
-          1;
-      // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
-      final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
-      return PopScope(
-        canPop: dariBulan.value,
-        onPopInvokedWithResult: (didpop, _) {
-          _laporanController.viewMode.value = 'Bulan';
-        },
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            showCheckboxColumn: false,
-            columnSpacing: 12,
-            columns: LaporanPenjualan.headList
-                .map((e) => DataColumn(label: Text(e)))
-                .toList(),
-            rows: List.generate(
-              jumlahHari,
-              (index) {
-                final tanggal = DateTime(tahunSekarang, indexBulan, index + 1);
-                final tanggalFormat = DateFormat('dd-MM-yyyy').format(tanggal);
-                final dataPenjualan = penjualanHarian[tanggalFormat] ??
-                    {'terjual': '-', 'modal': '-', 'omset': '-', 'laba': '-'};
-                // print(dataPenjualan);
-                final terjual = dataPenjualan['terjual'] == 0
-                    ? '-'
-                    : dataPenjualan['terjual'].toString();
-                final modal =
-                    dataPenjualan['modal'] == 0 ? '-' : dataPenjualan['modal'];
-                final omset =
-                    dataPenjualan['omset'] == 0 ? '-' : dataPenjualan['omset'];
-                final laba =
-                    dataPenjualan['laba'] == 0 ? '-' : dataPenjualan['laba'];
-                return DataRow(
-                  onSelectChanged: (value) {
-                    Get.to(() => RincianHarian(tanggal: tanggalFormat));
-                  },
-                  cells: [
-                    DataCell(Text(tanggalFormat)),
-                    DataCell(Text(terjual)),
-                    DataCell(Text(formatRupiah(modal))),
-                    DataCell(Text(formatRupiah(omset))),
-                    DataCell(Text(formatRupiah(laba))),
-                  ],
-                );
-              },
-            ),
+        final bulanTerpilih = _laporanController.bulanTerpilih.split(' ')[0];
+        indexBulan.value = _laporanController.namaBulan
+                .indexWhere((item) => item == bulanTerpilih) +
+            1;
+        // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
+        jumlahHari.value =
+            DateTime(tahunSekarang.value, indexBulan.value + 1, 0).day;
+      }
+
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          showCheckboxColumn: false,
+          columnSpacing: 12,
+          columns: LaporanPenjualan.headList
+              .map((e) => DataColumn(label: Text(e)))
+              .toList(),
+          rows: List.generate(
+            jumlahHari.value,
+            (index) {
+              final tanggal =
+                  DateTime(tahunSekarang.value, indexBulan.value, index + 1);
+              final tanggalFormat = DateFormat('dd-MM-yyyy').format(tanggal);
+              final dataPenjualan = penjualanHarian.value[tanggalFormat] ??
+                  {'terjual': '-', 'modal': '-', 'omset': '-', 'laba': '-'};
+              // print(dataPenjualan);
+              final terjual = dataPenjualan['terjual'] == 0
+                  ? '-'
+                  : dataPenjualan['terjual'].toString();
+              final modal =
+                  dataPenjualan['modal'] == 0 ? '-' : dataPenjualan['modal'];
+              final omset =
+                  dataPenjualan['omset'] == 0 ? '-' : dataPenjualan['omset'];
+              final laba =
+                  dataPenjualan['laba'] == 0 ? '-' : dataPenjualan['laba'];
+              return DataRow(
+                onSelectChanged: (value) {
+                  Get.to(() => RincianHarian(tanggal: tanggalFormat));
+                },
+                cells: [
+                  DataCell(Text(tanggalFormat)),
+                  DataCell(Text(terjual)),
+                  DataCell(Text(formatRupiah(modal))),
+                  DataCell(Text(formatRupiah(omset))),
+                  DataCell(Text(formatRupiah(laba))),
+                ],
+              );
+            },
           ),
         ),
       );
     });
   }
 
-  Map<String, Map<String, dynamic>> hitungPenjualanHarian() {
+  RxMap<String, Map<String, dynamic>> hitungPenjualanHarian() {
     Map<String, Map<String, dynamic>> penjualanHarian = {};
     // final tahunSekarang = DateTime.now().year;
 
@@ -123,7 +127,7 @@ class LaporanHarian extends StatelessWidget {
 
       penjualanHarian[tanggalFormat] = dataPenjualan;
     }
-    return penjualanHarian;
+    return penjualanHarian.obs;
   }
 
   int? _parseToInt(dynamic value) {

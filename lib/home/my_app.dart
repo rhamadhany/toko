@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
+import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
+import 'package:myapp/laporan/laporan_harian.dart';
 import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
   final ProductController _productController = Get.find();
   final KeranjangController _keranjangController =
       Get.put(KeranjangController());
+  final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -137,7 +140,11 @@ class MyApp extends StatelessWidget {
   }
 
   void dialogTutup(didPop, result) {
-    if (_productController.showCheckBoxRemove.value) {
+    if (LaporanHarian.dariBulan.value &&
+        _biometrikController.tabIndex.value == 2) {
+      LaporanHarian.dariBulan.value = false;
+      _laporanController.viewMode.value = 'Bulan';
+    } else if (_productController.showCheckBoxRemove.value) {
       _productController.showCheckBoxRemove.value = false;
     } else {
       Get.dialog(

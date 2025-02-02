@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 
 class KalenderPicker extends StatelessWidget {
-  KalenderPicker({super.key});
+  KalenderPicker(
+      {super.key, required this.tampilkandaftarTahun, required this.dariHari});
   final LaporanController _laporanController = Get.find();
   final daftarBulan = [
     'Jan',
@@ -22,21 +23,19 @@ class KalenderPicker extends StatelessWidget {
   final daftarTahun = [].obs;
   final tahunTertinggi = 0.obs;
   final tahunTerendah = 0.obs;
-  final tampilkandaftarTahun = false.obs;
-  // final daftarBulan = ['Januari', 'Februari', 'Maret', 'April',]
+  final RxBool tampilkandaftarTahun;
+  final RxBool dariHari;
+
   @override
   Widget build(BuildContext context) {
-    // print(_laporanController.bulanIni);
     nilaitahun();
     return Obx(() {
       return Dialog(
         child: SizedBox(
-          // padding: const EdgeInsets.all(16),
           height: Get.height * 0.5,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // ubah ini
-            crossAxisAlignment: CrossAxisAlignment.center, // tambahkan ini
-
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
@@ -50,7 +49,6 @@ class KalenderPicker extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
-                      // mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -83,7 +81,7 @@ class KalenderPicker extends StatelessWidget {
                               int currentIndex = daftarTahun.indexOf(
                                   _laporanController.tahunTerpilih.value
                                       .toString());
-                              // print(currentIndex);
+
                               if (currentIndex > 0) {
                                 _laporanController.tahunTerpilih.value =
                                     int.tryParse(
@@ -97,8 +95,10 @@ class KalenderPicker extends StatelessWidget {
                             )),
                         TextButton(
                           onPressed: () {
-                            tampilkandaftarTahun.value =
-                                !tampilkandaftarTahun.value;
+                            if (dariHari.value) {
+                              tampilkandaftarTahun.value =
+                                  !tampilkandaftarTahun.value;
+                            }
                           },
                           child: Text(
                             _laporanController.tahunTerpilih.value.toString(),
@@ -110,7 +110,7 @@ class KalenderPicker extends StatelessWidget {
                               int currentIndex = daftarTahun.indexOf(
                                   _laporanController.tahunTerpilih.value
                                       .toString());
-                              // print(currentIndex);
+
                               if (currentIndex < daftarTahun.length - 1) {
                                 _laporanController.tahunTerpilih.value =
                                     int.tryParse(
@@ -128,7 +128,6 @@ class KalenderPicker extends StatelessWidget {
                 ),
               ),
               Expanded(
-                // Mengganti SizedBox dengan Expanded
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
@@ -153,7 +152,7 @@ class KalenderPicker extends StatelessWidget {
                             : daftarTahun.toString() ==
                                 _laporanController.tahunTerpilih.value
                                     .toString();
-                        // print(daftarTahun[index]);
+
                         return Card(
                             color: tahunSelect && tampilkandaftarTahun.value
                                 ? Colors.blue
@@ -168,8 +167,12 @@ class KalenderPicker extends StatelessWidget {
                                         int.tryParse(daftarTahun[index]) ??
                                             _laporanController
                                                 .tahunTerpilih.value;
-                                    tampilkandaftarTahun.value =
-                                        !tampilkandaftarTahun.value;
+                                    if (dariHari.value) {
+                                      tampilkandaftarTahun.value =
+                                          !tampilkandaftarTahun.value;
+                                    } else {
+                                      Get.back();
+                                    }
                                   } else {
                                     _laporanController.bulanTerpilih.value =
                                         _laporanController.namaBulan[index];
@@ -209,18 +212,17 @@ class KalenderPicker extends StatelessWidget {
     daftarTahun.sort((a, b) {
       return a.compareTo(b);
     });
-    // daftarTahun.value = tahun;
-    final tertinggi =
-        daftarTahun.reduce((a, b) => int.parse(a) > int.parse(b) ? a : b);
-    final terendah =
-        daftarTahun.reduce((a, b) => int.parse(a) < int.parse(b) ? a : b);
-    tahunTertinggi.value = int.parse(tertinggi);
-    tahunTerendah.value = int.parse(terendah);
 
-    // if (tertinggi) {
-    //   return  ?? DateTime.now().year.toInt();
-    // } else {
-    // return int.tryParse(tahunTerendah) ?? DateTime.now().year.toInt();
-    // }
+    if (daftarTahun.isEmpty) {
+      daftarTahun.value = [DateTime.now().year.toString()];
+      tahunTertinggi.value = tahunTerendah.value = DateTime.now().year;
+    } else {
+      final tertinggi =
+          daftarTahun.reduce((a, b) => int.parse(a) > int.parse(b) ? a : b);
+      final terendah =
+          daftarTahun.reduce((a, b) => int.parse(a) < int.parse(b) ? a : b);
+      tahunTertinggi.value = int.parse(tertinggi);
+      tahunTerendah.value = int.parse(terendah);
+    }
   }
 }
