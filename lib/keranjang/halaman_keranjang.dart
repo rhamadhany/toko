@@ -50,112 +50,121 @@ class HalamanKeranjang extends StatelessWidget {
                                 itemBuilder: (context, indexKeranjang) {
                                   final produkKeranjang = _keranjangController
                                       .keranjangProduk[indexKeranjang];
-
-                                  return Card(
-                                      child: Row(
-                                    children: [
-                                      Obx(() {
-                                        return Checkbox(
-                                            value: _keranjangController
-                                                .valueBox[indexKeranjang],
-                                            onChanged: (value) {
-                                              _keranjangController.valueBox[
-                                                      indexKeranjang] =
-                                                  value ?? false;
-                                            });
-                                      }),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: produkKeranjang['gambar'] != ""
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    final indexGambar =
-                                                        _productController
-                                                            .allProduct
-                                                            .indexWhere((all) =>
-                                                                all['key'] ==
-                                                                produkKeranjang[
-                                                                    'key']);
-                                                    if (indexGambar != -1) {
-                                                      Get.dialog(AlertDialog(
-                                                        content:
-                                                            SingleChildScrollView(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          child: Row(
-                                                            children: (_productController
-                                                                            .allProduct[indexGambar]
-                                                                        [
-                                                                        'gambar']
-                                                                    as List<
-                                                                        dynamic>)
-                                                                .map(
-                                                                    (gambar) =>
-                                                                        InkWell(
-                                                                          onTap:
-                                                                              () {
-                                                                            Get.to(() =>
-                                                                                GambarPenuh(gambar: gambar));
-                                                                          },
-                                                                          child: logoProduk(
-                                                                              gambar,
-                                                                              10,
-                                                                              Get.height * 0.5,
-                                                                              1),
-                                                                        ))
-                                                                .toList(),
+                                  final gambarThumb =
+                                      gambarIndex(produkKeranjang);
+                                  return InkWell(
+                                    onTap: () {
+                                      _keranjangController
+                                              .valueBox[indexKeranjang] =
+                                          !_keranjangController
+                                              .valueBox[indexKeranjang];
+                                    },
+                                    child: Card(
+                                        child: Row(
+                                      children: [
+                                        Obx(() {
+                                          return Checkbox(
+                                              value: _keranjangController
+                                                  .valueBox[indexKeranjang],
+                                              onChanged: (value) {
+                                                _keranjangController.valueBox[
+                                                        indexKeranjang] =
+                                                    value ?? false;
+                                              });
+                                        }),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: gambarThumb != ""
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      final indexGambar =
+                                                          _productController
+                                                              .allProduct
+                                                              .indexWhere((all) =>
+                                                                  all['key'] ==
+                                                                  produkKeranjang[
+                                                                      'key']);
+                                                      if (indexGambar != -1) {
+                                                        Get.dialog(AlertDialog(
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            child: Row(
+                                                              children: (_productController
+                                                                              .allProduct[indexGambar]
+                                                                          [
+                                                                          'gambar']
+                                                                      as List<
+                                                                          dynamic>)
+                                                                  .map((gambar) =>
+                                                                      InkWell(
+                                                                        onTap:
+                                                                            () {
+                                                                          Get.to(() =>
+                                                                              GambarPenuh(gambar: gambar));
+                                                                        },
+                                                                        child: logoProduk(
+                                                                            gambar,
+                                                                            10,
+                                                                            Get.height *
+                                                                                0.5,
+                                                                            1),
+                                                                      ))
+                                                                  .toList(),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ));
-                                                    }
-                                                  },
-                                                  child: logoProduk(
-                                                      produkKeranjang['gambar'],
-                                                      10,
-                                                      Get.height * 0.1,
-                                                      2.5),
-                                                )
-                                              : noLogoProduk(
-                                                  Get.height * 0.1, 10),
+                                                        ));
+                                                      }
+                                                    },
+                                                    child: logoProduk(
+                                                        gambarThumb,
+                                                        10,
+                                                        Get.height * 0.1,
+                                                        2.5),
+                                                  )
+                                                : noLogoProduk(
+                                                    Get.height * 0.1, 10),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              produkKeranjang['produk'],
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                hargaBarang(
-                                                    produkKeranjang['key']),
-                                                JumlahKeranjang(
-                                                  // jumlahControllers:
-                                                  //     jumlahControllers,
-                                                  indexKeranjang:
-                                                      indexKeranjang,
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ));
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                produkKeranjang['produk'],
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  hargaBarang(
+                                                      produkKeranjang['key']),
+                                                  JumlahKeranjang(
+                                                    // jumlahControllers:
+                                                    //     jumlahControllers,
+                                                    indexKeranjang:
+                                                        indexKeranjang,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                                  );
                                 }),
                           ),
                         ],
@@ -176,6 +185,22 @@ class HalamanKeranjang extends StatelessWidget {
       "Rp $hargaFinal",
       style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 12),
     );
+  }
+
+  String? gambarIndex(Map<String, dynamic> produk) {
+    final indexKey = _productController.allProduct
+        .indexWhere((semua) => semua['key'] == produk['key']);
+
+    if (indexKey != -1) {
+      final gambar = _productController.allProduct[indexKey]['gambar'];
+      if (gambar is List && gambar.isNotEmpty) {
+        return gambar[0];
+      } else {
+        return '';
+      }
+    } else {
+      return '';
+    }
   }
 
   static bool haveValueBox() {
