@@ -95,7 +95,7 @@ class DialogJual extends StatelessWidget {
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
                         snackPosition: SnackPosition.BOTTOM,
                         colorText: Colors.white,
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.blue,
                         duration: const Duration(seconds: 1));
                   } else {
                     Get.snackbar("Tidak Cukup",
@@ -144,7 +144,7 @@ class DialogJual extends StatelessWidget {
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,
                       colorText: Colors.white,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       duration: const Duration(seconds: 1));
                 } else {
                   await stokTidakCukup(true);

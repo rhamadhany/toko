@@ -59,7 +59,7 @@ class QRScanner extends StatelessWidget {
                                                 .mobileScannerController,
                                             onDetect: (barcodeCapture) async {
                                               _qrScannerController.sideColors
-                                                  .value = Colors.green;
+                                                  .value = Colors.blue;
 
                                               final keyScan = barcodeCapture
                                                   .barcodes.first.rawValue;

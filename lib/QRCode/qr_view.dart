@@ -38,7 +38,7 @@ class QRView extends StatelessWidget {
                     'Berhasil',
                     'Kode QR berhasil disalin ke clipboard',
                     snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue,
                     colorText: Colors.white,
                   );
                 },
