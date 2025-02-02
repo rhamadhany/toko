@@ -54,6 +54,7 @@ class LaporanBulanan extends StatelessWidget {
                     // print(_laporanController.bulanTerpilih);
                     _laporanController.bulanTerpilih.value =
                         _laporanController.namaBulan[index];
+                    _laporanController.viewMode.value = 'Hari';
                     // Get.to(() => LaporanHarian(
                     //     // indexBulan: index,
                     //     ));

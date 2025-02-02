@@ -11,6 +11,7 @@ class LaporanHarian extends StatelessWidget {
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
   // final int indexBulan;
+  static final dariBulan = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -24,44 +25,50 @@ class LaporanHarian extends StatelessWidget {
           1;
       // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
       final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          showCheckboxColumn: false,
-          columnSpacing: 12,
-          columns: LaporanPenjualan.headList
-              .map((e) => DataColumn(label: Text(e)))
-              .toList(),
-          rows: List.generate(
-            jumlahHari,
-            (index) {
-              final tanggal = DateTime(tahunSekarang, indexBulan, index + 1);
-              final tanggalFormat = DateFormat('dd-MM-yyyy').format(tanggal);
-              final dataPenjualan = penjualanHarian[tanggalFormat] ??
-                  {'terjual': '-', 'modal': '-', 'omset': '-', 'laba': '-'};
-              // print(dataPenjualan);
-              final terjual = dataPenjualan['terjual'] == 0
-                  ? '-'
-                  : dataPenjualan['terjual'].toString();
-              final modal =
-                  dataPenjualan['modal'] == 0 ? '-' : dataPenjualan['modal'];
-              final omset =
-                  dataPenjualan['omset'] == 0 ? '-' : dataPenjualan['omset'];
-              final laba =
-                  dataPenjualan['laba'] == 0 ? '-' : dataPenjualan['laba'];
-              return DataRow(
-                onSelectChanged: (value) {
-                  Get.to(() => RincianHarian(tanggal: tanggalFormat));
-                },
-                cells: [
-                  DataCell(Text(tanggalFormat)),
-                  DataCell(Text(terjual)),
-                  DataCell(Text(formatRupiah(modal))),
-                  DataCell(Text(formatRupiah(omset))),
-                  DataCell(Text(formatRupiah(laba))),
-                ],
-              );
-            },
+      return PopScope(
+        canPop: dariBulan.value,
+        onPopInvokedWithResult: (didpop, _) {
+          _laporanController.viewMode.value = 'Bulan';
+        },
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            showCheckboxColumn: false,
+            columnSpacing: 12,
+            columns: LaporanPenjualan.headList
+                .map((e) => DataColumn(label: Text(e)))
+                .toList(),
+            rows: List.generate(
+              jumlahHari,
+              (index) {
+                final tanggal = DateTime(tahunSekarang, indexBulan, index + 1);
+                final tanggalFormat = DateFormat('dd-MM-yyyy').format(tanggal);
+                final dataPenjualan = penjualanHarian[tanggalFormat] ??
+                    {'terjual': '-', 'modal': '-', 'omset': '-', 'laba': '-'};
+                // print(dataPenjualan);
+                final terjual = dataPenjualan['terjual'] == 0
+                    ? '-'
+                    : dataPenjualan['terjual'].toString();
+                final modal =
+                    dataPenjualan['modal'] == 0 ? '-' : dataPenjualan['modal'];
+                final omset =
+                    dataPenjualan['omset'] == 0 ? '-' : dataPenjualan['omset'];
+                final laba =
+                    dataPenjualan['laba'] == 0 ? '-' : dataPenjualan['laba'];
+                return DataRow(
+                  onSelectChanged: (value) {
+                    Get.to(() => RincianHarian(tanggal: tanggalFormat));
+                  },
+                  cells: [
+                    DataCell(Text(tanggalFormat)),
+                    DataCell(Text(terjual)),
+                    DataCell(Text(formatRupiah(modal))),
+                    DataCell(Text(formatRupiah(omset))),
+                    DataCell(Text(formatRupiah(laba))),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       );
