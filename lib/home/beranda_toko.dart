@@ -50,36 +50,40 @@ class HomeToko extends StatelessWidget {
                   },
                 ),
               ),
-            if (_productController.allProduct.isNotEmpty)
+            if (_productController.allProduct.isNotEmpty &&
+                _productController.daftarKategori.length > 1)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: SizedBox(
                   height: Get.height * 0.06,
-                  child: Row(
-                    children: [
-                      ..._productController.daftarKategori.map((kategori) =>
-                          Card(
-                              color: kategori ==
-                                      _productController.kategoriAktif.value
-                                  ? Colors.blue
-                                  : null,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: TextButton(
-                                  onPressed: () {
-                                    _productController.kategoriAktif.value =
-                                        kategori;
-                                  },
-                                  child: Text(
-                                    kategori,
-                                    style: TextStyle(
-                                        color: kategori ==
-                                                _productController
-                                                    .kategoriAktif.value
-                                            ? Colors.white
-                                            : null),
-                                  ))))
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ..._productController.daftarKategori.map((kategori) =>
+                            Card(
+                                color: kategori ==
+                                        _productController.kategoriAktif.value
+                                    ? Colors.blue
+                                    : null,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: TextButton(
+                                    onPressed: () {
+                                      _productController.kategoriAktif.value =
+                                          kategori;
+                                    },
+                                    child: Text(
+                                      kategori,
+                                      style: TextStyle(
+                                          color: kategori ==
+                                                  _productController
+                                                      .kategoriAktif.value
+                                              ? Colors.white
+                                              : null),
+                                    ))))
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -63,7 +63,7 @@ class LaporanTahunan extends StatelessWidget {
         .toSet()
         .toList();
     if (daftarTahun.isEmpty) {
-      daftarTahun.value = [DateTime.now().year];
+      daftarTahun.value = [DateTime.now().year.toString()];
     }
     daftarTahun.sort((a, b) => a.compareTo(b));
     tahunTerendah.value = int.tryParse(daftarTahun.first)!;

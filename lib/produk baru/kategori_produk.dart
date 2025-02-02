@@ -55,10 +55,17 @@ class KategoriProduk extends StatelessWidget {
                                       onLongPress: () {
                                         if (removeIndex.value == '' ||
                                             removeIndex.value !=
+                                                    _productController
+                                                            .daftarKategori[
+                                                        index] &&
                                                 _productController
-                                                    .daftarKategori[index]) {
+                                                            .daftarKategori[
+                                                        index] !=
+                                                    'Semua') {
                                           removeIndex.value = _productController
                                               .daftarKategori[index];
+                                          _productController
+                                              .saveDaftarKategori();
                                         } else {
                                           removeIndex.value = '';
                                         }
@@ -112,9 +119,17 @@ class KategoriProduk extends StatelessWidget {
                       child: TextField(
                         controller: addController,
                         onSubmitted: (value) {
-                          _productController.daftarKategori.add(value);
-                          _productController.saveDaftarKategori();
-                          addController.clear();
+                          if (_productController.daftarKategori
+                              .any((kategori) => kategori == value)) {
+                            Get.snackbar('Error', 'Kategori sudah ada',
+                                colorText: Colors.white,
+                                backgroundColor: Colors.red,
+                                snackPosition: SnackPosition.BOTTOM);
+                          } else {
+                            _productController.daftarKategori.add(value);
+                            _productController.saveDaftarKategori();
+                            addController.clear();
+                          }
                         },
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),

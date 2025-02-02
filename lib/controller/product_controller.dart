@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,31 +49,59 @@ class ProductController extends GetxController {
   final RxList<Map<String, dynamic>> filterProduct =
       <Map<String, dynamic>>[].obs;
   final showSearch = false.obs;
-  // final keyboardVisible = false.obs;
+
   final kategoriAktif = 'Semua'.obs;
 
-  // final keyboardVisibilityController = KeyboardVisibilityController();
   @override
   void onInit() {
     super.onInit();
     initDatabase();
     filteringProduk();
-    // allProductListener();
+
     loadDaftarKategori();
-    // listenKeyboard();
+    kategoriListener();
+
     pencarianController.addListener(() {
-      // update();
-      // filteringProduk();
       searchText.value = pencarianController.text;
     });
-    //  final bool isKeyboardVisible = KeyboardVisibilityProvider;
   }
 
-  // void listenKeyboard() {
-  //   keyboardVisibilityController.onChange.listen((visible) {
-  //     keyboardVisible.value = visible;
-  //   });
-  // }
+  void kategoriListener() {
+    kategoriAktif.listen((_) {
+      if (kategoriAktif.value == 'Semua') {
+        refreshFilter();
+
+        generateMapCheckBox();
+        update();
+      } else {
+        filterKategori();
+      }
+    });
+  }
+
+  refreshFilter() {
+    filterProduct.value = allProduct
+        .where((produk) =>
+            produk['produk']
+                .toLowerCase()
+                .contains(searchText.value.toLowerCase()) ||
+            produk['key'] == searchText.value)
+        .toList();
+  }
+
+  filterKategori() {
+    refreshFilter();
+    if (kategoriAktif.value != 'Semua') {
+      final cocok = filterProduct
+          .where((produk) => produk['kategori'] == kategoriAktif.value)
+          .toList();
+      filterProduct.value = cocok;
+    }
+    filterProduct.refresh();
+
+    generateMapCheckBox();
+    update();
+  }
 
   Future<void> saveDaftarKategori() async {
     await SharedPreferences.getInstance().then((prefs) {
@@ -98,16 +126,15 @@ class ProductController extends GetxController {
       generateMapCheckBox();
     });
     allProduct.listen((_) {
-      filterProduct.value = allProduct
-          .where((produk) =>
-              produk['produk']
-                  .toLowerCase()
-                  .contains(searchText.value.toLowerCase()) ||
-              produk['key'] == searchText.value)
-          .toList();
-      filterProduct.refresh();
-      update();
-      generateMapCheckBox();
+      // filterProduct.value = allProduct
+      //     .where((produk) =>
+      //         produk['produk']
+      //             .toLowerCase()
+      //             .contains(searchText.value.toLowerCase()) ||
+      //         produk['key'] == searchText.value)
+      //     .toList();
+
+      filterKategori();
     });
   }
 

@@ -113,12 +113,15 @@ class LihatProduk extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
-                        kategoriView(),
+                        if (produk['kategori'] != null &&
+                            produk['kategori'] != '')
+                          kategoriView(),
                       ],
                     ),
                   ),
                 ),
-                deskripsiView(),
+                if (produk['deskripsi'] != null && produk['deskripsi'] != '')
+                  deskripsiView(),
               ],
             ),
           ),
