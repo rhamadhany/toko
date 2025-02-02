@@ -27,27 +27,31 @@ class LihatProduk extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blue,
             title: Row(
-          children: [
-            Text(
-              '${produk['produk']}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            IconButton(
-                onPressed: () {
-                  Get.to(() => QRView(
-                        produk: produk,
-                      ));
-                },
-                icon: const Icon(Icons.qr_code)),
-            IconButton(
-                onPressed: () {
-                  Get.to(() => const HalamanKeranjang());
-                },
-                icon: const Icon(Icons.shopping_cart_checkout))
-          ],
-        )),
+              children: [
+                Text(
+                  '${produk['produk']}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      Get.to(() => QRView(
+                            produk: produk,
+                          ));
+                    },
+                    icon: const Icon(Icons.qr_code, color: Colors.white)),
+                IconButton(
+                    onPressed: () {
+                      Get.to(() => const HalamanKeranjang());
+                    },
+                    icon: const Icon(Icons.shopping_cart_checkout,
+                        color: Colors.white))
+              ],
+            )),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(

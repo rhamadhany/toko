@@ -9,28 +9,28 @@ class CheckBoxAll extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Card(
-        child: Row(
-          children: [
-            Checkbox(
-                value: _keranjangController.boxAll.value,
-                onChanged: (value) {
-                  _keranjangController.boxAll.value = value ?? false;
-                  selectall();
-                }),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                _keranjangController.boxAll.value =
-                    !_keranjangController.boxAll.value;
-                CheckBoxAll.selectall();
-              },
-              child: const Text(
+        child: InkWell(
+          onTap: () {
+            _keranjangController.boxAll.value =
+                !_keranjangController.boxAll.value;
+            CheckBoxAll.selectall();
+          },
+          child: Row(
+            children: [
+              Checkbox(
+                  value: _keranjangController.boxAll.value,
+                  onChanged: (value) {
+                    _keranjangController.boxAll.value = value ?? false;
+                    selectall();
+                  }),
+              const Spacer(),
+              const Text(
                 "Pilih Semua",
                 style: TextStyle(fontSize: 18),
               ),
-            ),
-            const Spacer(),
-          ],
+              const Spacer(),
+            ],
+          ),
         ),
       );
     });

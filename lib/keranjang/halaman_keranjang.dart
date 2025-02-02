@@ -20,7 +20,10 @@ class HalamanKeranjang extends StatelessWidget {
     // initValueBox();
     return Obx(() {
       return Scaffold(
-          appBar: AppBar(title: const AppBarRow()),
+          appBar: AppBar(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              title: const AppBarRow()),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: _keranjangController.isLoading.value

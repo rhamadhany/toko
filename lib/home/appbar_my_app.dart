@@ -31,7 +31,8 @@ class AppBarMyApp extends StatelessWidget {
                     : _biometrikController.tabIndex.value == 2
                         ? "Laporan ${titleLaporan()}"
                         : "Pengaturan",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const Spacer(),
           if (_biometrikController.tabIndex.value == 0 ||
@@ -49,7 +50,7 @@ class AppBarMyApp extends StatelessWidget {
                     HomeToko.focusPencarian.requestFocus();
                   }
                 },
-                icon: const Icon(Icons.search)),
+                icon: const Icon(Icons.search, color: Colors.white)),
           if (!_productController.showCheckBoxRemove.value &&
               (_biometrikController.tabIndex.value == 0 ||
                   _biometrikController.tabIndex.value == 1))
@@ -57,7 +58,10 @@ class AppBarMyApp extends StatelessWidget {
                 onPressed: () {
                   Get.to(() => const HalamanKeranjang());
                 },
-                icon: const Icon(Icons.shopping_cart_checkout)),
+                icon: const Icon(
+                  Icons.shopping_cart_checkout,
+                  color: Colors.white,
+                )),
           if (_productController.showCheckBoxRemove.value)
             IconButton(
                 onPressed: () {
@@ -73,7 +77,7 @@ class AppBarMyApp extends StatelessWidget {
                     _productController.mapCheckBoxRemove.refresh();
                   }
                 },
-                icon: const Icon(Icons.select_all)),
+                icon: const Icon(Icons.select_all, color: Colors.white)),
           if (_biometrikController.tabIndex.value == 2 &&
               _laporanController.viewMode.value != 'Tahun')
             TextButton(
@@ -90,15 +94,18 @@ class AppBarMyApp extends StatelessWidget {
                     ));
                   }
                 },
-                child: Text(_laporanController.viewMode.value == 'Hari'
-                    ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
-                    : _laporanController.tahunTerpilih.value.toString())),
+                child: Text(
+                  _laporanController.viewMode.value == 'Hari'
+                      ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
+                      : _laporanController.tahunTerpilih.value.toString(),
+                  style: const TextStyle(color: Colors.white),
+                )),
           if (_biometrikController.tabIndex.value == 2)
             IconButton(
                 onPressed: () {
                   dialogSwitchOpsi();
                 },
-                icon: const Icon(Icons.calendar_month)),
+                icon: const Icon(Icons.calendar_month, color: Colors.white)),
         ],
       );
     });

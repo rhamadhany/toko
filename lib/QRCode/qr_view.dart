@@ -11,6 +11,8 @@ class QRView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         title: Text(
           produk['produk'],
           style: const TextStyle(fontWeight: FontWeight.bold),

@@ -1,5 +1,3 @@
-// import 'dart:ui';
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +31,8 @@ class MyApp extends StatelessWidget {
         onPopInvokedWithResult: dialogTutup,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
             title: AppBarMyApp(),
           ),
           body: TabBarView(
@@ -41,17 +41,11 @@ class MyApp extends StatelessWidget {
                   : null,
               controller: _biometrikController.tabController,
               children: [
-                HomeToko(
-                    // productController: _productController,
-                    // biometrikController: _biometrikController,
-                    ),
+                HomeToko(),
                 !_biometrikController.hasAuthenticated.value &&
                         Settings.autentikasiAktif.value
                     ? const Center(child: CircularProgressIndicator())
-                    : HomeToko(
-                        // productController: _productController,
-                        // biometrikController: _biometrikController,
-                        ),
+                    : HomeToko(),
                 !_biometrikController.hasAuthenticated.value &&
                         Settings.autentikasiAktif.value
                     ? const Center(child: CircularProgressIndicator())
