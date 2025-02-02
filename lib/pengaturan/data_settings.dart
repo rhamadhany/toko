@@ -68,8 +68,9 @@ class DataSettings {
     final slitPath = tempDir.path.split('/');
     final sub = slitPath.last;
     final path = tempDir.path.replaceAll(sub, "");
-    final gambar = '${path}cache';
+    final gambar = '${path}images';
     final database = '${path}databases';
+    final pathPrefs = '${path}shared_prefs';
 
     if (output != null) {
       progressFinish.value = false;
@@ -85,6 +86,8 @@ class DataSettings {
         await encoder.addDirectory(Directory(gambar));
         progress.value = "Menyimpan database ke $output";
         await encoder.addDirectory(Directory(database));
+        progress.value = "Menyimpan pengaturan ke $output";
+        await encoder.addDirectory(Directory(pathPrefs));
         encoder.closeSync();
         progress.value = 'Data telah disimpan ke $output';
         progressFinish.value = true;

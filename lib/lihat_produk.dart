@@ -99,11 +99,14 @@ class LihatProduk extends StatelessWidget {
                               hargaProduk(),
                               produkTerjual(),
                               if (sisa > 0) sisaProduk(sisa),
-                              if (_biometrikController.tabIndex.value == 1)
+                              if (_biometrikController.tabIndex.value == 1 ||
+                                  _biometrikController.tabIndex.value == 2)
                                 profitJual(),
-                              if (_biometrikController.tabIndex.value == 1)
+                              if (_biometrikController.tabIndex.value == 1 ||
+                                  _biometrikController.tabIndex.value == 2)
                                 biayaBeli(),
-                              if (_biometrikController.tabIndex.value == 1)
+                              if (_biometrikController.tabIndex.value == 1 ||
+                                  _biometrikController.tabIndex.value == 2)
                                 omsetJual(),
                             ],
                           ),
@@ -119,7 +122,8 @@ class LihatProduk extends StatelessWidget {
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
-            if (_biometrikController.tabIndex.value == 1)
+            if (_biometrikController.tabIndex.value == 1 ||
+                _biometrikController.tabIndex.value == 2)
               const BottomNavigationBarItem(
                   icon: Icon(Icons.edit_note), label: 'Edit'),
             if (_biometrikController.tabIndex.value == 0)

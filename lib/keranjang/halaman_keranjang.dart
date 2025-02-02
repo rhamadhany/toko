@@ -88,6 +88,14 @@ class HalamanKeranjang extends StatelessWidget {
                                                                       'key']);
                                                       if (indexGambar != -1) {
                                                         Get.dialog(AlertDialog(
+                                                          title: Text(
+                                                            produkKeranjang[
+                                                                'produk'],
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                           content:
                                                               SingleChildScrollView(
                                                             scrollDirection:
