@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/logo_produk.dart';
+import 'package:myapp/produk%20baru/edit_deskripsi.dart';
 import 'package:myapp/produk%20baru/kategori_produk.dart';
 import 'package:myapp/produk%20baru/tambah_gambar.dart';
 
@@ -15,7 +16,7 @@ class BodyProduk extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -86,21 +87,53 @@ class BodyProduk extends StatelessWidget {
               ),
               ..._productController.listTextField.map((textField) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: TextField(
-                    controller: textField['controller'],
-                    keyboardType:
-                        textField['keyboardType'] ?? TextInputType.text,
-                    decoration: InputDecoration(
-                        labelText: textField['label'],
-                        prefixText: textField['label'] == 'Harga Beli' ||
-                                textField['label'] == 'Harga Jual'
-                            ? 'Rp '
-                            : "",
-                        border: const OutlineInputBorder()),
-                  ),
+                  padding: EdgeInsets.symmetric(
+                      vertical: textField['label'] == 'Deskripsi' ? 0 : 4.0),
+                  child: textField['label'] == 'Deskripsi'
+                      ? null
+                      : TextField(
+                          textAlign: TextAlign.start,
+                          textAlignVertical: TextAlignVertical.top,
+                          // expands: textField['label'] == 'Deskripsi' ? true : false,
+                          // maxLines: textField['label'] == 'Deskripsi' ? null : 1,
+                          controller: textField['controller'],
+                          keyboardType: textField['keyboardType'],
+                          decoration: InputDecoration(
+                              // suffix: textField['label'] != 'Deskripsi'
+                              //     ? null
+                              //     : Align(alignment: Alignment.centerRight,
+                              //       child: IconButton(
+                              //           onPressed: () {
+                              //             Get.to(() => EditDeskripsi());
+                              //           },
+                              //           icon: const Icon(Icons.expand)),
+                              //     ),
+                              labelText: textField['label'],
+                              prefixText: textField['label'] == 'Harga Beli' ||
+                                      textField['label'] == 'Harga Jual'
+                                  ? 'Rp '
+                                  : "",
+                              border: const OutlineInputBorder()),
+                        ),
                 );
               }),
+
+              Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        onTap: () {
+                          Get.to(() => EditDeskripsi());
+                        },
+                        title: Text(_productController
+                                    .listTextField[5]['controller'].text ==
+                                ''
+                            ? 'Deskripsi...'
+                            : _productController
+                                .listTextField[5]['controller'].text),
+                      )))
             ],
           ),
         ),

@@ -114,6 +114,7 @@ class MyApp extends StatelessWidget {
                           await _keranjangController.loadProduk();
                           await _productController.generateMapCheckBox();
                         } else {
+                          _productController.kategoriTerpilih.value = 'Semua';
                           for (final controller
                               in _productController.listTextField) {
                             if (controller['label'] != 'Terjual') {

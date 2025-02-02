@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/db_helper.dart';
 
-class FloatingProduk extends StatelessWidget {
-  const FloatingProduk({
+class IconSave extends StatelessWidget {
+  const IconSave({
     super.key,
     required ProductController productController,
     required this.produkEdit,
@@ -17,7 +17,7 @@ class FloatingProduk extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return IconButton(
       onPressed: () async {
         String product = _productController.listTextField[0]['controller'].text;
         String hargaBeli =
@@ -47,7 +47,7 @@ class FloatingProduk extends StatelessWidget {
 
         Get.back();
       },
-      child: const Icon(Icons.check),
+      icon: const Icon(Icons.check),
     );
   }
 }

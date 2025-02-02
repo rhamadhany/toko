@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,11 +40,18 @@ class ProductController extends GetxController {
       'controller': TextEditingController(),
       'keyboardType': TextInputType.number
     },
+    {
+      'label': 'Deskripsi',
+      'controller': TextEditingController(),
+    },
   ]);
   final RxList<Map<String, dynamic>> allProduct = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> filterProduct =
       <Map<String, dynamic>>[].obs;
   final showSearch = false.obs;
+  final keyboardVisible = false.obs;
+
+  // final keyboardVisibilityController = KeyboardVisibilityController();
   @override
   void onInit() {
     super.onInit();
@@ -51,12 +59,20 @@ class ProductController extends GetxController {
     filteringProduk();
     // allProductListener();
     loadDaftarKategori();
+    // listenKeyboard();
     pencarianController.addListener(() {
       // update();
       // filteringProduk();
       searchText.value = pencarianController.text;
     });
+    //  final bool isKeyboardVisible = KeyboardVisibilityProvider;
   }
+
+  // void listenKeyboard() {
+  //   keyboardVisibilityController.onChange.listen((visible) {
+  //     keyboardVisible.value = visible;
+  //   });
+  // }
 
   Future<void> saveDaftarKategori() async {
     await SharedPreferences.getInstance().then((prefs) {

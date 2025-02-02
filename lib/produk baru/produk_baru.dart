@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/produk%20baru/body_produk.dart';
-import 'package:myapp/produk%20baru/floating_produk.dart';
+import 'package:myapp/produk%20baru/save_produk.dart';
 
 class NewProduct extends StatelessWidget {
   final ProductController _productController = Get.find();
@@ -23,17 +23,24 @@ class NewProduct extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
-          title: Text(
-            produkEdit.isNotEmpty ? "Edit Produk" : "Produk Baru",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              Text(
+                produkEdit.isNotEmpty ? "Edit Produk" : "Produk Baru",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              IconSave(
+                  productController: _productController,
+                  produkEdit: produkEdit,
+                  listPictures: listPictures),
+            ],
           ),
         ),
         body: BodyProduk(produkEdit: produkEdit, listPictures: listPictures),
-        floatingActionButton: FloatingProduk(
-            productController: _productController,
-            produkEdit: produkEdit,
-            listPictures: listPictures),
       );
     });
   }
 }
+
+
