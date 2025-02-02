@@ -11,7 +11,10 @@ class QRView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(produk['produk']),
+        title: Text(
+          produk['produk'],
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Center(
         child: Column(

@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_view.dart';
-// import 'package:myapp/beranda_toko.dart';
+
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/dialog_jual.dart';
 import 'package:myapp/gambar_penuh.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-// import 'package:myapp/keranjang_controller.dart';
+
 import 'package:myapp/logo_produk.dart';
-// import 'package:myapp/main.dart';
-// import 'package:myapp/controller/main_controller.dart';
+
 import 'package:myapp/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
-// import 'package:qr_flutter/qr_flutter.dart';
 
 class LihatProduk extends StatelessWidget {
   LihatProduk({super.key, required this.produk});
   final RxMap<String, dynamic> produk;
   final ProductController _productController = Get.find();
-  // final MainController _mainController = Get.find();
+
   final KeranjangController _keranjangController = Get.find();
   final BiometrikController _biometrikController = Get.find();
   @override
   Widget build(BuildContext context) {
-    // print('profit: ${nilaiProfit()}');
     return Obx(() {
-      // final sisa =
-      // final terjual = produk['terjual'];
-      // final stok = produk['stok'];
-      // final sisa = stok - terjual;
       final sisa = produk['stok'] - produk['terjual'];
 
       return Scaffold(
@@ -85,9 +78,7 @@ class LihatProduk extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding:
-                      // const EdgeInsets.only(top: 30.0, left: 30, right: 30),
-                      const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -113,7 +104,6 @@ class LihatProduk extends StatelessWidget {
                             ],
                           ),
                           const Spacer(),
-                          // idProduk(),
                         ],
                       ),
                     ),
@@ -150,7 +140,9 @@ class LihatProduk extends StatelessWidget {
                 ));
               } else {
                 Get.snackbar("Stok", "${produk['produk']} kosong",
-                    snackPosition: SnackPosition.BOTTOM);
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white);
               }
             }
           },
@@ -207,21 +199,6 @@ class LihatProduk extends StatelessWidget {
     return omset;
   }
 
-  // idProduk() {
-  //   final key = produk['key'];
-
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //     child: Card(
-  //         color: Colors.blue,
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: Text(key,
-  //               style: const TextStyle(color: Colors.white, fontSize: 16)),
-  //         )),
-  //   );
-  // }
-
   Row omsetJual() {
     final omsetNormal = nilaiOmset().toString();
     final omsetFinal = _productController.regexNominal(omsetNormal);
@@ -233,9 +210,7 @@ class LihatProduk extends StatelessWidget {
         ),
         Text(
           "Rp $omsetFinal",
-          style: const TextStyle(
-              // color: Colors.green,
-              fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ],
     );
@@ -252,9 +227,7 @@ class LihatProduk extends StatelessWidget {
         ),
         Text(
           "Rp $nilaiFinal",
-          style: const TextStyle(
-              // color: Colors.red,
-              fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ],
     );
@@ -285,11 +258,8 @@ class LihatProduk extends StatelessWidget {
     final profitFinal = _productController.regexNominal(profitNormal);
     return Row(
       children: [
-        const Text("Laba  : ", style: TextStyle(fontSize: 18)),
-        Text('Rp $profitFinal',
-            style: const TextStyle(
-                // color: Color.fromARGB(255, 167, 117, 255),
-                fontSize: 18)),
+        const Text("Laba : ", style: TextStyle(fontSize: 18)),
+        Text('Rp $profitFinal', style: const TextStyle(fontSize: 18)),
       ],
     );
   }

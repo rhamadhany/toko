@@ -31,7 +31,9 @@ class BottomBar extends StatelessWidget {
                             if (!_keranjangController.hasSnackbar.value) {
                               _keranjangController.hasSnackbar.value = true;
                               Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
-                                  snackPosition: SnackPosition.BOTTOM);
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  colorText: Colors.white, backgroundColor: Colors.red
+                                  );
                               await Future.delayed(const Duration(seconds: 3));
                               _keranjangController.hasSnackbar.value = false;
                             }

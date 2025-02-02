@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-// import 'package:myapp/keranjang/halaman_keranjang.dart';
+
 import 'package:myapp/lihat_produk.dart';
 
 class QRScanner extends StatelessWidget {
@@ -15,7 +15,6 @@ class QRScanner extends StatelessWidget {
   final bool dariKeranjang;
   @override
   Widget build(BuildContext context) {
-    // _qrScannerController.mobileScannerController.start();
     _qrScannerController.fromGallery.value = false;
     return Obx(() {
       return Scaffold(
@@ -58,13 +57,13 @@ class QRScanner extends StatelessWidget {
                                           MobileScanner(
                                             controller: _qrScannerController
                                                 .mobileScannerController,
-                                            onDetect: (barcodeCapture) {
+                                            onDetect: (barcodeCapture) async {
                                               _qrScannerController.sideColors
                                                   .value = Colors.green;
 
                                               final keyScan = barcodeCapture
                                                   .barcodes.first.rawValue;
-                                              updateKePencarian(keyScan);
+                                              await updateKePencarian(keyScan);
                                             },
                                             onDetectError: (barcode, error) {
                                               _qrScannerController.sideColors
@@ -141,8 +140,6 @@ class QRScanner extends StatelessWidget {
                             if (data != null) {
                               final keyScan = data.barcodes.first.rawValue;
                               updateKePencarian(keyScan);
-                              // _productController.pencarianController.text =
-                              //     keyScan!;
                             } else {
                               _qrScannerController.fromGallery.value = false;
                             }
@@ -165,31 +162,36 @@ class QRScanner extends StatelessWidget {
     });
   }
 
-  updateKePencarian(String? keyScan) {
-    final indexKey =
-        _productController.allProduct.indexWhere((pr) => pr['key'] == keyScan);
-    // Get.back();
+  Future<void> updateKePencarian(String? keyScan) async {
+    if (keyScan != null) {
+      final indexKey = _productController.allProduct
+          .indexWhere((pr) => pr['key'] == keyScan);
 
-    if (indexKey != -1) {
-      final produk = _productController.allProduct[indexKey];
-      final sisa = produk['stok'] - produk['terjual'];
-      if (dariKeranjang) {
-        // _keranjangController.initValueBox();
+      if (indexKey != -1) {
+        final produk = _productController.allProduct[indexKey];
+        final sisa = produk['stok'] - produk['terjual'];
+        if (dariKeranjang) {
+          await _keranjangController.langsungtambahkeKeranjang(
+              sisa, produk.obs);
+        } else {
+          Get.back();
 
-        _keranjangController.langsungtambahkeKeranjang(sisa, produk.obs);
+          Get.to(() => LihatProduk(
+                produk: produk.obs,
+              ));
+        }
       } else {
-        Get.back();
-
-        Get.to(() => LihatProduk(
-              produk: produk.obs,
-            ));
+        _qrScannerController.fromGallery.value = false;
+        Get.snackbar('Gagal', '$keyScan tidak ditemukan pada daftar produk',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
-
-      // _productController.pencarianController.text = produk;
     } else {
-      _qrScannerController.fromGallery.value = false;
-      Get.snackbar('Gagal', '$keyScan tidak ditemukan pada daftar produk',
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+      Get.snackbar('Gagal', 'Tidak berhasil memindai gambar',
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
     }
   }
 }
@@ -213,17 +215,7 @@ class QRScannerController extends GetxController
     )..repeat(reverse: true);
 
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-
-    // scannerListener();
   }
-
-  // scannerListener() {
-  //   mobileScannerController.addListener(() {
-  //     // final torchState = mobileScannerController.torchState;
-  //     flashCamera.value = mobileScannerController.torchEnabled;
-  //     update();
-  //   });
-  // }
 
   @override
   void onClose() {

@@ -88,7 +88,9 @@ class MyApp extends StatelessWidget {
 
                           if (!existSelect) {
                             Get.snackbar("Error", "Pilih setidaknya 1 produk",
-                                snackPosition: SnackPosition.BOTTOM);
+                                snackPosition: SnackPosition.BOTTOM,
+                                colorText: Colors.white,
+                                backgroundColor: Colors.red);
                             return;
                           }
 

@@ -59,11 +59,15 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       Get.back();
 
       Get.snackbar("Terjual", "Penjualan Selesai",
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.green);
     } else {
       Get.back();
       Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
     }
   }
 }

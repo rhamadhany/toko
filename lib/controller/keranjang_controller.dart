@@ -148,8 +148,13 @@ CREATE TABLE keranjang (
         jumlahUpdate = sisa;
         if (!hasSnackbar.value) {
           hasSnackbar.value = true;
-          Get.snackbar("Stok", "$produk hanya tersisa $sisa",
-              snackPosition: SnackPosition.BOTTOM);
+          Get.snackbar(
+            "Stok",
+            "$produk hanya tersisa $sisa",
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+          );
           await Future.delayed(const Duration(seconds: 3));
           hasSnackbar.value = false;
         }
@@ -177,11 +182,12 @@ CREATE TABLE keranjang (
     return sisa;
   }
 
-  void langsungtambahkeKeranjang(int sisa, RxMap<String, dynamic> produkBaru) {
+  Future<void> langsungtambahkeKeranjang(
+      int sisa, RxMap<String, dynamic> produkBaru) async {
     if (sisa > 0) {
       final gambar =
           produkBaru['gambar'].isEmpty ? "" : produkBaru['gambar'][0];
-      addProduk(produkBaru['key'], produkBaru['produk'], 1, gambar);
+      await addProduk(produkBaru['key'], produkBaru['produk'], 1, gambar);
 
       Get.back();
       HomeToko.focusPencarian.unfocus();
@@ -190,11 +196,13 @@ CREATE TABLE keranjang (
           "Keranjang", '${produkBaru['produk']} ditambahkan ke keranjang',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
+          colorText: Colors.white,
           duration: const Duration(seconds: 1));
     } else {
       Get.snackbar("Stok", "${produkBaru['produk']} kosong",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
+          colorText: Colors.white,
           duration: const Duration(seconds: 1));
     }
   }

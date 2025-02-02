@@ -79,7 +79,6 @@ class DialogJual extends StatelessWidget {
                       1;
                   final sisa = produk['stok'] - produk['terjual'];
 
-                  // print(sisa);
                   if (jumlah <= sisa) {
                     if (jumlah == 0) {
                       jumlah = 1;
@@ -95,11 +94,15 @@ class DialogJual extends StatelessWidget {
                     Get.snackbar('Keranjang',
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
                         snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.green,
                         duration: const Duration(seconds: 1));
                   } else {
                     Get.snackbar("Tidak Cukup",
                         "${produk['produk']} hanya tersisa $sisa",
                         snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.red,
                         duration: const Duration(seconds: 1));
                     _productController.jualController.value.text =
                         sisa.toString();
@@ -115,7 +118,6 @@ class DialogJual extends StatelessWidget {
                 int countInt = int.parse(count);
 
                 final sisa = produk['stok'] - (produk['terjual'] + countInt);
-                // print(sisa);
 
                 if (sisa > -1) {
                   final terjualSebelumnya = produk['terjual'];
@@ -125,6 +127,8 @@ class DialogJual extends StatelessWidget {
                   if (terjualBaru <= 0) {
                     Get.snackbar('Gagal', 'Masukkan jumlah yang dijual',
                         snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.red,
                         duration: const Duration(seconds: 1));
                     return;
                   }
@@ -139,11 +143,11 @@ class DialogJual extends StatelessWidget {
                   Get.snackbar('Terjual',
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,
+                      colorText: Colors.white,
+                      backgroundColor: Colors.green,
                       duration: const Duration(seconds: 1));
                 } else {
                   await stokTidakCukup(true);
-                  // _productController.jualController.value.clear();
-                  // print(sisa);
                 }
               },
               child: const Icon(
@@ -225,6 +229,8 @@ class DialogJual extends StatelessWidget {
       Get.snackbar("Stok",
           "${produk['produk']} hanya tersisa ${produk['stok'] - produk['terjual']} produk",
           snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
           duration: const Duration(seconds: 1));
       showSnackbarStok.value = true;
       if (isJual) {
