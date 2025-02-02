@@ -27,7 +27,7 @@ class AppBarMyApp extends StatelessWidget {
             _biometrikController.tabIndex.value == 0
                 ? "Toko"
                 : _biometrikController.tabIndex.value == 1
-                    ? "Rincian"
+                    ? "Admin"
                     : _biometrikController.tabIndex.value == 2
                         ? "Laporan ${titleLaporan()}"
                         : "Pengaturan",

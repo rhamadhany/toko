@@ -20,20 +20,24 @@ class LaporanBulanan extends StatelessWidget {
       if (_biometrikController.tabIndex.value == 2) {
         penjualan.value = hitungBulanan();
       }
-      // final penjualan = hitungBulanan();
 
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
             showCheckboxColumn: false,
-            columnSpacing: 12,
+            columnSpacing: 20,
             columns: List.generate(headList.length, (index) {
               return DataColumn(
-                label: Text(headList[index]),
+                label: Center(
+                  child: Text(
+                    headList[index],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
               );
             }),
             rows: List.generate(_laporanController.namaBulan.length, (index) {
-              // print(penjualan);
               final tahunTerpilih = _laporanController.tahunTerpilih.value;
               final penjualanBulan = penjualan.value[
                   '${(index + 1).toString().padLeft(2, '0')}-$tahunTerpilih'];
@@ -53,25 +57,20 @@ class LaporanBulanan extends StatelessWidget {
                       penjualanBulan['laba'] != null
                   ? 'Rp ${_productController.regexNominal(penjualanBulan['laba'].toString())}'
                   : '-';
-              // print(terjual);
+
               return DataRow(
                   onSelectChanged: (_) {
-                    // print(index);
-                    // print(_laporanController.namaBulan[index]);
-                    // print(_laporanController.bulanTerpilih);
                     LaporanHarian.dariBulan.value = true;
                     _laporanController.bulanTerpilih.value =
                         _laporanController.namaBulan[index];
                     _laporanController.viewMode.value = 'Hari';
-                    // Get.to(() => LaporanHarian(
-                    //     // indexBulan: index,
-                    //     ));
-                    // _laporanController.viewMode.value = 'hari';
                   },
                   cells: [
-                    DataCell(Text(
-                        '${_laporanController.namaBulan[index]} ${_laporanController.tahunTerpilih}')),
-                    DataCell(Text(terjual)),
+                    DataCell(Center(
+                      child: Text(
+                          '${_laporanController.namaBulan[index]} ${_laporanController.tahunTerpilih}'),
+                    )),
+                    DataCell(Center(child: Text(terjual))),
                     DataCell(Text(modal)),
                     DataCell(Text(omset)),
                     DataCell(Text(laba)),
@@ -106,8 +105,6 @@ class LaporanBulanan extends StatelessWidget {
       final omset = terjual * hargaJual;
       final laba = omset - modal;
 
-      // print('terjual' + item['jumlah'].toString());
-
       final dataPenjualanBulanan = daftarPenjualan[tanggalFormat]!;
       dataPenjualanBulanan['terjual'] += terjual;
       dataPenjualanBulanan['modal'] += modal;
@@ -115,7 +112,7 @@ class LaporanBulanan extends StatelessWidget {
       dataPenjualanBulanan['laba'] += laba;
       daftarPenjualan[tanggalFormat] = dataPenjualanBulanan;
     }
-    // print(daftarPenjualan);
+
     return daftarPenjualan.obs;
   }
 }

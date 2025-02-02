@@ -12,7 +12,7 @@ class LaporanHarian extends StatelessWidget {
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
-  // final int indexBulan;
+
   static final dariBulan = false.obs;
   final penjualanHarian = RxMap<String, Map<String, dynamic>>().obs;
   final jumlahHari = 0.obs;
@@ -30,7 +30,7 @@ class LaporanHarian extends StatelessWidget {
         indexBulan.value = _laporanController.namaBulan
                 .indexWhere((item) => item == bulanTerpilih) +
             1;
-        // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
+
         jumlahHari.value =
             DateTime(tahunSekarang.value, indexBulan.value + 1, 0).day;
       }
@@ -39,9 +39,13 @@ class LaporanHarian extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           showCheckboxColumn: false,
-          columnSpacing: 12,
+          columnSpacing: 20,
           columns: LaporanPenjualan.headList
-              .map((e) => DataColumn(label: Text(e)))
+              .map((e) => DataColumn(
+                  label: Center(
+                      child: Text(e,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)))))
               .toList(),
           rows: List.generate(
             jumlahHari.value,
@@ -51,7 +55,7 @@ class LaporanHarian extends StatelessWidget {
               final tanggalFormat = DateFormat('dd-MM-yyyy').format(tanggal);
               final dataPenjualan = penjualanHarian.value[tanggalFormat] ??
                   {'terjual': '-', 'modal': '-', 'omset': '-', 'laba': '-'};
-              // print(dataPenjualan);
+
               final terjual = dataPenjualan['terjual'] == 0
                   ? '-'
                   : dataPenjualan['terjual'].toString();
@@ -66,8 +70,8 @@ class LaporanHarian extends StatelessWidget {
                   Get.to(() => RincianHarian(tanggal: tanggalFormat));
                 },
                 cells: [
-                  DataCell(Text(tanggalFormat)),
-                  DataCell(Text(terjual)),
+                  DataCell(Center(child: Text(tanggalFormat))),
+                  DataCell(Center(child: Text(terjual))),
                   DataCell(Text(formatRupiah(modal))),
                   DataCell(Text(formatRupiah(omset))),
                   DataCell(Text(formatRupiah(laba))),
@@ -82,16 +86,14 @@ class LaporanHarian extends StatelessWidget {
 
   RxMap<String, Map<String, dynamic>> hitungPenjualanHarian() {
     Map<String, Map<String, dynamic>> penjualanHarian = {};
-    // final tahunSekarang = DateTime.now().year;
 
     final bulanTerpilih = _laporanController.bulanTerpilih.value;
     final tahunTerpilih = _laporanController.tahunTerpilih.value;
     final indexBulan = _laporanController.namaBulan
             .indexWhere((item) => item == bulanTerpilih) +
         1;
-    // final jumlahHari = DateTime(tahunSekarang, indexBulan + 1, 0).day;
+
     final jumlahHari = DateTime(tahunTerpilih, indexBulan + 1, 0).day;
-    // print('indexBulan: $indexBulan');
 
     for (var i = 1; i <= jumlahHari; i++) {
       final tanggal = DateTime(tahunTerpilih, indexBulan, i);

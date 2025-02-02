@@ -21,9 +21,14 @@ class LaporanTahunan extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: DataTable(
           showCheckboxColumn: false,
-          columnSpacing: 12,
+          columnSpacing: 20,
           columns: List.generate(headList.length, (index) {
-            return DataColumn(label: Text(headList[index]));
+            return DataColumn(
+                label: Center(
+                    child: Text(
+              headList[index],
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            )));
           }),
           rows: List.generate(daftarTahun.length, (index) {
             // print(penjualan);
@@ -41,8 +46,8 @@ class LaporanTahunan extends StatelessWidget {
                   LaporanBulanan.dariTahun.value = true;
                 },
                 cells: [
-                  DataCell(Text(daftarTahun[index])),
-                  DataCell(Text(jumlah)),
+                  DataCell(Center(child: Text(daftarTahun[index]))),
+                  DataCell(Center(child: Text(jumlah))),
                   DataCell(Text(modal)),
                   DataCell(Text(omset)),
                   DataCell(Text(laba)),
