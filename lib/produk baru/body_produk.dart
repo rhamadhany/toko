@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/logo_produk.dart';
+import 'package:myapp/produk%20baru/kategori_produk.dart';
 import 'package:myapp/produk%20baru/tambah_gambar.dart';
 
 class BodyProduk extends StatelessWidget {
@@ -71,6 +72,17 @@ class BodyProduk extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              // KategoriProduk(),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: ListTile(
+                    onTap: () {
+                      // KategoriProduk();
+                      Get.dialog(KategoriProduk());
+                    },
+                    title: Text(_productController.kategoriTerpilih.value)),
               ),
               ..._productController.listTextField.map((textField) {
                 return Padding(

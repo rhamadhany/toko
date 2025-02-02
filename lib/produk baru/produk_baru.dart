@@ -21,6 +21,8 @@ class NewProduct extends StatelessWidget {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
           title: Text(
             produkEdit.isNotEmpty ? "Edit Produk" : "Produk Baru",
             style: const TextStyle(fontWeight: FontWeight.bold),

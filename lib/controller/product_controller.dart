@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProductController extends GetxController {
@@ -12,7 +13,8 @@ class ProductController extends GetxController {
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
   final pencarianController = TextEditingController();
-
+  final daftarKategori = ['Semua', 'TV', 'kulkas', 'dinamo'].obs;
+  final kategoriTerpilih = 'Semua'.obs;
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
       RxList<Map<String, dynamic>>([
@@ -48,10 +50,23 @@ class ProductController extends GetxController {
     initDatabase();
     filteringProduk();
     // allProductListener();
+    loadDaftarKategori();
     pencarianController.addListener(() {
       // update();
       // filteringProduk();
       searchText.value = pencarianController.text;
+    });
+  }
+
+  Future<void> saveDaftarKategori() async {
+    await SharedPreferences.getInstance().then((prefs) {
+      prefs.setStringList('kategori', daftarKategori);
+    });
+  }
+
+  Future<void> loadDaftarKategori() async {
+    await SharedPreferences.getInstance().then((prefs) {
+      daftarKategori.value = prefs.getStringList('kategori') ?? ['Semua'];
     });
   }
 
