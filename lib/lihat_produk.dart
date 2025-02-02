@@ -10,7 +10,7 @@ import 'package:myapp/keranjang/halaman_keranjang.dart';
 
 import 'package:myapp/logo_produk.dart';
 
-import 'package:myapp/produk_baru.dart';
+import 'package:myapp/produk%20baru/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 class LihatProduk extends StatelessWidget {

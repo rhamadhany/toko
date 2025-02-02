@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/beranda_toko.dart';
+import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -12,7 +12,7 @@ import 'package:myapp/laporan/penjualan/laporan_harian.dart';
 import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
-import 'package:myapp/produk_baru.dart';
+import 'package:myapp/produk%20baru/produk_baru.dart';
 import 'package:myapp/tes/generate.dart';
 
 class MyApp extends StatelessWidget {
