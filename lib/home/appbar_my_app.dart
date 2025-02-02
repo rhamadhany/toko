@@ -1,10 +1,7 @@
-// import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:month_year_picker/month_year_picker.dart';
-// import 'package:myapp/QRCode/qr_scanner.dart';
+
 import 'package:myapp/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -20,7 +17,7 @@ class AppBarMyApp extends StatelessWidget {
 
   final ProductController _productController = Get.find();
   final LaporanController _laporanController = Get.find();
-  // final KeranjangController _keranjangController =
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -32,7 +29,7 @@ class AppBarMyApp extends StatelessWidget {
                 : _biometrikController.tabIndex.value == 1
                     ? "Rincian"
                     : _biometrikController.tabIndex.value == 2
-                        ? "Laporan"
+                        ? "Laporan ${titleLaporan()}"
                         : "Pengaturan",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -72,35 +69,14 @@ class AppBarMyApp extends StatelessWidget {
                                 'true'
                             ? 'false'
                             : 'true';
-                    // print(
-                    // _productController.mapCheckBoxRemove[i]['isSelected']);
-                    // _productController.update();
 
                     _productController.mapCheckBoxRemove.refresh();
                   }
                 },
                 icon: const Icon(Icons.select_all)),
-          // if (_biometrikController.tabIndex.value == 2)
-          //   TextButton(
-          //       onPressed: () {},
-          //       child: Text((DateTime.now().day + 1).toString())),
-          // if (_biometrikController.tabIndex.value == 2)
-          //   TextButton(
-          //       onPressed: () {},
-          //       child: Text(namaBulan[DateTime.now().month - 1])),
-          // if (_biometrikController.tabIndex.value == 2)
-          //   TextButton(
-          //       onPressed: () {},
-          //       child: Text((DateTime.now().year).toString())),
-
           if (_biometrikController.tabIndex.value == 2)
             TextButton(
                 onPressed: () async {
-                  // final bulan = _laporanController.bulan.value;
-                  // int tahun = _laporanController.tahunTerpilih.value;
-
-                  // 1;
-
                   if (_laporanController.viewMode.value == 'Hari') {
                     Get.dialog(KalenderPicker(
                       tampilkandaftarTahun: false.obs,
@@ -116,7 +92,6 @@ class AppBarMyApp extends StatelessWidget {
                 child: Text(_laporanController.viewMode.value == 'Hari'
                     ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
                     : _laporanController.tahunTerpilih.value.toString())),
-
           if (_biometrikController.tabIndex.value == 2)
             IconButton(
                 onPressed: () {
@@ -143,7 +118,7 @@ class AppBarMyApp extends StatelessWidget {
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Tahun';
-              Get.back(); // Menutup dialog setelah pilihan
+              Get.back();
             },
           ),
           ListTile(
@@ -154,7 +129,7 @@ class AppBarMyApp extends StatelessWidget {
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Bulan';
-              Get.back(); // Menutup dialog setelah pilihan
+              Get.back();
             },
           ),
           ListTile(
@@ -165,7 +140,7 @@ class AppBarMyApp extends StatelessWidget {
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Hari';
-              Get.back(); // Menutup dialog setelah pilihan
+              Get.back();
             },
           ),
         ],
@@ -185,5 +160,13 @@ class AppBarMyApp extends StatelessWidget {
             })),
       ),
     ));
+  }
+
+  String titleLaporan() {
+    return _laporanController.viewMode.value == 'Hari'
+        ? 'Harian'
+        : _laporanController.viewMode.value == 'Bulan'
+            ? 'Bulanan'
+            : 'Tahunan';
   }
 }

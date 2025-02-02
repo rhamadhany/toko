@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/laporan_bulanan.dart';
-import 'package:myapp/laporan/laporan_harian.dart';
+import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
+import 'package:myapp/laporan/penjualan/laporan_harian.dart';
+import 'package:myapp/laporan/penjualan/laporan_tahunan.dart';
 
 class LaporanPenjualan extends StatelessWidget {
   final LaporanController _laporanController = Get.find();
@@ -25,7 +26,9 @@ class LaporanPenjualan extends StatelessWidget {
             child: SingleChildScrollView(
                 child: _laporanController.viewMode.value == 'Hari'
                     ? LaporanHarian()
-                    : LaporanBulanan()),
+                    : _laporanController.viewMode.value == 'Bulan'
+                        ? LaporanBulanan()
+                        : LaporanTahunan()),
           ),
           BottomNavigationBar(
             items: const [

@@ -9,8 +9,9 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
-import 'package:myapp/laporan/laporan_harian.dart';
-import 'package:myapp/laporan/laporan_penjualan.dart';
+import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
+import 'package:myapp/laporan/penjualan/laporan_harian.dart';
+import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk_baru.dart';
@@ -144,6 +145,10 @@ class MyApp extends StatelessWidget {
         _biometrikController.tabIndex.value == 2) {
       LaporanHarian.dariBulan.value = false;
       _laporanController.viewMode.value = 'Bulan';
+    } else if (LaporanBulanan.dariTahun.value &&
+        _biometrikController.tabIndex.value == 2) {
+      LaporanBulanan.dariTahun.value = false;
+      _laporanController.viewMode.value = 'Tahun';
     } else if (_productController.showCheckBoxRemove.value) {
       _productController.showCheckBoxRemove.value = false;
     } else {

@@ -127,8 +127,8 @@ CREATE TABLE penambahan (
           '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
       // print(formattedDate);
 
-      // print(formattedDate)
-
+      // print(formattedDate);
+// final formatDate = '2023-05-12 04:29:26';
       final values = {
         'key': key,
         'tanggal': formattedDate,
