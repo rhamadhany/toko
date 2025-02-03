@@ -297,6 +297,8 @@ class LihatProduk extends StatelessWidget {
   }
 
   kategoriView() {
+    final indexIcons = _productController.daftarKategori
+        .indexWhere((ind) => ind['kategori'] == produk['kategori']);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -304,13 +306,25 @@ class LihatProduk extends StatelessWidget {
         color: Colors.blue,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            produk['kategori'],
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+          child: Row(
+            children: [
+              Icon(
+                IconData(_productController.daftarKategori[indexIcons]['icon'],
+                    fontFamily: 'MaterialIcons'),
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                produk['kategori'],
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ],
           ),
         ),
       ),

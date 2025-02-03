@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -15,8 +17,7 @@ class ProductController extends GetxController {
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
   final pencarianController = TextEditingController();
-  final daftarKategori = ['Semua'].obs;
-  final kategoriAdd = 'Semua'.obs;
+
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
       RxList<Map<String, dynamic>>([
@@ -52,6 +53,13 @@ class ProductController extends GetxController {
   final showSearch = false.obs;
 
   final kategoriAktif = 'Semua'.obs;
+  final daftarKategori = RxList<Map<String, dynamic>>([
+    {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint},
+  ]);
+
+  final kategoriAdd = 'Semua'.obs;
+  final  iconsTerpilih = Icons.grid_view.codePoint.obs;
+
   final storage = GetStorage();
   @override
   void onInit() {
@@ -111,7 +119,10 @@ class ProductController extends GetxController {
 
   void loadDaftarKategori() {
     daftarKategori.value =
-        List<String>.from(storage.read('kategori') ?? ['Semua']);
+        List<Map<String, dynamic>>.from(storage.read('kategori') ??
+            [
+              {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint}
+            ]);
   }
 
   void filteringProduk() {

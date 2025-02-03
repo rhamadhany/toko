@@ -63,7 +63,7 @@ class HomeToko extends StatelessWidget {
                     children: [
                       ..._productController.daftarKategori
                           .map((kategori) => Card(
-                                color: kategori ==
+                                color: kategori['kategori'] ==
                                         _productController.kategoriAktif.value
                                     ? Colors.blue
                                     : null,
@@ -75,17 +75,33 @@ class HomeToko extends StatelessWidget {
                                   child: InkWell(
                                     onTap: () {
                                       _productController.kategoriAktif.value =
-                                          kategori;
+                                          kategori['kategori'];
                                     },
-                                    child: Text(
-                                      kategori,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: kategori ==
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          IconData(kategori['icon'],
+                                              fontFamily: 'MaterialIcons'),
+                                          color: kategori['kategori'] ==
                                                   _productController
                                                       .kategoriAktif.value
                                               ? Colors.white
-                                              : null),
+                                              : null,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          kategori['kategori'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: kategori['kategori'] ==
+                                                      _productController
+                                                          .kategoriAktif.value
+                                                  ? Colors.white
+                                                  : null),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 )),

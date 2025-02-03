@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
+import 'package:flutter_iconpicker/Models/icon_picker_icon.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
 
@@ -8,6 +11,7 @@ class KategoriProduk extends StatelessWidget {
   final showAdd = false.obs;
   final addController = TextEditingController();
   final removeIndex = ''.obs;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -51,51 +55,57 @@ class KategoriProduk extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Obx(() {
-                                    return ListTile(
+                                    return ListTile(leading: Icon(IconData(_productController.daftarKategori[index]['icon'], fontFamily: 'MaterialIcons')),
                                       onLongPress: () {
                                         if (removeIndex.value == '' ||
                                             removeIndex.value !=
                                                     _productController
                                                             .daftarKategori[
-                                                        index] &&
+                                                        index]['kategori'] &&
                                                 _productController
                                                             .daftarKategori[
-                                                        index] !=
+                                                        index]['kategori'] !=
                                                     'Semua') {
                                           removeIndex.value = _productController
-                                              .daftarKategori[index];
-                                          _productController
-                                              .saveDaftarKategori();
+                                                  .daftarKategori[index]
+                                              ['kategori'];
+                                          // _productController
+                                          //     .saveDaftarKategori();
                                         } else {
                                           removeIndex.value = '';
                                         }
-                                        // print(item)
                                       },
                                       onTap: () {
                                         _productController.kategoriAdd.value =
                                             _productController
-                                                .daftarKategori[index];
+                                                    .daftarKategori[index]
+                                                ['kategori'];
+
                                         Get.back();
                                       },
                                       trailing: _productController
-                                                  .daftarKategori[index] ==
+                                                      .daftarKategori[index]
+                                                  ['kategori'] ==
                                               removeIndex.value
                                           ? IconButton(
                                               onPressed: () {
                                                 _productController
                                                     .daftarKategori
-                                                    .remove(removeIndex.value);
+                                                    .removeWhere((kategori) =>
+                                                        kategori['kategori'] ==
+                                                        removeIndex.value);
                                                 removeIndex.value = '';
                                               },
                                               icon: const Icon(Icons.remove))
                                           : _productController
                                                       .kategoriAdd.value ==
                                                   _productController
-                                                      .daftarKategori[index]
+                                                          .daftarKategori[index]
+                                                      ['kategori']
                                               ? const Icon(Icons.circle)
                                               : null,
                                       title: Text(_productController
-                                          .daftarKategori[index]),
+                                          .daftarKategori[index]['kategori']),
                                     );
                                   })),
                             );
@@ -119,19 +129,33 @@ class KategoriProduk extends StatelessWidget {
                       child: TextField(
                         controller: addController,
                         onSubmitted: (value) {
-                          if (_productController.daftarKategori
-                              .any((kategori) => kategori == value)) {
+                          if (_productController.daftarKategori.any(
+                              (kategori) => kategori['kategori'] == value)) {
                             Get.snackbar('Error', 'Kategori sudah ada',
                                 colorText: Colors.white,
                                 backgroundColor: Colors.red,
                                 snackPosition: SnackPosition.BOTTOM);
                           } else {
-                            _productController.daftarKategori.add(value);
+                            _productController.daftarKategori.add({
+                              'kategori': value,
+                              'icon': _productController.iconsTerpilih.value,
+                            });
+
                             _productController.saveDaftarKategori();
                             addController.clear();
                           }
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              IconData(_productController.iconsTerpilih.value,
+                                  fontFamily: 'MaterialIcons'),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.emoji_emotions),
+                              onPressed: () {
+                                pickIcons();
+                              },
+                            ),
                             border: OutlineInputBorder(),
                             label: Text('Nama Kategori'),
                             hintText: 'Nama Kategori'),
@@ -144,5 +168,19 @@ class KategoriProduk extends StatelessWidget {
         ),
       );
     });
+  }
+
+  final Rx<IconData> iconsTerpilih = Rx<IconData>(Icons.grid_view);
+
+  pickIcons() async {
+    final picker = await showIconPicker(
+      Get.overlayContext!,
+      configuration: SinglePickerConfiguration(
+        iconPackModes: [IconPack.allMaterial],
+      ),
+    );
+
+    _productController.iconsTerpilih.value =
+        picker?.data.codePoint ?? Icons.grid_view.codePoint;
   }
 }
