@@ -74,6 +74,8 @@ class MyApp extends StatelessWidget {
                       _biometrikController.tabIndex.value != 1
                   ? null
                   : FloatingActionButton(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         if (_productController.showCheckBoxRemove.value &&
                             _productController.filterProduct.isNotEmpty) {
@@ -128,10 +130,13 @@ class MyApp extends StatelessWidget {
                           Get.to(() => NewProduct());
                         }
                       },
-                      child: Icon(_productController.showCheckBoxRemove.value &&
-                              _productController.filterProduct.isNotEmpty
-                          ? Icons.clear
-                          : Icons.add),
+                      child: Icon(
+                        _productController.showCheckBoxRemove.value &&
+                                _productController.filterProduct.isNotEmpty
+                            ? Icons.clear
+                            : Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
         ),
       );

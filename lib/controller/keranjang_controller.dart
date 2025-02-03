@@ -189,7 +189,8 @@ CREATE TABLE keranjang (
           produkBaru['gambar'].isEmpty ? "" : produkBaru['gambar'][0];
       await addProduk(produkBaru['key'], produkBaru['produk'], 1, gambar);
 
-      Get.back();
+      Get.back(closeOverlays: true);
+
       HomeToko.focusPencarian.unfocus();
 
       Get.snackbar(

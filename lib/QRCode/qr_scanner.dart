@@ -174,7 +174,7 @@ class QRScanner extends StatelessWidget {
           await _keranjangController.langsungtambahkeKeranjang(
               sisa, produk.obs);
         } else {
-          Get.back();
+          Get.back(closeOverlays: true);
 
           Get.to(() => LihatProduk(
                 produk: produk.obs,

@@ -193,15 +193,17 @@ class LihatProduk extends StatelessWidget {
           controller['controller'].text = produk['stok'].toString();
           break;
       }
-
-      final gambar = (produk['gambar'] as List<dynamic>)
-          .cast<String>()
-          .map((e) => e.trim())
-          .toList()
-          .obs;
-
-      Get.to(() => NewProduct(listPictures: gambar, produkEdit: produk));
     }
+
+    final gambar = (produk['gambar'] as List<dynamic>)
+        .cast<String>()
+        .map((e) => e.trim())
+        .toList()
+        .obs;
+
+    _productController.kategoriAdd.value = produk['kategori'];
+
+    Get.to(() => NewProduct(listPictures: gambar, produkEdit: produk));
   }
 
   Text sisaProduk(int sisa) {
