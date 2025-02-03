@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:myapp/db_helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 class ProductController extends GetxController {
@@ -14,7 +15,7 @@ class ProductController extends GetxController {
   final RxInt bottomIndex = 0.obs;
   final jualController = TextEditingController(text: '0').obs;
   final pencarianController = TextEditingController();
-  final daftarKategori = ['Semua', 'TV', 'kulkas', 'dinamo'].obs;
+  final daftarKategori = ['Semua'].obs;
   final kategoriAdd = 'Semua'.obs;
   final searchText = "".obs;
   final RxList<Map<String, dynamic>> listTextField =
@@ -51,14 +52,15 @@ class ProductController extends GetxController {
   final showSearch = false.obs;
 
   final kategoriAktif = 'Semua'.obs;
-
+  final storage = GetStorage();
   @override
   void onInit() {
     super.onInit();
+    loadDaftarKategori();
+
     initDatabase();
     filteringProduk();
 
-    loadDaftarKategori();
     kategoriListener();
 
     pencarianController.addListener(() {
@@ -103,37 +105,35 @@ class ProductController extends GetxController {
     update();
   }
 
-  Future<void> saveDaftarKategori() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      prefs.setStringList('kategori', daftarKategori);
-    });
+  void saveDaftarKategori() async {
+    storage.write('kategori', daftarKategori);
   }
 
-  Future<void> loadDaftarKategori() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      daftarKategori.value = prefs.getStringList('kategori') ?? ['Semua'];
-    });
+  void loadDaftarKategori() {
+    daftarKategori.value =
+        List<String>.from(storage.read('kategori') ?? ['Semua']);
   }
 
   void filteringProduk() {
     filterProduct.value = allProduct;
     searchText.listen((data) {
-      filterProduct.value = allProduct
-          .where((produk) =>
-              produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
-              produk['key'] == data)
-          .toList();
+      if (kategoriAktif.value == 'Semua') {
+        filterProduct.value = allProduct
+            .where((produk) =>
+                produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
+                produk['key'] == data)
+            .toList();
+      } else {
+        filterProduct.value = allProduct
+            .where((produk) =>
+                (produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
+                    produk['key'] == data) &&
+                produk['kategori'] == kategoriAktif.value)
+            .toList();
+      }
       generateMapCheckBox();
     });
     allProduct.listen((_) {
-      // filterProduct.value = allProduct
-      //     .where((produk) =>
-      //         produk['produk']
-      //             .toLowerCase()
-      //             .contains(searchText.value.toLowerCase()) ||
-      //         produk['key'] == searchText.value)
-      //     .toList();
-
       filterKategori();
     });
   }

@@ -54,36 +54,43 @@ class HomeToko extends StatelessWidget {
                 _productController.daftarKategori.length > 1)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: SizedBox(
-                  height: Get.height * 0.06,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ..._productController.daftarKategori.map((kategori) =>
-                            Card(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ..._productController.daftarKategori
+                          .map((kategori) => Card(
                                 color: kategori ==
                                         _productController.kategoriAktif.value
                                     ? Colors.blue
                                     : null,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
-                                child: TextButton(
-                                    onPressed: () {
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
                                       _productController.kategoriAktif.value =
                                           kategori;
                                     },
                                     child: Text(
                                       kategori,
                                       style: TextStyle(
+                                          fontSize: 14,
                                           color: kategori ==
                                                   _productController
                                                       .kategoriAktif.value
                                               ? Colors.white
                                               : null),
-                                    ))))
-                      ],
-                    ),
+                                    ),
+                                  ),
+                                )),
+                              ))
+                    ],
                   ),
                 ),
               ),

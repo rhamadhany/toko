@@ -58,7 +58,7 @@ class BodyProduk extends StatelessWidget {
                     }),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
+                      child: IconButton(
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(10),
@@ -66,9 +66,9 @@ class BodyProduk extends StatelessWidget {
                         onPressed: () async {
                           await pickImages();
                         },
-                        child: Icon(
-                          Icons.add,
-                          size: listPictures.isEmpty ? 50 : 30,
+                        icon: Icon(
+                          listPictures.isEmpty ? Icons.image : Icons.add,
+                          size: listPictures.isEmpty ? 150 : 50,
                         ),
                       ),
                     ),

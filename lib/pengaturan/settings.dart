@@ -3,15 +3,17 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/data_settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:archive/archive_io.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
   static final autentikasiAktif = false.obs;
   static final BiometrikController _biometrikController = Get.find();
+  static final storage = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -85,15 +87,22 @@ class Settings extends StatelessWidget {
     });
   }
 
+  // static Future<void> saveSettingsPrefs() async {
+  //   await SharedPreferences.getInstance().then((prefs) {
+  //     prefs.setBool('autentikasiAktif', autentikasiAktif.value);
+  //   });
+  // }
+
   static Future<void> saveSettingsPrefs() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool('autentikasiAktif', autentikasiAktif.value);
-    });
+    storage.write('autentikasiAktif', autentikasiAktif.value);
   }
 
   static Future<void> loadSettingsPrefs() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      autentikasiAktif.value = prefs.getBool("autentikasiAktif") ?? false;
-    });
+    autentikasiAktif.value = storage.read('autentikasiAktif') ?? false;
   }
+  // static Future<void> loadSettingsPrefs() async {
+  //   await SharedPreferences.getInstance().then((prefs) {
+  //     autentikasiAktif.value = prefs.getBool("autentikasiAktif") ?? false;
+  //   });
+  // }
 }

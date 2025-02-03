@@ -17,6 +17,7 @@ import 'package:myapp/tes/generate.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
+
   final BiometrikController _biometrikController = Get.find();
 
   final ProductController _productController = Get.find();
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
               controller: _biometrikController.tabController,
               tabs: const [
                 Tab(text: "Produk", icon: Icon(Icons.shop)),
-                Tab(text: "Admin", icon: Icon(Icons.home)),
+                Tab(text: "Admin", icon: Icon(Icons.admin_panel_settings)),
                 Tab(
                   text: "Laporan",
                   icon: Icon(Icons.bar_chart),

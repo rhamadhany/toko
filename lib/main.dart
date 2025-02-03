@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 // import 'package:month_year_picker/month_year_picker.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/controller/laporan_controller.dart';
@@ -11,7 +12,8 @@ import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   Get.put(BiometrikController());
   Get.put(ProductController());
   Get.put(LaporanController());

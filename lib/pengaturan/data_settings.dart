@@ -70,8 +70,8 @@ class DataSettings {
     final path = tempDir.path.replaceAll(sub, "");
     final gambar = '${path}images';
     final database = '${path}databases';
-    final pathPrefs = '${path}shared_prefs';
-
+    // final pathPrefs = '${path}shared_prefs';
+    final appFlutter = '${path}app_flutter';
     if (output != null) {
       progressFinish.value = false;
       final encoder = ZipFileEncoder();
@@ -87,13 +87,16 @@ class DataSettings {
         progress.value = "Menyimpan database ke $output";
         await encoder.addDirectory(Directory(database));
         progress.value = "Menyimpan pengaturan ke $output";
-        await encoder.addDirectory(Directory(pathPrefs));
+        await encoder.addDirectory(Directory(appFlutter));
         encoder.closeSync();
         progress.value = 'Data telah disimpan ke $output';
         progressFinish.value = true;
       } catch (e) {
         // print(e);
-        Get.snackbar("Error", '$e', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar("Error", '$e',
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.red);
       }
     }
   }
@@ -161,7 +164,10 @@ class DataSettings {
         return '$sdcard/Backup_$date.zip'.replaceAll("'", '');
       }
     } catch (e) {
-      Get.snackbar("Error", "Backup $e", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Error", "Backup $e",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
       return null;
     }
     return null;

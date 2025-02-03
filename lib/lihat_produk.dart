@@ -27,35 +27,39 @@ class LihatProduk extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.blue,
-            title: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${produk['produk']}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        overflow: TextOverflow.ellipsis),
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${produk['produk']}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
-                IconButton(
-                    onPressed: () {
-                      Get.to(() => QRView(
-                            produk: produk,
-                          ));
-                    },
-                    icon: const Icon(Icons.qr_code, color: Colors.white)),
-                IconButton(
-                    onPressed: () {
-                      Get.to(() => const HalamanKeranjang());
-                    },
-                    icon: const Icon(Icons.shopping_cart_checkout,
-                        color: Colors.white))
-              ],
-            )),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+                  Get.to(() => QRView(produk: produk));
+                },
+                icon: const Icon(Icons.qr_code, color: Colors.white),
+              ),
+              IconButton(
+                onPressed: () {
+                  Get.to(() => const HalamanKeranjang());
+                },
+                icon: const Icon(
+                  Icons.shopping_cart_checkout,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -70,24 +74,22 @@ class LihatProduk extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: Get.width * 0.09,
-                      ),
+                      SizedBox(width: Get.width * 0.09),
                       ...(produk['gambar'] as List<dynamic>).map((picPath) {
                         return InkWell(
-                            onTap: () {
-                              Get.to(() => GambarPenuh(
-                                    gambar: picPath,
-                                  ));
-                            },
-                            child: logoProduk(picPath, 10, 300, 2.5));
-                      })
+                          onTap: () {
+                            Get.to(() => GambarPenuh(gambar: picPath));
+                          },
+                          child: logoProduk(picPath, 10, 300, 2.5),
+                        );
+                      }),
                     ],
                   ),
                 ),
                 Card(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -131,12 +133,18 @@ class LihatProduk extends StatelessWidget {
             if (_biometrikController.tabIndex.value == 1 ||
                 _biometrikController.tabIndex.value == 2)
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.edit_note), label: 'Edit'),
+                icon: Icon(Icons.edit_note),
+                label: 'Edit',
+              ),
             if (_biometrikController.tabIndex.value == 0)
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
+                icon: Icon(Icons.shopping_cart),
+                label: 'Keranjang',
+              ),
             const BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_checkout), label: 'Jual'),
+              icon: Icon(Icons.shopping_cart_checkout),
+              label: 'Jual',
+            ),
           ],
           currentIndex: _productController.bottomIndex.value,
           onTap: (value) {
@@ -149,14 +157,15 @@ class LihatProduk extends StatelessWidget {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
                 _productController.jualController.value.text = '0';
-                Get.dialog(DialogJual(
-                  produk: produk,
-                ));
+                Get.dialog(DialogJual(produk: produk));
               } else {
-                Get.snackbar("Stok", "${produk['produk']} kosong",
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white);
+                Get.snackbar(
+                  "Stok",
+                  "${produk['produk']} kosong",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
               }
             }
           },
@@ -218,14 +227,8 @@ class LihatProduk extends StatelessWidget {
     final omsetFinal = _productController.regexNominal(omsetNormal);
     return Row(
       children: [
-        const Text(
-          "Omset: ",
-          style: TextStyle(fontSize: 18),
-        ),
-        Text(
-          "Rp $omsetFinal",
-          style: const TextStyle(fontSize: 18),
-        ),
+        const Text("Omset: ", style: TextStyle(fontSize: 18)),
+        Text("Rp $omsetFinal", style: const TextStyle(fontSize: 18)),
       ],
     );
   }
@@ -235,14 +238,8 @@ class LihatProduk extends StatelessWidget {
     final nilaiFinal = _productController.regexNominal(nilaiNormal);
     return Row(
       children: [
-        const Text(
-          "Modal: ",
-          style: TextStyle(fontSize: 18),
-        ),
-        Text(
-          "Rp $nilaiFinal",
-          style: const TextStyle(fontSize: 18),
-        ),
+        const Text("Modal: ", style: TextStyle(fontSize: 18)),
+        Text("Rp $nilaiFinal", style: const TextStyle(fontSize: 18)),
       ],
     );
   }
@@ -284,9 +281,10 @@ class LihatProduk extends StatelessWidget {
       child: Text(
         "Rp ${_productController.hargaProduk(produk)}",
         style: const TextStyle(
-            fontSize: 35,
-            color: Colors.deepOrangeAccent,
-            fontWeight: FontWeight.bold),
+          fontSize: 35,
+          color: Colors.deepOrangeAccent,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -294,9 +292,7 @@ class LihatProduk extends StatelessWidget {
   Text produkTerjual() {
     return Text(
       'Terjual: ${produk['terjual']}/${produk['stok']}',
-      style: const TextStyle(
-        fontSize: 18,
-      ),
+      style: const TextStyle(fontSize: 18),
     );
   }
 
@@ -311,7 +307,10 @@ class LihatProduk extends StatelessWidget {
           child: Text(
             produk['kategori'],
             style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
         ),
       ),
@@ -322,20 +321,25 @@ class LihatProduk extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Row(
           children: [
-            const Text(
-              'Deskripsi',
-              softWrap: true,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text(
+                  'Deskripsi',
+                  softWrap: true,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                Text(
+                  produk['deskripsi'],
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
             ),
-            Text(
-              produk['deskripsi'],
-              softWrap: true,
-              style: const TextStyle(fontSize: 14),
-            ),
+            const Spacer(),
           ],
         ),
       ),
