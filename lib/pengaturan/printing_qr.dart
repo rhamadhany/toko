@@ -9,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PrintingQR {
+  PrintingQR({required this.dariBox});
+  final RxBool dariBox;
   final ProductController _productController = Get.find();
   final pressAction = false.obs;
   final isLoading = false.obs;
@@ -41,9 +43,6 @@ class PrintingQR {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // TextField()
-              // Text(),
-              // LinearProgressIndicator(),
               if (!pressAction.value)
                 ...listTextField.value.map((t) => TextField(
                       controller: t['controller'],
@@ -62,6 +61,10 @@ class PrintingQR {
               if (isLoading.value)
                 LinearProgressIndicator(
                   color: Colors.blue,
+                ),
+              if (isLoading.value)
+                SizedBox(
+                  height: 10,
                 ),
               if (isLoading.value)
                 Text(
@@ -86,13 +89,17 @@ class PrintingQR {
                 child: Text('Batal')),
           if (!pressAction.value)
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  pressAction.value = true;
+
+                  isLoading.value = true;
+
+                  await Future.delayed(const Duration(seconds: 3));
                   final time = DateTime.now()
                       .toString()
                       .replaceAll(':', '_')
                       .split('.')[0];
                   fileName.value = 'QRCode_$time.pdf';
-                  pressAction.value = true;
                   printQR();
                 },
                 child: Text('Simpan'))
@@ -103,10 +110,19 @@ class PrintingQR {
 
   Future<void> printQR() async {
     await PermissionRequest.periksaIzin();
-    isLoading.value = true;
-    final daftarQR = _productController.allProduct
-        .map((produk) => produk['key'].toString())
-        .toList();
+    List<String> daftarQR = [];
+
+    if (dariBox.value) {
+      daftarQR = _productController.mapCheckBoxRemove
+          .where((i) => i['isSelected'] == 'true')
+          .toList()
+          .map((f) => f['key'] as String)
+          .toList();
+    } else {
+      daftarQR = _productController.allProduct
+          .map((produk) => produk['key'].toString())
+          .toList();
+    }
 
     final daftarController =
         listTextField.value.map((t) => t['controller']).toList();
@@ -120,7 +136,7 @@ class PrintingQR {
           i + qrPerhalaman > daftarQR.length
               ? daftarQR.length
               : i + qrPerhalaman);
-      // print(itemList);
+
       pdf.addPage(pw.Page(build: (pw.Context context) {
         return pw.GridView(
             padding: const pw.EdgeInsets.all(8),

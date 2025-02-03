@@ -86,7 +86,7 @@ class Settings extends StatelessWidget {
                   leading: const Icon(Icons.picture_as_pdf),
                   onTap: () {
                     // DataSettings.backupData();
-                    PrintingQR().dialogQR();
+                    PrintingQR(dariBox: false.obs).dialogQR();
                   },
                 ),
               ),

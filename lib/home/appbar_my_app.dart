@@ -8,6 +8,7 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/laporan/kalender_picker.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/pengaturan/printing_qr.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
 class AppBarMyApp extends StatelessWidget {
@@ -62,6 +63,12 @@ class AppBarMyApp extends StatelessWidget {
                   Icons.shopping_cart_checkout,
                   color: Colors.white,
                 )),
+          if (_productController.showCheckBoxRemove.value)
+            IconButton(
+                onPressed: () {
+                  PrintingQR(dariBox: true.obs).dialogQR();
+                },
+                icon: Icon(Icons.print)),
           if (_productController.showCheckBoxRemove.value)
             IconButton(
                 onPressed: () {
