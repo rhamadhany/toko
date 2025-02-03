@@ -112,11 +112,17 @@ class HomeToko extends StatelessWidget {
               ),
             if (_productController.filterProduct.isEmpty) const Spacer(),
             _productController.filterProduct.isEmpty
-                ? const Center(
-                    child: Text(
-                    "Tidak ada produk",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ))
+                ? Center(
+                    child: Icon(
+                    Icons.shop,
+                    size: Get.height * 0.3,
+                  )
+                    //   Text(
+                    //   "Tidak ada produk",
+                    //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    // )
+
+                    )
                 : Expanded(
                     child: GridView.builder(
                       gridDelegate:

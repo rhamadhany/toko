@@ -33,11 +33,10 @@ class HalamanKeranjang extends StatelessWidget {
                     ),
                   )
                 : _keranjangController.keranjangProduk.isEmpty
-                    ? const Center(
-                        child: Text(
-                          "Keranjang kosong",
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
+                    ? Center(
+                        child: Icon(
+                          Icons.shopping_cart,
+                          size: Get.height * 0.3,
                         ),
                       )
                     : Column(
