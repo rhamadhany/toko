@@ -1,0 +1,176 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/pengaturan/permission_request.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+
+class PrintingQR {
+  final ProductController _productController = Get.find();
+  final pressAction = false.obs;
+  final isLoading = false.obs;
+  final progress = ''.obs;
+  final finish = false.obs;
+  final sdcardPath = '/storage/emulated/0/Toko';
+  final fileName = 'QRCode.pdf'.obs;
+  final listTextField = RxList<Map<String, dynamic>>([
+    {
+      'controller': TextEditingController(text: 60.toString()),
+      'label': 'QR Perhalaman',
+    },
+    {
+      'controller': TextEditingController(text: 6.toString()),
+      'label': 'Lebar QR',
+    },
+    {
+      'controller': TextEditingController(text: 10.toString()),
+      'label': 'Spasi',
+    },
+  ]).obs;
+  void dialogQR() {
+    Get.dialog(Obx(() {
+      return AlertDialog(
+        title: Text(
+          'Simpan QRCode',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // TextField()
+              // Text(),
+              // LinearProgressIndicator(),
+              if (!pressAction.value)
+                ...listTextField.value.map((t) => TextField(
+                      controller: t['controller'],
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                      ],
+                      decoration: InputDecoration(
+                          labelText: t['label'], hintText: t['label']),
+                    )),
+              if (finish.value)
+                Text(
+                  'Daftar QRCode berhasil disimpan ke $sdcardPath/$fileName',
+                  style: TextStyle(fontSize: 14),
+                ),
+              if (isLoading.value)
+                LinearProgressIndicator(
+                  color: Colors.blue,
+                ),
+              if (isLoading.value)
+                Text(
+                  progress.value,
+                  style: TextStyle(fontSize: 14),
+                )
+            ],
+          ),
+        ),
+        actions: [
+          if (finish.value)
+            ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text('Oke')),
+          if (!pressAction.value)
+            ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text('Batal')),
+          if (!pressAction.value)
+            ElevatedButton(
+                onPressed: () {
+                  final time = DateTime.now()
+                      .toString()
+                      .replaceAll(':', '_')
+                      .split('.')[0];
+                  fileName.value = 'QRCode_$time.pdf';
+                  pressAction.value = true;
+                  printQR();
+                },
+                child: Text('Simpan'))
+        ],
+      );
+    }));
+  }
+
+  Future<void> printQR() async {
+    await PermissionRequest.periksaIzin();
+    isLoading.value = true;
+    final daftarQR = _productController.allProduct
+        .map((produk) => produk['key'].toString())
+        .toList();
+
+    final daftarController =
+        listTextField.value.map((t) => t['controller']).toList();
+
+    final pdf = pw.Document();
+    final qrPerhalaman = int.tryParse(daftarController[0].text) ?? 60;
+    for (int i = 0; i < daftarQR.length; i += qrPerhalaman) {
+      progress.value = 'Memproses item ke ${i + 1} dari ${daftarQR.length + 1}';
+      final itemList = daftarQR.sublist(
+          i,
+          i + qrPerhalaman > daftarQR.length
+              ? daftarQR.length
+              : i + qrPerhalaman);
+      // print(itemList);
+      pdf.addPage(pw.Page(build: (pw.Context context) {
+        return pw.GridView(
+            padding: const pw.EdgeInsets.all(8),
+            crossAxisCount: int.tryParse(daftarController[1].text) ?? 6,
+            mainAxisSpacing: double.tryParse(daftarController[2].text) ?? 10,
+            crossAxisSpacing: double.tryParse(daftarController[2].text) ?? 10,
+            children: itemList
+                .map((item) => pw.Center(
+                    child: pw.BarcodeWidget(
+                        data: item, barcode: pw.Barcode.qrCode())))
+                .toList());
+      }));
+    }
+
+    final directory = await _getDirectory();
+    if (directory == null) return;
+
+    final filePath = '${directory.path}/${fileName.value}';
+    final file = File(filePath);
+
+    try {
+      await file.writeAsBytes(await pdf.save());
+      isLoading.value = false;
+      finish.value = true;
+    } catch (e) {
+      isLoading.value = false;
+
+      Get.snackbar("Error", "Gagal membuat file PDF. Periksa izin penyimpanan.",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
+    }
+  }
+
+  Future<Directory?> _getDirectory() async {
+    try {
+      final rootPath = await getExternalStorageDirectory();
+      if (rootPath == null) return null;
+      final backupDir = Directory(sdcardPath);
+      if (!backupDir.existsSync()) {
+        backupDir.createSync(recursive: true);
+      }
+      return backupDir;
+    } catch (e) {
+      Get.snackbar("Error", "Error getting directory: $e.",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
+
+      return null;
+    }
+  }
+}

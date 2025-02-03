@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
-import 'package:flutter_iconpicker/Models/icon_picker_icon.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -55,7 +54,11 @@ class KategoriProduk extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Obx(() {
-                                    return ListTile(leading: Icon(IconData(_productController.daftarKategori[index]['icon'], fontFamily: 'MaterialIcons')),
+                                    return ListTile(
+                                      leading: Icon(IconData(
+                                          _productController
+                                              .daftarKategori[index]['icon'],
+                                          fontFamily: 'MaterialIcons')),
                                       onLongPress: () {
                                         if (removeIndex.value == '' ||
                                             removeIndex.value !=

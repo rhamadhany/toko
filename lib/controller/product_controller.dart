@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -58,7 +56,7 @@ class ProductController extends GetxController {
   ]);
 
   final kategoriAdd = 'Semua'.obs;
-  final  iconsTerpilih = Icons.grid_view.codePoint.obs;
+  final iconsTerpilih = Icons.grid_view.codePoint.obs;
 
   final storage = GetStorage();
   @override

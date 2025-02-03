@@ -1,13 +1,10 @@
-// import 'package:archive/archive_io.dart';
-// import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/data_settings.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:archive/archive_io.dart';
+import 'package:myapp/pengaturan/printing_qr.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -81,17 +78,24 @@ class Settings extends StatelessWidget {
                 ),
               ),
             ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListTile(
+                  title: const Text("Simpan QRCode"),
+                  leading: const Icon(Icons.picture_as_pdf),
+                  onTap: () {
+                    // DataSettings.backupData();
+                    PrintingQR().dialogQR();
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       );
     });
   }
-
-  // static Future<void> saveSettingsPrefs() async {
-  //   await SharedPreferences.getInstance().then((prefs) {
-  //     prefs.setBool('autentikasiAktif', autentikasiAktif.value);
-  //   });
-  // }
 
   static Future<void> saveSettingsPrefs() async {
     storage.write('autentikasiAktif', autentikasiAktif.value);
@@ -100,9 +104,4 @@ class Settings extends StatelessWidget {
   static Future<void> loadSettingsPrefs() async {
     autentikasiAktif.value = storage.read('autentikasiAktif') ?? false;
   }
-  // static Future<void> loadSettingsPrefs() async {
-  //   await SharedPreferences.getInstance().then((prefs) {
-  //     autentikasiAktif.value = prefs.getBool("autentikasiAktif") ?? false;
-  //   });
-  // }
 }
