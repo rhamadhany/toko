@@ -18,6 +18,7 @@ class CheckBoxAll extends StatelessWidget {
           child: Row(
             children: [
               Checkbox(
+                  activeColor: Colors.blue,
                   value: _keranjangController.boxAll.value,
                   onChanged: (value) {
                     _keranjangController.boxAll.value = value ?? false;

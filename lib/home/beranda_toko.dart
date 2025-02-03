@@ -193,6 +193,7 @@ class HomeToko extends StatelessWidget {
                                             child: Transform.scale(
                                               scale: 1.2,
                                               child: Checkbox(
+                                                activeColor: Colors.blue,
                                                 value: isChecked.value,
                                                 onChanged: (value) {
                                                   _productController

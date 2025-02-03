@@ -6,16 +6,12 @@ import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
 class DialogCheckoutKeranjang extends StatelessWidget {
-  DialogCheckoutKeranjang(
-      {super.key,
-      // required this.valueBox,
-      // required this.jumlahControllers,
-      // required this.initValueBo
-      x});
-  // final RxList<bool> valueBox;
+  DialogCheckoutKeranjang({
+    super.key,
+  });
+
   final KeranjangController _keranjangController = Get.find();
-  // final List<TextEditingController> jumlahControllers;
-  // final VoidCallback initValueBox;
+
   final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -52,8 +48,6 @@ class DialogCheckoutKeranjang extends StatelessWidget {
           await _keranjangController.removeProduk(key);
         }
       }
-
-      // _keranjangController.refreshProduk();
 
       await _keranjangController.initValueBox();
       Get.back();

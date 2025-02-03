@@ -64,6 +64,7 @@ class HalamanKeranjang extends StatelessWidget {
                                       children: [
                                         Obx(() {
                                           return Checkbox(
+                                              activeColor: Colors.blue,
                                               value: _keranjangController
                                                   .valueBox[indexKeranjang],
                                               onChanged: (value) {
