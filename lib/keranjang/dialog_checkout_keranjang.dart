@@ -4,6 +4,8 @@ import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/pengaturan/settings.dart';
 
 class DialogCheckoutKeranjang extends StatelessWidget {
   DialogCheckoutKeranjang({
@@ -11,10 +13,13 @@ class DialogCheckoutKeranjang extends StatelessWidget {
   });
 
   final KeranjangController _keranjangController = Get.find();
+  final BiometrikController _biometrikController = Get.find();
 
   final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
+    _biometrikController.hasAuthenticated.value = false;
+
     return AlertDialog(
       title: const Text(
         'Konfirmasi',
@@ -28,8 +33,24 @@ class DialogCheckoutKeranjang extends StatelessWidget {
             },
             child: const Text("Batal")),
         ElevatedButton(
-            onPressed: () {
-              confirmJual();
+            onPressed: () async {
+              if (Settings.autentikasiAktif.value) {
+                final hasAuth = await _biometrikController.authReuired();
+                if (hasAuth) {
+                  _biometrikController.hasAuthenticated.value = true;
+                }
+
+                if (_biometrikController.hasAuthenticated.value) {
+                  confirmJual();
+                } else {
+                  Get.snackbar('Gagal', 'Autentikasi gagal',
+                      snackPosition: SnackPosition.BOTTOM,
+                      colorText: Colors.white,
+                      backgroundColor: Colors.red);
+                }
+              } else {
+                confirmJual();
+              }
             },
             child: const Text("Ya")),
       ],

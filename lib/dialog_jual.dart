@@ -7,17 +7,23 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/pengaturan/settings.dart';
 
 class DialogJual extends StatelessWidget {
   DialogJual({super.key, required this.produk});
   final ProductController _productController = Get.find();
   final KeranjangController _keranjangController = Get.find();
   final LaporanController _laporanController = Get.find();
+  final BiometrikController _biometrikController = Get.find();
+
   final RxMap<String, dynamic> produk;
   final RxBool showSnackbarStok = false.obs;
   final RxBool finishLongPress = false.obs;
   @override
   Widget build(BuildContext context) {
+    _biometrikController.hasAuthenticated.value = false;
+
     return Obx(() {
       return AlertDialog(
         title: const Text("Jual Produk"),
@@ -114,6 +120,20 @@ class DialogJual extends StatelessWidget {
             message: "Jual",
             child: ElevatedButton(
               onPressed: () async {
+                if (Settings.autentikasiAktif.value) {
+                  final hasAuth = await _biometrikController.authReuired();
+                  if (hasAuth) {
+                    _biometrikController.hasAuthenticated.value = true;
+                  }
+                  if (!_biometrikController.hasAuthenticated.value) {
+                    Get.snackbar('Gagal', 'Autentikasi gagal',
+                        snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.red);
+                    return;
+                  }
+                }
+
                 final count = _productController.jualController.value.text;
                 int countInt = int.parse(count);
 
