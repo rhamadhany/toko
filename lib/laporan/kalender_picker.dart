@@ -31,6 +31,9 @@ class KalenderPicker extends StatelessWidget {
     nilaitahun();
     return Obx(() {
       return Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.blue)),
         child: SizedBox(
           height: Get.height * 0.5,
           child: Column(
@@ -42,8 +45,8 @@ class KalenderPicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25)),
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
                   color: Colors.blue,
                 ),
                 child: Column(

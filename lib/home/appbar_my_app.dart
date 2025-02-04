@@ -118,8 +118,41 @@ class AppBarMyApp extends StatelessWidget {
     });
   }
 
+  // void dialogSwitchOpsi() {
+  //   List<String> opsi = ['Tahun', 'Bulan', 'Hari'];
+  //   Get.dialog(Dialog(
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         CupertinoPicker(
+  //           itemExtent: 32,
+  //           onSelectedItemChanged: (value) {
+  //             _laporanController.viewMode.value = opsi[value];
+  //           },
+  //           children: opsi.map((i) => Text(i)).toList(),
+  //         ),
+  //       ],
+  //     ),
+  //   ));
+  // }
   void dialogSwitchOpsi() {
     Get.dialog(AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: Colors.blue)),
+      title: Card(
+        color: Colors.blue,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.blue)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Mode',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
