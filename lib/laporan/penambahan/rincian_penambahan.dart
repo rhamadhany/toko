@@ -10,8 +10,8 @@ class RincianPenambahan extends StatelessWidget {
   final ProductController _productController = Get.find();
   final headList = [
     'Tanggal',
-    'Produk',
     'Id',
+    'Produk',
     'Jumlah',
     'Modal',
     'Omset',
@@ -20,40 +20,42 @@ class RincianPenambahan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dataPenambahan = initData();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        title: Text(
-          tanggal.value,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            showCheckboxColumn: false,
-            columnSpacing: 20,
-            columns: headList
-                .map((h) => DataColumn(
-                    label: Text(h,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16))))
-                .toList(),
-            rows: dataPenambahan.map((data) {
-              return DataRow(
-                  cells: headList.map((head) {
-                return DataCell(head == 'Jumlah'
-                    ? Center(child: Text(data[head].toString()))
-                    : Text(data[head].toString()));
-              }).toList());
-            }).toList(),
+    return Obx(() {
+      final dataPenambahan = initData();
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          title: Text(
+            tanggal.value,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              showCheckboxColumn: false,
+              columnSpacing: 20,
+              columns: headList
+                  .map((h) => DataColumn(
+                      label: Text(h,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16))))
+                  .toList(),
+              rows: dataPenambahan.map((data) {
+                return DataRow(
+                    cells: headList.map((head) {
+                  return DataCell(head == 'Jumlah'
+                      ? Center(child: Text(data[head].toString()))
+                      : Text(data[head].toString()));
+                }).toList());
+              }).toList(),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   List<Map<String, dynamic>> initData() {
@@ -82,8 +84,8 @@ class RincianPenambahan extends StatelessWidget {
 
       dataPenambahan.add({
         'Tanggal': itemTanggal,
-        'Produk': produk,
         'Id': key,
+        'Produk': produk,
         'Jumlah': jumlah,
         'Modal': 'Rp ${_productController.regexNominal(modal.toString())}',
         'Omset': 'Rp ${_productController.regexNominal(omset.toString())}',

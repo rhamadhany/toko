@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:myapp/controller/laporan_controller.dart';
+import 'package:myapp/laporan/penambahan/penambahan_bulanan.dart';
 import 'package:myapp/laporan/penambahan/penambahan_harian.dart';
 
 import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
@@ -31,7 +32,9 @@ class LaporanPenjualan extends StatelessWidget {
                         : _laporanController.viewMode.value == 'Bulan'
                             ? LaporanBulanan()
                             : LaporanTahunan())
-                : PenambahanHarian(),
+                : _laporanController.viewMode.value == 'Hari'
+                    ? PenambahanHarian()
+                    : PenambahanBulanan(),
           ),
           BottomNavigationBar(
             items: const [
