@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
-import 'package:myapp/db_helper.dart';
+import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -29,7 +29,7 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       actions: [
         ElevatedButton(
             onPressed: () {
-              Get.back();
+              Get.back(closeOverlays: true);
             },
             child: const Text("Batal")),
         ElevatedButton(
@@ -71,14 +71,15 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       }
 
       await _keranjangController.initValueBox();
-      Get.back();
+      Get.back(closeOverlays: true);
 
       Get.snackbar("Terjual", "Penjualan Selesai",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.blue);
     } else {
-      Get.back();
+      // Get.back();
+      Get.back(closeOverlays: true);
       Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,

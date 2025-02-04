@@ -4,11 +4,11 @@ import 'package:myapp/QRCode/qr_view.dart';
 
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
-import 'package:myapp/dialog_jual.dart';
-import 'package:myapp/gambar_penuh.dart';
+import 'package:myapp/lihat/dialog_jual.dart';
+import 'package:myapp/lihat/gambar_penuh.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
-import 'package:myapp/logo_produk.dart';
+import 'package:myapp/lihat/logo_produk.dart';
 
 import 'package:myapp/produk%20baru/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
@@ -149,7 +149,9 @@ class LihatProduk extends StatelessWidget {
           currentIndex: _productController.bottomIndex.value,
           onTap: (value) {
             _productController.bottomIndex.value = value;
-            if (value == 0 && _biometrikController.tabIndex.value == 1) {
+            if (value == 0 &&
+                (_biometrikController.tabIndex.value == 1 ||
+                    _biometrikController.tabIndex.value == 2)) {
               editProduk();
             } else if (value == 0 && _biometrikController.tabIndex.value == 0) {
               _keranjangController.langsungtambahkeKeranjang(sisa, produk);

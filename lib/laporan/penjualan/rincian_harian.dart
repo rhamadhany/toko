@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/lihat_produk.dart';
+import 'package:myapp/lihat/lihat_produk.dart';
 
 class RincianHarian extends StatelessWidget {
   RincianHarian({super.key, required this.tanggal});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/logo_produk.dart';
+import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/produk%20baru/edit_deskripsi.dart';
 import 'package:myapp/produk%20baru/kategori_produk.dart';
 import 'package:myapp/produk%20baru/tambah_gambar.dart';

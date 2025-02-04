@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/gambar_penuh.dart';
+import 'package:myapp/lihat/gambar_penuh.dart';
 import 'package:myapp/keranjang/app_bar_row.dart';
 import 'package:myapp/keranjang/bottom_bar.dart';
 import 'package:myapp/keranjang/check_box_all.dart';
 import 'package:myapp/keranjang/jumlah_keranjang.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/logo_produk.dart';
+import 'package:myapp/lihat/logo_produk.dart';
 
 class HalamanKeranjang extends StatelessWidget {
   const HalamanKeranjang({super.key});

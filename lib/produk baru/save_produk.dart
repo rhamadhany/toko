@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/db_helper.dart';
+import 'package:myapp/controller/db_helper.dart';
 
 class IconSave extends StatelessWidget {
   const IconSave({

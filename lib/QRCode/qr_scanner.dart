@@ -5,7 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 
-import 'package:myapp/lihat_produk.dart';
+import 'package:myapp/lihat/lihat_produk.dart';
 
 class QRScanner extends StatelessWidget {
   QRScanner({super.key, required this.dariKeranjang});
@@ -13,6 +13,7 @@ class QRScanner extends StatelessWidget {
   final ProductController _productController = Get.find();
   final KeranjangController _keranjangController = Get.find();
   final bool dariKeranjang;
+  final hasShowSnackBar = false.obs;
   @override
   Widget build(BuildContext context) {
     _qrScannerController.fromGallery.value = false;
@@ -182,16 +183,26 @@ class QRScanner extends StatelessWidget {
         }
       } else {
         _qrScannerController.fromGallery.value = false;
-        Get.snackbar('Gagal', '$keyScan tidak ditemukan pada daftar produk',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white);
+        hasShowSnackBar.value = true;
+        if (!hasShowSnackBar.value) {
+          Get.snackbar('Gagal', '$keyScan tidak ditemukan pada daftar produk',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+              colorText: Colors.white);
+          await Future.delayed(const Duration(seconds: 3));
+          hasShowSnackBar.value = false;
+        }
       }
     } else {
-      Get.snackbar('Gagal', 'Tidak berhasil memindai gambar',
-          snackPosition: SnackPosition.BOTTOM,
-          colorText: Colors.white,
-          backgroundColor: Colors.red);
+      hasShowSnackBar.value = true;
+      if (!hasShowSnackBar.value) {
+        Get.snackbar('Gagal', 'Tidak berhasil memindai gambar',
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.red);
+        await Future.delayed(const Duration(seconds: 3));
+        hasShowSnackBar.value = false;
+      }
     }
   }
 }

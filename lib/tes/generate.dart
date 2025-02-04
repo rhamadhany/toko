@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/db_helper.dart';
+import 'package:myapp/controller/db_helper.dart';
 
 class GenerateItem extends StatelessWidget {
   GenerateItem({super.key});

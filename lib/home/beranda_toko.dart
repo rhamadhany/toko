@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 
-import 'package:myapp/lihat_produk.dart';
-import 'package:myapp/logo_produk.dart';
+import 'package:myapp/lihat/lihat_produk.dart';
+import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 class HomeToko extends StatelessWidget {
