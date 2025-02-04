@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/laporan/penambahan/penambahan_bulanan.dart';
 import 'package:myapp/laporan/penambahan/penambahan_harian.dart';
+import 'package:myapp/laporan/penambahan/penambahan_tahunan.dart';
 
 import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
 import 'package:myapp/laporan/penjualan/laporan_harian.dart';
@@ -17,6 +18,8 @@ class LaporanPenjualan extends StatelessWidget {
 
   static final headList2 =
       ['Tanggal', 'Produk', 'Terjual', 'Modal', 'Omset', 'Laba'].obs;
+  static final dariTahun = false.obs;
+  static final dariBulan = false.obs;
 
   LaporanPenjualan({super.key});
   @override
@@ -34,7 +37,9 @@ class LaporanPenjualan extends StatelessWidget {
                             : LaporanTahunan())
                 : _laporanController.viewMode.value == 'Hari'
                     ? PenambahanHarian()
-                    : PenambahanBulanan(),
+                    : _laporanController.viewMode.value == 'Bulan'
+                        ? PenambahanBulanan()
+                        : PenambahanTahunan(),
           ),
           BottomNavigationBar(
             items: const [

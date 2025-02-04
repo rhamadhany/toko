@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
 
 class PenambahanBulanan extends StatelessWidget {
-  PenambahanBulanan({super.key});
+  PenambahanBulanan({
+    super.key,
+  });
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
   final headList = ['Bulan', 'Jumlah', 'Modal', 'Omset', 'Laba'];
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -28,6 +32,13 @@ class PenambahanBulanan extends StatelessWidget {
                   .toList(),
               rows: dataPenambahan.entries
                   .map((data) => DataRow(
+                      onSelectChanged: (_) {
+                        // print(data.key);
+                        LaporanPenjualan.dariBulan.value = true;
+                        _laporanController.bulanTerpilih.value =
+                            data.key.split(' ')[0];
+                        _laporanController.viewMode.value = 'Hari';
+                      },
                       cells: headList
                           .map((head) => DataCell(head == 'Jumlah'
                               ? Center(

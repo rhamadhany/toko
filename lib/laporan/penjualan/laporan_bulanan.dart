@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/penjualan/laporan_harian.dart';
+import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 
 class LaporanBulanan extends StatelessWidget {
@@ -13,7 +13,6 @@ class LaporanBulanan extends StatelessWidget {
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
   final penjualan = RxMap<String, Map<String, dynamic>>().obs;
-  static final dariTahun = false.obs;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -60,7 +59,7 @@ class LaporanBulanan extends StatelessWidget {
 
               return DataRow(
                   onSelectChanged: (_) {
-                    LaporanHarian.dariBulan.value = true;
+                    LaporanPenjualan.dariBulan.value = true;
                     _laporanController.bulanTerpilih.value =
                         _laporanController.namaBulan[index];
                     _laporanController.viewMode.value = 'Hari';

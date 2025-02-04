@@ -13,7 +13,6 @@ class LaporanHarian extends StatelessWidget {
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
 
-  static final dariBulan = false.obs;
   final penjualanHarian = RxMap<String, Map<String, dynamic>>().obs;
   final jumlahHari = 0.obs;
   final indexBulan = 0.obs;

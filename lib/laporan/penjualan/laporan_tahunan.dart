@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/penjualan/laporan_bulanan.dart';
+import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
 
 class LaporanTahunan extends StatelessWidget {
   LaporanTahunan({super.key});
@@ -31,7 +31,6 @@ class LaporanTahunan extends StatelessWidget {
             )));
           }),
           rows: List.generate(daftarTahun.length, (index) {
-            // print(penjualan);
             final tahunIndex = penjualan[daftarTahun[index]];
 
             final jumlah = convertString(tahunIndex, 'jumlah');
@@ -43,7 +42,7 @@ class LaporanTahunan extends StatelessWidget {
                   _laporanController.tahunTerpilih.value =
                       int.tryParse(daftarTahun[index]) ?? DateTime.now().year;
                   _laporanController.viewMode.value = 'Bulan';
-                  LaporanBulanan.dariTahun.value = true;
+                  LaporanPenjualan.dariTahun.value = true;
                 },
                 cells: [
                   DataCell(Center(child: Text(daftarTahun[index]))),
@@ -75,7 +74,7 @@ class LaporanTahunan extends StatelessWidget {
     Map<String, Map<String, dynamic>> daftarPenjualan = {};
     for (var item in penjualan) {
       final tahun = item['tanggal'].split('-')[0];
-      // print(tahun);
+
       if (!daftarPenjualan.containsKey(tahun)) {
         daftarPenjualan[tahun] = {
           'jumlah': 0,
