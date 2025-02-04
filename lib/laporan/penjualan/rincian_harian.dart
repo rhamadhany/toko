@@ -59,52 +59,59 @@ class RincianHarian extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          body: SingleChildScrollView(
+          body: Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: 2, color: Colors.blue),
+              borderRadius: BorderRadius.circular(0),
+            ),
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                  showCheckboxColumn: false,
-                  columnSpacing: 20,
-                  columns: headList
-                      .map((head) => DataColumn(
-                              label: Center(
-                                  child: Text(
-                            head,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ))))
-                      .toList(),
-                  rows: List.generate(rincianPenjualan.length, (index) {
-                    final produk = rincianPenjualan[index];
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                    showCheckboxColumn: false,
+                    columnSpacing: 20,
+                    columns: headList
+                        .map((head) => DataColumn(
+                                label: Center(
+                                    child: Text(
+                              head,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ))))
+                        .toList(),
+                    rows: List.generate(rincianPenjualan.length, (index) {
+                      final produk = rincianPenjualan[index];
 
-                    final omset =
-                        _productController.regexNominal(produk['omset']);
-                    final laba =
-                        _productController.regexNominal(produk['laba']);
-                    final modal =
-                        _productController.regexNominal(produk['modal']);
-                    return DataRow(
-                        onSelectChanged: (_) {
-                          final indexKey = _productController.allProduct
-                              .indexWhere((all) => all['key'] == produk['key']);
+                      final omset =
+                          _productController.regexNominal(produk['omset']);
+                      final laba =
+                          _productController.regexNominal(produk['laba']);
+                      final modal =
+                          _productController.regexNominal(produk['modal']);
+                      return DataRow(
+                          onSelectChanged: (_) {
+                            final indexKey = _productController.allProduct
+                                .indexWhere(
+                                    (all) => all['key'] == produk['key']);
 
-                          // print(indexKey.toString() +
-                          // rincianPenjualan.toString());
-                          if (indexKey != -1) {
-                            Get.to(() => LihatProduk(
-                                produk: _productController
-                                    .allProduct[indexKey].obs));
-                          }
-                        },
-                        cells: [
-                          DataCell(Text(produk['tanggal'])),
-                          DataCell(Text(produk['produk'])),
-                          DataCell(Center(child: Text(produk['jumlah']))),
-                          DataCell(Text(modal)),
-                          DataCell(Text(omset)),
-                          DataCell(Text(laba)),
-                        ]);
-                  })),
+                            // print(indexKey.toString() +
+                            // rincianPenjualan.toString());
+                            if (indexKey != -1) {
+                              Get.to(() => LihatProduk(
+                                  produk: _productController
+                                      .allProduct[indexKey].obs));
+                            }
+                          },
+                          cells: [
+                            DataCell(Text(produk['tanggal'])),
+                            DataCell(Text(produk['produk'])),
+                            DataCell(Center(child: Text(produk['jumlah']))),
+                            DataCell(Text(modal)),
+                            DataCell(Text(omset)),
+                            DataCell(Text(laba)),
+                          ]);
+                    })),
+              ),
             ),
           ));
     });

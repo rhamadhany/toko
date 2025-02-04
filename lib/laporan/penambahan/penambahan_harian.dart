@@ -16,53 +16,64 @@ class PenambahanHarian extends StatelessWidget {
     return Obx(() {
       final dataPenambahan = iniasiasiData();
 
-      return SingleChildScrollView(
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 2, color: Colors.blue),
+          borderRadius: BorderRadius.circular(0),
+        ),
         child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            showCheckboxColumn: false,
-            columnSpacing: 20,
-            columns: headList
-                .map((h) => DataColumn(
-                      label: Text(
-                        h,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ))
-                .toList(),
-            rows: List.generate(jumlahHari.value, (index) {
-              final jumlah = dataPenambahan.values.elementAt(index)['jumlah'] ==
-                      0
-                  ? '-'
-                  : dataPenambahan.values.elementAt(index)['jumlah'].toString();
-              final modal = dataPenambahan.values.elementAt(index)['modal'] == 0
-                  ? '-'
-                  : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['modal'].toString())}';
-              final omset = dataPenambahan.values.elementAt(index)['omset'] == 0
-                  ? '-'
-                  : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['omset'].toString())}';
-              final laba = dataPenambahan.values.elementAt(index)['laba'] == 0
-                  ? '-'
-                  : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['laba'].toString())}';
-              return DataRow(
-                  onSelectChanged: (_) {
-                    final tanggalSelect = dataPenambahan.keys.elementAt(index);
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              showCheckboxColumn: false,
+              columnSpacing: 20,
+              columns: headList
+                  .map((h) => DataColumn(
+                        label: Text(
+                          h,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ))
+                  .toList(),
+              rows: List.generate(jumlahHari.value, (index) {
+                final jumlah =
+                    dataPenambahan.values.elementAt(index)['jumlah'] == 0
+                        ? '-'
+                        : dataPenambahan.values
+                            .elementAt(index)['jumlah']
+                            .toString();
+                final modal = dataPenambahan.values.elementAt(index)['modal'] ==
+                        0
+                    ? '-'
+                    : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['modal'].toString())}';
+                final omset = dataPenambahan.values.elementAt(index)['omset'] ==
+                        0
+                    ? '-'
+                    : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['omset'].toString())}';
+                final laba = dataPenambahan.values.elementAt(index)['laba'] == 0
+                    ? '-'
+                    : 'Rp ${_productController.regexNominal(dataPenambahan.values.elementAt(index)['laba'].toString())}';
+                return DataRow(
+                    onSelectChanged: (_) {
+                      final tanggalSelect =
+                          dataPenambahan.keys.elementAt(index);
 
-                    Get.to(() => RincianPenambahan(
-                          tanggal: tanggalSelect.obs,
-                        ));
-                  },
-                  cells: [
-                    DataCell(Text(dataPenambahan.values
-                        .elementAt(index)['tanggal']
-                        .toString())),
-                    DataCell(Center(child: Text(jumlah))),
-                    DataCell(Text(modal)),
-                    DataCell(Text(omset)),
-                    DataCell(Text(laba)),
-                  ]);
-            }),
+                      Get.to(() => RincianPenambahan(
+                            tanggal: tanggalSelect.obs,
+                          ));
+                    },
+                    cells: [
+                      DataCell(Text(dataPenambahan.values
+                          .elementAt(index)['tanggal']
+                          .toString())),
+                      DataCell(Center(child: Text(jumlah))),
+                      DataCell(Text(modal)),
+                      DataCell(Text(omset)),
+                      DataCell(Text(laba)),
+                    ]);
+              }),
+            ),
           ),
         ),
       );

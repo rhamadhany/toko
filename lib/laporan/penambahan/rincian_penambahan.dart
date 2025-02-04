@@ -31,26 +31,32 @@ class RincianPenambahan extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 2, color: Colors.blue),
+            borderRadius: BorderRadius.circular(0),
+          ),
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 20,
-              columns: headList
-                  .map((h) => DataColumn(
-                      label: Text(h,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16))))
-                  .toList(),
-              rows: dataPenambahan.map((data) {
-                return DataRow(
-                    cells: headList.map((head) {
-                  return DataCell(head == 'Jumlah'
-                      ? Center(child: Text(data[head].toString()))
-                      : Text(data[head].toString()));
-                }).toList());
-              }).toList(),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                showCheckboxColumn: false,
+                columnSpacing: 20,
+                columns: headList
+                    .map((h) => DataColumn(
+                        label: Text(h,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16))))
+                    .toList(),
+                rows: dataPenambahan.map((data) {
+                  return DataRow(
+                      cells: headList.map((head) {
+                    return DataCell(head == 'Jumlah'
+                        ? Center(child: Text(data[head].toString()))
+                        : Text(data[head].toString()));
+                  }).toList());
+                }).toList(),
+              ),
             ),
           ),
         ),

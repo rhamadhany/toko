@@ -16,39 +16,45 @@ class PenambahanBulanan extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final dataPenambahan = initData();
-      return SingleChildScrollView(
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 2, color: Colors.blue),
+          borderRadius: BorderRadius.circular(0),
+        ),
         child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 20,
-              columns: headList
-                  .map((head) => DataColumn(
-                          label: Text(
-                        head,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      )))
-                  .toList(),
-              rows: dataPenambahan.entries
-                  .map((data) => DataRow(
-                      onSelectChanged: (_) {
-                        // print(data.key);
-                        LaporanPenjualan.dariBulan.value = true;
-                        _laporanController.bulanTerpilih.value =
-                            data.key.split(' ')[0];
-                        _laporanController.viewMode.value = 'Hari';
-                      },
-                      cells: headList
-                          .map((head) => DataCell(head == 'Jumlah'
-                              ? Center(
-                                  child: Text(data.value[head].toString()),
-                                )
-                              : Text(head != 'Bulan'
-                                  ? 'Rp ${_productController.regexNominal(data.value[head].toString())}'
-                                  : data.value[head].toString())))
-                          .toList()))
-                  .toList()),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                showCheckboxColumn: false,
+                columnSpacing: 20,
+                columns: headList
+                    .map((head) => DataColumn(
+                            label: Text(
+                          head,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        )))
+                    .toList(),
+                rows: dataPenambahan.entries
+                    .map((data) => DataRow(
+                        onSelectChanged: (_) {
+                          // print(data.key);
+                          LaporanPenjualan.dariBulan.value = true;
+                          _laporanController.bulanTerpilih.value =
+                              data.key.split(' ')[0];
+                          _laporanController.viewMode.value = 'Hari';
+                        },
+                        cells: headList
+                            .map((head) => DataCell(head == 'Jumlah'
+                                ? Center(
+                                    child: Text(data.value[head].toString()),
+                                  )
+                                : Text(head != 'Bulan'
+                                    ? 'Rp ${_productController.regexNominal(data.value[head].toString())}'
+                                    : data.value[head].toString())))
+                            .toList()))
+                    .toList()),
+          ),
         ),
       );
     });

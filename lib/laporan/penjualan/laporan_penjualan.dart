@@ -29,12 +29,11 @@ class LaporanPenjualan extends StatelessWidget {
         children: [
           Expanded(
             child: indexLaporan.value == 1
-                ? SingleChildScrollView(
-                    child: _laporanController.viewMode.value == 'Hari'
-                        ? LaporanHarian()
-                        : _laporanController.viewMode.value == 'Bulan'
-                            ? LaporanBulanan()
-                            : LaporanTahunan())
+                ? _laporanController.viewMode.value == 'Hari'
+                    ? LaporanHarian()
+                    : _laporanController.viewMode.value == 'Bulan'
+                        ? LaporanBulanan()
+                        : LaporanTahunan()
                 : _laporanController.viewMode.value == 'Hari'
                     ? PenambahanHarian()
                     : _laporanController.viewMode.value == 'Bulan'

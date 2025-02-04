@@ -17,41 +17,51 @@ class LaporanTahunan extends StatelessWidget {
   Widget build(BuildContext context) {
     inisiasiDaftarTahun();
     final penjualan = hitungLaporanTahunan();
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-          showCheckboxColumn: false,
-          columnSpacing: 20,
-          columns: List.generate(headList.length, (index) {
-            return DataColumn(
-                label: Center(
-                    child: Text(
-              headList[index],
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            )));
-          }),
-          rows: List.generate(daftarTahun.length, (index) {
-            final tahunIndex = penjualan[daftarTahun[index]];
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: Colors.blue),
+        borderRadius: BorderRadius.circular(0),
+      ),
+      child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+              showCheckboxColumn: false,
+              columnSpacing: 20,
+              columns: List.generate(headList.length, (index) {
+                return DataColumn(
+                    label: Center(
+                        child: Text(
+                  headList[index],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
+                )));
+              }),
+              rows: List.generate(daftarTahun.length, (index) {
+                final tahunIndex = penjualan[daftarTahun[index]];
 
-            final jumlah = convertString(tahunIndex, 'jumlah');
-            final modal = convertString(tahunIndex, 'modal');
-            final omset = convertString(tahunIndex, 'omset');
-            final laba = convertString(tahunIndex, 'laba');
-            return DataRow(
-                onSelectChanged: (_) {
-                  _laporanController.tahunTerpilih.value =
-                      int.tryParse(daftarTahun[index]) ?? DateTime.now().year;
-                  _laporanController.viewMode.value = 'Bulan';
-                  LaporanPenjualan.dariTahun.value = true;
-                },
-                cells: [
-                  DataCell(Center(child: Text(daftarTahun[index]))),
-                  DataCell(Center(child: Text(jumlah))),
-                  DataCell(Text(modal)),
-                  DataCell(Text(omset)),
-                  DataCell(Text(laba)),
-                ]);
-          })),
+                final jumlah = convertString(tahunIndex, 'jumlah');
+                final modal = convertString(tahunIndex, 'modal');
+                final omset = convertString(tahunIndex, 'omset');
+                final laba = convertString(tahunIndex, 'laba');
+                return DataRow(
+                    onSelectChanged: (_) {
+                      _laporanController.tahunTerpilih.value =
+                          int.tryParse(daftarTahun[index]) ??
+                              DateTime.now().year;
+                      _laporanController.viewMode.value = 'Bulan';
+                      LaporanPenjualan.dariTahun.value = true;
+                    },
+                    cells: [
+                      DataCell(Center(child: Text(daftarTahun[index]))),
+                      DataCell(Center(child: Text(jumlah))),
+                      DataCell(Text(modal)),
+                      DataCell(Text(omset)),
+                      DataCell(Text(laba)),
+                    ]);
+              })),
+        ),
+      ),
     );
   }
 
