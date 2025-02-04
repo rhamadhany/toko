@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
   static final ProductController _productController =
       Get.find<ProductController>();
+  static final LaporanController _laporanController = Get.find();
 
   static Future<bool> columnExists(
       Database db, String tableName, String columnName) async {
@@ -83,6 +85,19 @@ class DBHelper {
       'kategori': kategori,
       'deskripsi': deskripsi,
     });
+    _laporanController.database?.insert('penambahan', {
+      'key': key,
+      'tanggal': DateTime.now().toString(),
+      'produk': product,
+      'harga_beli': hargaBeli,
+      'harga_jual': hargaJual,
+      'terjual': terjual,
+      'stok': stock,
+      'gambar': jsonPictures,
+      'kategori': kategori,
+      'deskripsi': deskripsi
+    });
+    _laporanController.loadProduk();
     _productController.allProduct.value = await loadProducts();
   }
 
