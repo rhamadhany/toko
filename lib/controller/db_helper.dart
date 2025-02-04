@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -53,13 +54,22 @@ class DBHelper {
     }
     _productController.allProduct.value = await loadProducts();
     final jsonPictures = jsonEncode(pictures);
-    final time = DateTime.now();
+    // final time = DateTime.now();
     final random = Random();
-    int randomNumber = random.nextInt(1000) + 1;
+    // int randomNumber = random.nextInt(1000) + 1;
 
     // String key = base64Encode(utf8.encode(now.toString()));
-    final keyString =
-        'ID${time}_${_productController.allProduct.length + 1}_$randomNumber';
+    // final keyString =
+    final date = DateTime.now();
+    final format = DateFormat('HHmmss');
+    final formattedDate = format.format(date);
+    const chars =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    // final rString = String.fromCharCodes(Iterable.generate(
+    //     8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+    final rString = String.fromCharCodes(Iterable.generate(
+        8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+    final keyString = formattedDate + rString;
     final key = base64Encode(utf8.encode(keyString));
 
     await db.insert('products', {
