@@ -145,20 +145,45 @@ class HalamanKeranjang extends StatelessWidget {
                                                 MainAxisAlignment.start,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text(
-                                                produkKeranjang['produk'],
-                                                style: const TextStyle(
-                                                    fontSize: 16),
+                                              SizedBox(
+                                                width: Get.width * 0.5,
+                                                child: Text(
+                                                  produkKeranjang['produk'],
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
+                                                ),
                                               ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  hargaBarang(
-                                                      produkKeranjang['key']),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'Sisa: ${sisa(produkKeranjang['key'])}',
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                      hargaBarang(
+                                                          produkKeranjang[
+                                                              'key']),
+                                                    ],
+                                                  ),
                                                   JumlahKeranjang(
                                                     // jumlahControllers:
                                                     //     jumlahControllers,
@@ -209,6 +234,17 @@ class HalamanKeranjang extends StatelessWidget {
     } else {
       return '';
     }
+  }
+
+  String sisa(String keyKeranjang) {
+    final indexKeys = _productController.allProduct
+        .indexWhere((product) => product['key'] == keyKeranjang);
+    if (indexKeys != -1) {
+      final sisa = _productController.allProduct[indexKeys]['stok'] -
+          _productController.allProduct[indexKeys]['terjual'];
+      return sisa.toString();
+    }
+    return '0';
   }
 
   static bool haveValueBox() {
