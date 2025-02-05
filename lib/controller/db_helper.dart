@@ -119,6 +119,38 @@ class DBHelper {
 
     final gambarJson = jsonEncode(produk['gambar']);
 
+    final query = 'SELECT * FROM products WHERE key = ?';
+    final old = await db.rawQuery(query, [produk['key']]);
+
+    if (old.isEmpty) {
+      return {};
+    }
+
+    final oldProduk = old.first;
+
+    // print(old);
+    final tanggal = DateTime.now().toString();
+    await _laporanController.database?.insert('perubahan', {
+      'key': produk['key'],
+      'tanggal': tanggal,
+      'produk_baru': produk['produk'],
+      'produk_lama': oldProduk['produk'],
+      'harga_beli_baru': produk['harga_beli'],
+      'harga_beli_lama': oldProduk['harga_beli'],
+      'harga_jual_baru': produk['harga_jual'],
+      'harga_jual_lama': oldProduk['harga_jual'],
+      'terjual_baru': produk['terjual'],
+      'terjual_lama': oldProduk['terjual'],
+      'stok_baru': produk['stok'],
+      'stok_lama': oldProduk['stok'],
+      'gambar_baru': gambarJson,
+      'gambar_lama': oldProduk['gambar'],
+      'kategori_baru': produk['kategori'],
+      'kategori_lama': oldProduk['kategori'],
+      'deskripsi_baru': produk['deskripsi'],
+      'deskripsi_lama': oldProduk['deskripsi']
+    });
+    await _laporanController.loadProduk();
     await db.update(
       'products',
       {

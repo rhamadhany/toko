@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:myapp/controller/db_helper.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -57,12 +58,15 @@ class ProductController extends GetxController {
 
   final kategoriAdd = 'Semua'.obs;
   final iconsTerpilih = Icons.grid_view.codePoint.obs;
+  final dateFormat = DateFormat('dd-MM-yyyy');
   final tanggalHarian = DateTime.now().toString().split(' ')[0].obs;
 
   final storage = GetStorage();
   @override
   void onInit() {
     super.onInit();
+    tanggalHarian.value =
+        dateFormat.format(DateTime.now()).toString().split(' ')[0];
     loadDaftarKategori();
 
     initDatabase();

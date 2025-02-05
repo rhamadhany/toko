@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myapp/laporan/penambahan/penambahan_data.dart';
 
 import 'package:myapp/laporan/penjualan/penjualan_data.dart';
+import 'package:myapp/laporan/perubahan/data_perubahan.dart';
 
 class LaporanPenjualan extends StatelessWidget {
   static final indexLaporan = 1.obs;
@@ -19,7 +20,11 @@ class LaporanPenjualan extends StatelessWidget {
       return Column(
         children: [
           Expanded(
-            child: indexLaporan.value == 1 ? PenjualanData() : PenambahanData(),
+            child: indexLaporan.value == 1
+                ? PenjualanData()
+                : indexLaporan.value == 2
+                    ? PenambahanData()
+                    : DataPerubahan(),
           ),
           BottomNavigationBar(
             items: const [

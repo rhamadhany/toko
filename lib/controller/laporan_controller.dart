@@ -50,11 +50,24 @@ class LaporanController extends GetxController {
       onCreate: (db, version) async {
         await db.execute('''
 CREATE TABLE perubahan (
-  key TEXT,
-  tanggal TEXT,
-  produk TEXT,
-  lama TEXT,
-  baru TEXT
+            key TEXT,
+            tanggal TEXT,
+            produk_baru TEXT,
+            produk_lama TEXT,
+            harga_beli_baru TEXT,
+            harga_beli_lama TEXT,
+            harga_jual_baru TEXT,
+            harga_jual_lama TEXT,
+            terjual_baru INTEGER,
+            terjual_lama INTEGER,
+            stok_baru INTEGER,
+            stok_lama INTEGER,
+            gambar_baru TEXT, 
+            gambar_lama TEXT, 
+            kategori_baru TEXT,
+            kategori_lama TEXT,
+            deskripsi_baru TEXT,
+            deskripsi_lama TEXT
 )
 ''');
 
