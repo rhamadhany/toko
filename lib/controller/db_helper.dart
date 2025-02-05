@@ -56,19 +56,15 @@ class DBHelper {
     }
     _productController.allProduct.value = await loadProducts();
     final jsonPictures = jsonEncode(pictures);
-    // final time = DateTime.now();
-    final random = Random();
-    // int randomNumber = random.nextInt(1000) + 1;
 
-    // String key = base64Encode(utf8.encode(now.toString()));
-    // final keyString =
+    final random = Random();
+
     final date = DateTime.now();
     final format = DateFormat('HHmmss');
     final formattedDate = format.format(date);
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    // final rString = String.fromCharCodes(Iterable.generate(
-    //     8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+
     final rString = String.fromCharCodes(Iterable.generate(
         8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
     final keyString = formattedDate + rString;
@@ -85,7 +81,7 @@ class DBHelper {
       'kategori': kategori,
       'deskripsi': deskripsi,
     });
-    _laporanController.database?.insert('penambahan', {
+    await _laporanController.database?.insert('penambahan', {
       'key': key,
       'tanggal': DateTime.now().toString(),
       'produk': product,
@@ -97,7 +93,7 @@ class DBHelper {
       'kategori': kategori,
       'deskripsi': deskripsi
     });
-    _laporanController.loadProduk();
+    await _laporanController.loadProduk();
     _productController.allProduct.value = await loadProducts();
   }
 

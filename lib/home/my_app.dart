@@ -7,7 +7,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
-import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
+import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk%20baru/produk_baru.dart';
@@ -142,7 +142,11 @@ class MyApp extends StatelessWidget {
   }
 
   void dialogTutup(didPop, result) {
-    if (LaporanPenjualan.dariBulan.value &&
+    if (LaporanPenjualan.dariHari.value &&
+        _biometrikController.tabIndex.value == 2) {
+      LaporanPenjualan.dariHari.value = false;
+      _laporanController.viewMode.value = 'Hari';
+    } else if (LaporanPenjualan.dariBulan.value &&
         _biometrikController.tabIndex.value == 2) {
       LaporanPenjualan.dariBulan.value = false;
       _laporanController.viewMode.value = 'Bulan';

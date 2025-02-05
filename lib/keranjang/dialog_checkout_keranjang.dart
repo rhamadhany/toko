@@ -29,7 +29,7 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       actions: [
         ElevatedButton(
             onPressed: () {
-              Get.back(closeOverlays: true);
+              Get.back(closeOverlays: false);
             },
             child: const Text("Batal")),
         ElevatedButton(
@@ -41,6 +41,8 @@ class DialogCheckoutKeranjang extends StatelessWidget {
                 }
 
                 if (_biometrikController.hasAuthenticated.value) {
+                  Get.back(closeOverlays: false);
+
                   confirmJual();
                 } else {
                   Get.snackbar('Gagal', 'Autentikasi gagal',
@@ -49,6 +51,8 @@ class DialogCheckoutKeranjang extends StatelessWidget {
                       backgroundColor: Colors.red);
                 }
               } else {
+                Get.back(closeOverlays: false);
+
                 confirmJual();
               }
             },
@@ -71,15 +75,12 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       }
 
       await _keranjangController.initValueBox();
-      Get.back(closeOverlays: true);
 
       Get.snackbar("Terjual", "Penjualan Selesai",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.blue);
     } else {
-      // Get.back();
-      Get.back(closeOverlays: true);
       Get.snackbar("Gagal", "Pilih setidaknya 1 produk",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,

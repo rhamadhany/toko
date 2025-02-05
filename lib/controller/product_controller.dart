@@ -57,6 +57,7 @@ class ProductController extends GetxController {
 
   final kategoriAdd = 'Semua'.obs;
   final iconsTerpilih = Icons.grid_view.codePoint.obs;
+  final tanggalHarian = DateTime.now().toString().split(' ')[0].obs;
 
   final storage = GetStorage();
   @override

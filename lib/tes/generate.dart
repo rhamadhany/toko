@@ -69,6 +69,7 @@ class GenerateItem extends StatelessWidget {
           RxList<dynamic>.empty(),
           'Semua',
           '');
+      // await Future.delayed(Duration(seconds: 1));
     }
     Get.back();
     Get.snackbar("Berhasil", "$nilaiRandom random ditambahkan ke daftar produk",

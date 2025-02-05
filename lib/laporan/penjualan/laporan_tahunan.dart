@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
+import 'package:myapp/laporan/laporan_penjualan.dart';
 
 class LaporanTahunan extends StatelessWidget {
   LaporanTahunan({super.key});

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/penjualan/laporan_penjualan.dart';
+import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 
 class LaporanBulanan extends StatelessWidget {

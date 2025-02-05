@@ -30,7 +30,9 @@ class AppBarMyApp extends StatelessWidget {
                 : _biometrikController.tabIndex.value == 1
                     ? "Admin"
                     : _biometrikController.tabIndex.value == 2
-                        ? "Laporan ${titleLaporan()}"
+                        ? _laporanController.viewMode.value == 'Rincian'
+                            ? _productController.tanggalHarian.value
+                            : "Laporan ${titleLaporan()}"
                         : "Pengaturan",
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.white),
@@ -118,23 +120,6 @@ class AppBarMyApp extends StatelessWidget {
     });
   }
 
-  // void dialogSwitchOpsi() {
-  //   List<String> opsi = ['Tahun', 'Bulan', 'Hari'];
-  //   Get.dialog(Dialog(
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         CupertinoPicker(
-  //           itemExtent: 32,
-  //           onSelectedItemChanged: (value) {
-  //             _laporanController.viewMode.value = opsi[value];
-  //           },
-  //           children: opsi.map((i) => Text(i)).toList(),
-  //         ),
-  //       ],
-  //     ),
-  //   ));
-  // }
   void dialogSwitchOpsi() {
     Get.dialog(AlertDialog(
       shape: RoundedRectangleBorder(
@@ -188,6 +173,17 @@ class AppBarMyApp extends StatelessWidget {
                 : null,
             onTap: () {
               _laporanController.viewMode.value = 'Hari';
+              Get.back();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.access_time),
+            title: const Text('Rincian'),
+            trailing: _laporanController.viewMode.value == 'Rincian'
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () {
+              _laporanController.viewMode.value = 'Rincian';
               Get.back();
             },
           ),
