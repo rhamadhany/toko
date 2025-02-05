@@ -39,59 +39,72 @@ class PenjualanData extends StatelessWidget {
         child: SingleChildScrollView(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: DataTable(
-                showCheckboxColumn: false,
-                columnSpacing: 20,
-                columns: headList
-                    .map((head) => DataColumn(
-                            label: Text(
-                          head,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        )))
-                    .toList(),
-                rows: dataPenjualan.entries
-                    .map((data) => DataRow(
-                        onSelectChanged: (_) {
-                          if (_laporanController.viewMode.value == 'Tahun') {
-                            _laporanController.tahunTerpilih.value =
-                                int.tryParse(data.key)!;
-                            _laporanController.viewMode.value = 'Bulan';
-                            LaporanPenjualan.dariTahun.value = true;
-                          } else if (_laporanController.viewMode.value ==
-                              'Bulan') {
-                            LaporanPenjualan.dariBulan.value = true;
+            child: Column(
+              children: [
+                DataTable(
+                    showCheckboxColumn: false,
+                    columnSpacing: 20,
+                    columns: headList
+                        .map((head) => DataColumn(
+                                label: Text(
+                              head,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            )))
+                        .toList(),
+                    rows: dataPenjualan.entries
+                        .map((data) => DataRow(
+                            onSelectChanged: (_) {
+                              if (_laporanController.viewMode.value ==
+                                  'Tahun') {
+                                _laporanController.tahunTerpilih.value =
+                                    int.tryParse(data.key)!;
+                                _laporanController.viewMode.value = 'Bulan';
+                                LaporanPenjualan.dariTahun.value = true;
+                              } else if (_laporanController.viewMode.value ==
+                                  'Bulan') {
+                                LaporanPenjualan.dariBulan.value = true;
 
-                            _laporanController.bulanTerpilih.value =
-                                data.key.split(' ')[0];
-                            _laporanController.viewMode.value = 'Hari';
-                          } else if (_laporanController.viewMode.value ==
-                              'Hari') {
-                            _productController.tanggalHarian.value = data.key;
-                            LaporanPenjualan.dariHari.value = true;
-                            _laporanController.viewMode.value = 'Rincian';
-                          } else if (_laporanController.viewMode.value ==
-                              'Rincian') {
-                            final produk = _productController.allProduct
-                                .where((p) => p['key'] == data.value['Id'])
-                                .first;
-                            Get.to(() => LihatProduk(produk: produk.obs));
-                          }
-                        },
-                        cells: headList
-                            .map((head) => DataCell(head == 'Terjual'
-                                ? Center(
-                                    child: Text(data.value[head].toString()),
-                                  )
-                                : Text(head == 'Bulan' ||
-                                        head == 'Tahun' ||
-                                        head == 'Tanggal' ||
-                                        head == "Id" ||
-                                        head == 'Produk'
-                                    ? data.value[head].toString()
-                                    : 'Rp ${_productController.regexNominal(data.value[head].toString())}')))
-                            .toList()))
-                    .toList()),
+                                _laporanController.bulanTerpilih.value =
+                                    data.key.split(' ')[0];
+                                _laporanController.viewMode.value = 'Hari';
+                              } else if (_laporanController.viewMode.value ==
+                                  'Hari') {
+                                _productController.tanggalHarian.value =
+                                    data.key;
+                                LaporanPenjualan.dariHari.value = true;
+                                _laporanController.viewMode.value = 'Rincian';
+                              } else if (_laporanController.viewMode.value ==
+                                  'Rincian') {
+                                final produk = _productController.allProduct
+                                    .where((p) => p['key'] == data.value['Id'])
+                                    .first;
+                                Get.to(() => LihatProduk(produk: produk.obs));
+                              }
+                            },
+                            cells: headList
+                                .map((head) => DataCell(head == 'Terjual'
+                                    ? Center(
+                                        child: Text(data.value[head] == 0
+                                            ? '-'
+                                            : data.value[head].toString()),
+                                      )
+                                    : Text(head == 'Bulan' ||
+                                            head == 'Tahun' ||
+                                            head == 'Tanggal' ||
+                                            head == "Id" ||
+                                            head == 'Produk'
+                                        ? data.value[head].toString()
+                                        : data.value[head] == 0
+                                            ? '-'
+                                            : 'Rp ${_productController.regexNominal(data.value[head].toString())}')))
+                                .toList()))
+                        .toList()),
+                SizedBox(
+                  height: Get.height * 0.25,
+                )
+              ],
+            ),
           ),
         ),
       );
