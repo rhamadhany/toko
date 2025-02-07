@@ -15,20 +15,20 @@ class DataPerubahan extends StatelessWidget {
     return Obx(() {
       final headList = _laporanController.viewMode.value == 'Rincian'
           ? [
-              'Tanggal',
-              'Id',
-              'Produk',
-              'Kategori',
-              'Terjual',
-              'Modal',
-              'Omset',
-              'Laba'
+              'TANGGAL',
+              'ID',
+              'PRODUK',
+              'KATEGORI',
+              'TERJUAL',
+              'MODAL',
+              'OMSET',
+              'LABA'
             ]
           : _laporanController.viewMode.value == 'Hari'
-              ? ['Tanggal', 'Stok', 'Terjual', 'Modal', 'Omset', 'Laba']
+              ? ['TANGGAL', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
               : _laporanController.viewMode.value == 'Bulan'
-                  ? ['Bulan', 'Stok', 'Terjual', 'Modal', 'Omset', 'Laba']
-                  : ['Tahun', 'Stok', 'Terjual', 'Modal', 'Omset', 'Laba'];
+                  ? ['BULAN', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+                  : ['TAHUN', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
       final dataPerubahan = _laporanController.viewMode.value == 'Rincian'
           ? initDataRincian()
           : _laporanController.viewMode.value == 'Hari'
@@ -40,49 +40,73 @@ class DataPerubahan extends StatelessWidget {
       return SingleChildScrollView(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 20,
-              columns: headList
-                  .map((head) => DataColumn(
-                          label: Text(
-                        head,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      )))
-                  .toList(),
-              rows: dataPerubahan.entries.map((data) {
-                return DataRow(
-                    onSelectChanged: (_) {
-                      if (_laporanController.viewMode.value == 'Tahun') {
-                        _laporanController.tahunTerpilih.value =
-                            int.tryParse(data.key)!;
-                        _laporanController.viewMode.value = 'Bulan';
-                        LaporanPenjualan.dariTahun.value = true;
-                      } else if (_laporanController.viewMode.value == 'Bulan') {
-                        LaporanPenjualan.dariBulan.value = true;
+          child: Column(
+            children: [
+              Transform.scale(
+                scale: _laporanController.scaleTransformTable.value,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.blue),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  child: DataTable(
+                      showCheckboxColumn: false,
+                      columnSpacing: 20,
+                      headingRowColor: WidgetStatePropertyAll(Colors.blue),
+                      columns: headList
+                          .map((head) => DataColumn(
+                                  label: Text(
+                                head,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white),
+                              )))
+                          .toList(),
+                      rows: dataPerubahan.entries.map((data) {
+                        return DataRow(
+                            onSelectChanged: (_) {
+                              if (_laporanController.viewMode.value ==
+                                  'Tahun') {
+                                _laporanController.tahunTerpilih.value =
+                                    int.tryParse(data.key)!;
+                                _laporanController.viewMode.value = 'Bulan';
+                                LaporanPenjualan.dariTahun.value = true;
+                              } else if (_laporanController.viewMode.value ==
+                                  'Bulan') {
+                                LaporanPenjualan.dariBulan.value = true;
 
-                        _laporanController.bulanTerpilih.value =
-                            data.key.split(' ')[0];
-                        _laporanController.viewMode.value = 'Hari';
-                      } else if (_laporanController.viewMode.value == 'Hari') {
-                        _productController.tanggalHarian.value = data.key;
+                                _laporanController.bulanTerpilih.value =
+                                    data.key.split(' ')[0];
+                                _laporanController.viewMode.value = 'Hari';
+                              } else if (_laporanController.viewMode.value ==
+                                  'Hari') {
+                                _productController.tanggalHarian.value =
+                                    data.key;
 
-                        print(_productController.tanggalHarian.value);
-                        LaporanPenjualan.dariHari.value = true;
-                        _laporanController.viewMode.value = 'Rincian';
-                      } else if (_laporanController.viewMode.value ==
-                          'Rincian') {
-                        final produk = _productController.allProduct
-                            .where((p) => p['key'] == data.value['Id'])
-                            .first;
-                        Get.to(() => LihatProduk(produk: produk.obs));
-                      }
-                    },
-                    cells: headList.map((head) {
-                      return DataCell(Text(data.value[head].toString()));
-                    }).toList());
-              }).toList()),
+                                // print(_productController.tanggalHarian.value);
+                                LaporanPenjualan.dariHari.value = true;
+                                _laporanController.viewMode.value = 'Rincian';
+                              } else if (_laporanController.viewMode.value ==
+                                  'Rincian') {
+                                final produk = _productController.allProduct
+                                    .where((p) => p['key'] == data.value['ID'])
+                                    .first;
+                                Get.to(() => LihatProduk(produk: produk.obs));
+                              }
+                            },
+                            cells: headList.map((head) {
+                              return DataCell(
+                                  Text(data.value[head].toString()));
+                            }).toList());
+                      }).toList()),
+                ),
+              ),
+              SizedBox(
+                height: Get.height * 0.25,
+              )
+            ],
+          ),
         ),
       );
     });
@@ -114,29 +138,29 @@ class DataPerubahan extends StatelessWidget {
       final formatTanggal = DateFormat('dd-MM-yyyy').format(parserTanggal);
 
       dataPerubahanBaru[formatTanggal] = {
-        'Tanggal': formatTanggal,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TANGGAL': formatTanggal,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
       dataPerubahanLama[formatTanggal] = {
-        'Tanggal': formatTanggal,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TANGGAL': formatTanggal,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
 
       returnDataPerubahan[formatTanggal] = {
-        'Tanggal': formatTanggal,
-        'Stok': '-',
-        'Terjual': '-',
-        'Modal': '-',
-        'Omset': '-',
-        'Laba': '-',
+        'TANGGAL': formatTanggal,
+        'STOK': '-',
+        'TERJUAL': '-',
+        'MODAL': '-',
+        'OMSET': '-',
+        'LABA': '-',
       };
     }
 
@@ -162,11 +186,11 @@ class DataPerubahan extends StatelessWidget {
 
       final dataBaru = dataPerubahanBaru[formatTanggalItem]!;
 
-      dataBaru['Stok'] += stokBaru;
-      dataBaru['Terjual'] += terjualBaru;
-      dataBaru['Modal'] += modalBaru;
-      dataBaru['Omset'] += omsetBaru;
-      dataBaru['Laba'] += labaBaru;
+      dataBaru['STOK'] += stokBaru;
+      dataBaru['TERJUAL'] += terjualBaru;
+      dataBaru['MODAL'] += modalBaru;
+      dataBaru['OMSET'] += omsetBaru;
+      dataBaru['LABA'] += labaBaru;
 
       final stokLama = item['stok_lama'];
       final terjualLama = item['terjual_lama'];
@@ -178,28 +202,28 @@ class DataPerubahan extends StatelessWidget {
 
       final dataLama = dataPerubahanLama[formatTanggalItem]!;
 
-      dataLama['Stok'] += stokLama;
-      dataLama['Terjual'] += terjualLama;
-      dataLama['Modal'] += modalLama;
-      dataLama['Omset'] += omsetLama;
-      dataLama['Laba'] += labaLama;
+      dataLama['STOK'] += stokLama;
+      dataLama['TERJUAL'] += terjualLama;
+      dataLama['MODAL'] += modalLama;
+      dataLama['OMSET'] += omsetLama;
+      dataLama['LABA'] += labaLama;
 
       final dataReturn = returnDataPerubahan[formatTanggalItem]!;
-      dataReturn['Stok'] = dataLama['Stok'] != dataBaru['Stok']
-          ? '${dataLama['Stok']} => ${dataBaru['Stok']}'
-          : dataBaru['Stok'];
-      dataReturn['Terjual'] = dataLama['Terjual'] != dataBaru['Terjual']
-          ? "${dataLama['Terjual']} => ${dataBaru['Terjual']}"
-          : dataBaru['Terjual'];
-      dataReturn['Modal'] = dataLama['Modal'] != dataBaru['Modal']
-          ? "Rp ${_productController.regexNominal(dataLama['Modal'].toString())} => Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}"
-          : 'Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}';
-      dataReturn['Omset'] = dataLama['Omset'] != dataBaru['Omset']
-          ? "Rp ${_productController.regexNominal(dataLama['Omset'].toString())} => Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}"
-          : 'Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}';
-      dataReturn['Laba'] = dataLama['Laba'] != dataBaru['Laba']
-          ? "Rp ${_productController.regexNominal(dataLama['Laba'].toString())} => Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}"
-          : 'Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}';
+      dataReturn['STOK'] = dataLama['STOK'] != dataBaru['STOK']
+          ? '${dataLama['STOK']} => ${dataBaru['STOK']}'
+          : dataBaru['STOK'];
+      dataReturn['TERJUAL'] = dataLama['TERJUAL'] != dataBaru['TERJUAL']
+          ? "${dataLama['TERJUAL']} => ${dataBaru['TERJUAL']}"
+          : dataBaru['TERJUAL'];
+      dataReturn['MODAL'] = dataLama['MODAL'] != dataBaru['MODAL']
+          ? "Rp ${_productController.regexNominal(dataLama['MODAL'].toString())} => Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}"
+          : 'Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}';
+      dataReturn['OMSET'] = dataLama['OMSET'] != dataBaru['OMSET']
+          ? "Rp ${_productController.regexNominal(dataLama['OMSET'].toString())} => Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}"
+          : 'Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}';
+      dataReturn['LABA'] = dataLama['LABA'] != dataBaru['LABA']
+          ? "Rp ${_productController.regexNominal(dataLama['LABA'].toString())} => Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}"
+          : 'Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}';
     }
 
     return returnDataPerubahan;
@@ -226,29 +250,29 @@ class DataPerubahan extends StatelessWidget {
       final formatBulan = '$bulan $tahunTerpilih';
 
       dataPerubahanBaru[formatBulan] = {
-        'Bulan': formatBulan,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'BULAN': formatBulan,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
       dataPerubahanLama[formatBulan] = {
-        'Bulan': formatBulan,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'BULAN': formatBulan,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
 
       returnDataPerubahan[formatBulan] = {
-        'Bulan': formatBulan,
-        'Stok': '-',
-        'Terjual': '-',
-        'Modal': '-',
-        'Omset': '-',
-        'Laba': '-',
+        'BULAN': formatBulan,
+        'STOK': '-',
+        'TERJUAL': '-',
+        'MODAL': '-',
+        'OMSET': '-',
+        'LABA': '-',
       };
     }
 
@@ -271,11 +295,11 @@ class DataPerubahan extends StatelessWidget {
       final dataBaru = dataPerubahanBaru[formatBulan];
       final dataLama = dataPerubahanLama[formatBulan];
       final dataReturn = returnDataPerubahan[formatBulan]!;
-      dataBaru!['Stok'] += stokBaru;
-      dataBaru['Terjual'] += terjualBaru;
-      dataBaru['Modal'] += modalBaru;
-      dataBaru['Omset'] += omsetBaru;
-      dataBaru['Laba'] += labaBaru;
+      dataBaru!['STOK'] += stokBaru;
+      dataBaru['TERJUAL'] += terjualBaru;
+      dataBaru['MODAL'] += modalBaru;
+      dataBaru['OMSET'] += omsetBaru;
+      dataBaru['LABA'] += labaBaru;
 
       final stokLama = item['stok_lama'];
       final terjualLama = item['terjual_lama'];
@@ -284,26 +308,26 @@ class DataPerubahan extends StatelessWidget {
       final modalLama = stokLama * hargaBeliLama!;
       final omsetLama = stokLama * hargaJualLama!;
       final labaLama = omsetLama - modalLama;
-      dataLama!['Stok'] += stokLama;
-      dataLama['Terjual'] += terjualLama;
-      dataLama['Modal'] += modalLama;
-      dataLama['Omset'] += omsetLama;
-      dataLama['Laba'] += labaLama;
-      dataReturn['Stok'] = dataLama['Stok'] != dataBaru['Stok']
-          ? '${dataLama['Stok']} => ${dataBaru['Stok']}'
-          : dataBaru['Stok'];
-      dataReturn['Terjual'] = dataLama['Terjual'] != dataBaru['Terjual']
-          ? '${dataLama['Terjual']} => ${dataBaru['Terjual']}'
-          : dataBaru['Terjual'];
-      dataReturn['Modal'] = dataLama['Modal'] != dataBaru['Modal']
-          ? 'Rp ${_productController.regexNominal(dataLama['Modal'].toString())} => Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}';
-      dataReturn['Omset'] = dataLama['Omset'] != dataBaru['Omset']
-          ? 'Rp ${_productController.regexNominal(dataLama['Omset'].toString())} => Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}';
-      dataReturn['Laba'] = dataLama['Laba'] != dataBaru['Laba']
-          ? 'Rp ${_productController.regexNominal(dataLama['Laba'].toString())} => Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}';
+      dataLama!['STOK'] += stokLama;
+      dataLama['TERJUAL'] += terjualLama;
+      dataLama['MODAL'] += modalLama;
+      dataLama['OMSET'] += omsetLama;
+      dataLama['LABA'] += labaLama;
+      dataReturn['STOK'] = dataLama['STOK'] != dataBaru['STOK']
+          ? '${dataLama['STOK']} => ${dataBaru['STOK']}'
+          : dataBaru['STOK'];
+      dataReturn['TERJUAL'] = dataLama['TERJUAL'] != dataBaru['TERJUAL']
+          ? '${dataLama['TERJUAL']} => ${dataBaru['TERJUAL']}'
+          : dataBaru['TERJUAL'];
+      dataReturn['MODAL'] = dataLama['MODAL'] != dataBaru['MODAL']
+          ? 'Rp ${_productController.regexNominal(dataLama['MODAL'].toString())} => Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}';
+      dataReturn['OMSET'] = dataLama['OMSET'] != dataBaru['OMSET']
+          ? 'Rp ${_productController.regexNominal(dataLama['OMSET'].toString())} => Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}';
+      dataReturn['LABA'] = dataLama['LABA'] != dataBaru['LABA']
+          ? 'Rp ${_productController.regexNominal(dataLama['LABA'].toString())} => Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}';
     }
 
     return returnDataPerubahan;
@@ -323,29 +347,29 @@ class DataPerubahan extends StatelessWidget {
 
     for (var tahun in daftarTahun) {
       dataPerubahanLama[tahun] = {
-        'Tahun': tahun,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TAHUN': tahun,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
       dataPerubahanBaru[tahun] = {
-        'Tahun': tahun,
-        'Stok': 0,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TAHUN': tahun,
+        'STOK': 0,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
 
       returnDataPerubahan[tahun] = {
-        'Tahun': tahun,
-        'Stok': '-',
-        'Terjual': '-',
-        'Modal': '-',
-        'Omset': '-',
-        'Laba': '-',
+        'TAHUN': tahun,
+        'STOK': '-',
+        'TERJUAL': '-',
+        'MODAL': '-',
+        'OMSET': '-',
+        'LABA': '-',
       };
     }
 
@@ -369,31 +393,31 @@ class DataPerubahan extends StatelessWidget {
       final dataBaru = dataPerubahanBaru[tahun]!;
       final dataLama = dataPerubahanLama[tahun]!;
       final dataReturn = returnDataPerubahan[tahun]!;
-      dataBaru['Stok'] += stokBaru;
-      dataBaru['Terjual'] += terjualBaru;
-      dataBaru['Modal'] += modalBaru;
-      dataBaru['Omset'] += omsetBaru;
-      dataBaru['Laba'] += labaBaru;
-      dataLama['Stok'] += stokLama;
-      dataLama['Terjual'] += terjualLama;
-      dataLama['Modal'] += modalLama;
-      dataLama['Omset'] += omsetLama;
-      dataLama['Laba'] += labaLama;
-      dataReturn['Stok'] = dataLama['Stok'] != dataBaru['Stok']
-          ? '${dataLama['Stok']} => ${dataBaru['Stok']}'
-          : dataBaru['Stok'];
-      dataReturn['Terjual'] = dataLama['Terjual'] != dataBaru['Terjual']
-          ? '${dataLama['Terjual']} => ${dataBaru['Terjual']}'
-          : dataBaru['Terjual'];
-      dataReturn['Modal'] = dataLama['Modal'] != dataBaru['Modal']
-          ? 'Rp ${_productController.regexNominal(dataLama['Modal'].toString())} => Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Modal'].toString())}';
-      dataReturn['Omset'] = dataLama['Omset'] != dataBaru['Omset']
-          ? 'Rp ${_productController.regexNominal(dataLama['Omset'].toString())} => Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Omset'].toString())}';
-      dataReturn['Laba'] = dataLama['Laba'] != dataBaru['Laba']
-          ? 'Rp ${_productController.regexNominal(dataLama['Laba'].toString())} => Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}'
-          : 'Rp ${_productController.regexNominal(dataBaru['Laba'].toString())}';
+      dataBaru['STOK'] += stokBaru;
+      dataBaru['TERJUAL'] += terjualBaru;
+      dataBaru['MODAL'] += modalBaru;
+      dataBaru['OMSET'] += omsetBaru;
+      dataBaru['LABA'] += labaBaru;
+      dataLama['STOK'] += stokLama;
+      dataLama['TERJUAL'] += terjualLama;
+      dataLama['MODAL'] += modalLama;
+      dataLama['OMSET'] += omsetLama;
+      dataLama['LABA'] += labaLama;
+      dataReturn['STOK'] = dataLama['STOK'] != dataBaru['STOK']
+          ? '${dataLama['STOK']} => ${dataBaru['STOK']}'
+          : dataBaru['STOK'];
+      dataReturn['TERJUAL'] = dataLama['TERJUAL'] != dataBaru['TERJUAL']
+          ? '${dataLama['TERJUAL']} => ${dataBaru['TERJUAL']}'
+          : dataBaru['TERJUAL'];
+      dataReturn['MODAL'] = dataLama['MODAL'] != dataBaru['MODAL']
+          ? 'Rp ${_productController.regexNominal(dataLama['MODAL'].toString())} => Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['MODAL'].toString())}';
+      dataReturn['OMSET'] = dataLama['OMSET'] != dataBaru['OMSET']
+          ? 'Rp ${_productController.regexNominal(dataLama['OMSET'].toString())} => Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['OMSET'].toString())}';
+      dataReturn['LABA'] = dataLama['LABA'] != dataBaru['LABA']
+          ? 'Rp ${_productController.regexNominal(dataLama['LABA'].toString())} => Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}'
+          : 'Rp ${_productController.regexNominal(dataBaru['LABA'].toString())}';
     }
 
     return returnDataPerubahan;
@@ -441,25 +465,25 @@ class DataPerubahan extends StatelessWidget {
       final kategoriLama = item['kategori_lama'];
       final kategoriBaru = item['kategori_baru'];
       returnDataPerubahan['$tanggal$key'] = {
-        'Tanggal': tanggal,
-        'Id': id,
-        'Produk': produkLama != produkBaru
+        'TANGGAL': tanggal,
+        'ID': id,
+        'PRODUK': produkLama != produkBaru
             ? '$produkLama => $produkBaru'
             : produkBaru,
-        'Kategori': kategoriLama != kategoriBaru
+        'KATEGORI': kategoriLama != kategoriBaru
             ? '$kategoriLama => $kategoriBaru'
             : kategoriBaru,
-        'Stok': stokLama != stokBaru ? '$stokLama => $stokBaru' : stokBaru,
-        'Terjual': terjualLama != terjualBaru
+        'STOK': stokLama != stokBaru ? '$stokLama => $stokBaru' : stokBaru,
+        'TERJUAL': terjualLama != terjualBaru
             ? '$terjualLama => $terjualBaru'
             : terjualBaru,
-        'Modal': modalLama != modalBaru
+        'MODAL': modalLama != modalBaru
             ? 'Rp ${_productController.regexNominal(modalLama.toString())} => Rp ${_productController.regexNominal(modalBaru.toString())}'
             : 'Rp ${_productController.regexNominal(modalBaru.toString())}',
-        'Omset': omsetLama != omsetBaru
+        'OMSET': omsetLama != omsetBaru
             ? 'Rp ${_productController.regexNominal(omsetLama.toString())} => Rp ${_productController.regexNominal(omsetBaru.toString())}'
             : 'Rp ${_productController.regexNominal(omsetBaru.toString())}',
-        'Laba': labaLama != labaBaru
+        'LABA': labaLama != labaBaru
             ? 'Rp ${_productController.regexNominal(labaLama.toString())} => Rp ${_productController.regexNominal(labaBaru.toString())}'
             : 'Rp ${_productController.regexNominal(labaBaru.toString())}',
       };

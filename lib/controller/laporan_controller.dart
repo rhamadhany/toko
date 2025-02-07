@@ -13,6 +13,10 @@ class LaporanController extends GetxController {
   final bulanTerpilih = ''.obs;
   final bulan = (DateTime.now().month - 1).obs;
   final tahunTerpilih = DateTime.now().year.obs;
+  final scaleTransformTable = 1.0.obs;
+  final oldScaleTransformTable = 1.0.obs;
+  final showSliderScaler = false.obs;
+
   List<String> namaBulan = [
     'Januari',
     'Februari',

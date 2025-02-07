@@ -31,7 +31,7 @@ class AppBarMyApp extends StatelessWidget {
                     ? "Admin"
                     : _biometrikController.tabIndex.value == 2
                         ? _laporanController.viewMode.value == 'Rincian'
-                            ? _productController.tanggalHarian.value
+                            ? 'Rincian Produk'
                             : "Laporan ${titleLaporan()}"
                         : "Pengaturan",
             style: const TextStyle(
@@ -91,22 +91,35 @@ class AppBarMyApp extends StatelessWidget {
               _laporanController.viewMode.value != 'Tahun')
             TextButton(
                 onPressed: () async {
-                  if (_laporanController.viewMode.value == 'Hari') {
+                  if (_laporanController.viewMode.value == 'Rincian') {
+                    Get.dialog(KalenderPicker(
+                      tampilkandaftarTahun: false.obs,
+                      dariHari: false.obs,
+                      tampilkanTanggal: true.obs,
+                      dariRincian: true.obs,
+                    ));
+                  } else if (_laporanController.viewMode.value == 'Hari') {
                     Get.dialog(KalenderPicker(
                       tampilkandaftarTahun: false.obs,
                       dariHari: true.obs,
+                      tampilkanTanggal: false.obs,
+                      dariRincian: false.obs,
                     ));
                   } else {
                     Get.dialog(KalenderPicker(
                       tampilkandaftarTahun: true.obs,
                       dariHari: false.obs,
+                      tampilkanTanggal: false.obs,
+                      dariRincian: false.obs,
                     ));
                   }
                 },
                 child: Text(
-                  _laporanController.viewMode.value == 'Hari'
-                      ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
-                      : _laporanController.tahunTerpilih.value.toString(),
+                  _laporanController.viewMode.value == 'Rincian'
+                      ? _productController.tanggalHarian.value
+                      : _laporanController.viewMode.value == 'Hari'
+                          ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
+                          : _laporanController.tahunTerpilih.value.toString(),
                   style: const TextStyle(color: Colors.white),
                 )),
           if (_biometrikController.tabIndex.value == 2)
@@ -115,6 +128,15 @@ class AppBarMyApp extends StatelessWidget {
                   dialogSwitchOpsi();
                 },
                 icon: const Icon(Icons.calendar_month, color: Colors.white)),
+          if (_biometrikController.tabIndex.value == 2)
+            IconButton(
+                onPressed: () {
+                  _laporanController.oldScaleTransformTable.value =
+                      _laporanController.scaleTransformTable.value;
+                  _laporanController.showSliderScaler.value =
+                      !_laporanController.showSliderScaler.value;
+                },
+                icon: Icon(Icons.zoom_out))
         ],
       );
     });

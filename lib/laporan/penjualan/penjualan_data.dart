@@ -17,12 +17,12 @@ class PenjualanData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final headList = _laporanController.viewMode.value == 'Rincian'
-          ? ['Tanggal', 'Id', 'Produk', 'Terjual', 'Modal', 'Omset', 'Laba']
+          ? ['TANGGAL', 'ID', 'PRODUK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
           : _laporanController.viewMode.value == 'Hari'
-              ? ['Tanggal', 'Terjual', 'Modal', 'Omset', 'Laba']
+              ? ['TANGGAL', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
               : _laporanController.viewMode.value == 'Bulan'
-                  ? ['Bulan', 'Terjual', 'Modal', 'Omset', 'Laba']
-                  : ['Tahun', 'Terjual', 'Modal', 'Omset', 'Laba'];
+                  ? ['BULAN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+                  : ['TAHUN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
 
       final dataPenjualan = _laporanController.viewMode.value == 'Rincian'
           ? initRincianData()
@@ -31,80 +31,87 @@ class PenjualanData extends StatelessWidget {
               : _laporanController.viewMode.value == 'Bulan'
                   ? initDataBulanan()
                   : initDataTahunan();
-      return Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: Colors.blue),
-          borderRadius: BorderRadius.circular(0),
-        ),
+      return SingleChildScrollView(
         child: SingleChildScrollView(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              children: [
-                DataTable(
-                    showCheckboxColumn: false,
-                    columnSpacing: 20,
-                    columns: headList
-                        .map((head) => DataColumn(
-                                label: Text(
-                              head,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            )))
-                        .toList(),
-                    rows: dataPenjualan.entries
-                        .map((data) => DataRow(
-                            onSelectChanged: (_) {
-                              if (_laporanController.viewMode.value ==
-                                  'Tahun') {
-                                _laporanController.tahunTerpilih.value =
-                                    int.tryParse(data.key)!;
-                                _laporanController.viewMode.value = 'Bulan';
-                                LaporanPenjualan.dariTahun.value = true;
-                              } else if (_laporanController.viewMode.value ==
-                                  'Bulan') {
-                                LaporanPenjualan.dariBulan.value = true;
+          scrollDirection: Axis.horizontal,
+          child: Column(
+            children: [
+              Transform.scale(
+                scale: _laporanController.scaleTransformTable.value,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.blue),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  child: DataTable(
+                      showCheckboxColumn: false,
+                      headingRowColor: WidgetStatePropertyAll(Colors.blue),
+                      columnSpacing: 20,
+                      columns: headList
+                          .map((head) => DataColumn(
+                                  label: Text(
+                                head,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white),
+                              )))
+                          .toList(),
+                      rows: dataPenjualan.entries
+                          .map((data) => DataRow(
+                              onSelectChanged: (_) {
+                                if (_laporanController.viewMode.value ==
+                                    'Tahun') {
+                                  _laporanController.tahunTerpilih.value =
+                                      int.tryParse(data.key)!;
+                                  _laporanController.viewMode.value = 'Bulan';
+                                  LaporanPenjualan.dariTahun.value = true;
+                                } else if (_laporanController.viewMode.value ==
+                                    'Bulan') {
+                                  LaporanPenjualan.dariBulan.value = true;
 
-                                _laporanController.bulanTerpilih.value =
-                                    data.key.split(' ')[0];
-                                _laporanController.viewMode.value = 'Hari';
-                              } else if (_laporanController.viewMode.value ==
-                                  'Hari') {
-                                _productController.tanggalHarian.value =
-                                    data.key;
-                                LaporanPenjualan.dariHari.value = true;
-                                _laporanController.viewMode.value = 'Rincian';
-                              } else if (_laporanController.viewMode.value ==
-                                  'Rincian') {
-                                final produk = _productController.allProduct
-                                    .where((p) => p['key'] == data.value['Id'])
-                                    .first;
-                                Get.to(() => LihatProduk(produk: produk.obs));
-                              }
-                            },
-                            cells: headList
-                                .map((head) => DataCell(head == 'Terjual'
-                                    ? Center(
-                                        child: Text(data.value[head] == 0
-                                            ? '-'
-                                            : data.value[head].toString()),
-                                      )
-                                    : Text(head == 'Bulan' ||
-                                            head == 'Tahun' ||
-                                            head == 'Tanggal' ||
-                                            head == "Id" ||
-                                            head == 'Produk'
-                                        ? data.value[head].toString()
-                                        : data.value[head] == 0
-                                            ? '-'
-                                            : 'Rp ${_productController.regexNominal(data.value[head].toString())}')))
-                                .toList()))
-                        .toList()),
-                SizedBox(
-                  height: Get.height * 0.25,
-                )
-              ],
-            ),
+                                  _laporanController.bulanTerpilih.value =
+                                      data.key.split(' ')[0];
+                                  _laporanController.viewMode.value = 'Hari';
+                                } else if (_laporanController.viewMode.value ==
+                                    'Hari') {
+                                  _productController.tanggalHarian.value =
+                                      data.key;
+                                  LaporanPenjualan.dariHari.value = true;
+                                  _laporanController.viewMode.value = 'Rincian';
+                                } else if (_laporanController.viewMode.value ==
+                                    'Rincian') {
+                                  final produk = _productController.allProduct
+                                      .where(
+                                          (p) => p['key'] == data.value['ID'])
+                                      .first;
+                                  Get.to(() => LihatProduk(produk: produk.obs));
+                                }
+                              },
+                              cells: headList
+                                  .map((head) => DataCell(head == 'TERJUAL'
+                                      ? Center(
+                                          child: Text(data.value[head] == 0
+                                              ? '-'
+                                              : data.value[head].toString()),
+                                        )
+                                      : Text(head == 'BULAN' ||
+                                              head == 'TAHUN' ||
+                                              head == 'TANGGAL' ||
+                                              head == "ID" ||
+                                              head == 'PRODUK'
+                                          ? data.value[head].toString()
+                                          : data.value[head] == 0
+                                              ? '-'
+                                              : 'Rp ${_productController.regexNominal(data.value[head].toString())}')))
+                                  .toList()))
+                          .toList()),
+                ),
+              ),
+              SizedBox(
+                height: Get.height * 0.25,
+              )
+            ],
           ),
         ),
       );
@@ -125,11 +132,11 @@ class PenjualanData extends StatelessWidget {
     for (var bulan in _laporanController.namaBulan) {
       final formatBulan = '$bulan $tahun';
       dataPenjualan[formatBulan] = {
-        'Bulan': formatBulan,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'BULAN': formatBulan,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
     }
     for (var item in daftarTahun) {
@@ -147,10 +154,10 @@ class PenjualanData extends StatelessWidget {
       final laba = omset - modal;
 
       final data = dataPenjualan[formatTanggal]!;
-      data['Terjual'] += jumlah;
-      data['Modal'] += modal;
-      data['Omset'] += omset;
-      data['Laba'] += laba;
+      data['TERJUAL'] += jumlah;
+      data['MODAL'] += modal;
+      data['OMSET'] += omset;
+      data['LABA'] += laba;
     }
 
     return dataPenjualan;
@@ -169,11 +176,11 @@ class PenjualanData extends StatelessWidget {
       final formatTanggal = DateFormat('dd-MM-yyyy').format(tanggal);
 
       dataPenjualan[formatTanggal] = {
-        'Tanggal': formatTanggal,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TANGGAL': formatTanggal,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
     }
     for (var item in penjualan) {
@@ -194,10 +201,10 @@ class PenjualanData extends StatelessWidget {
       int omset = jumlah * hargaJual;
       int laba = omset - modal;
       final data = dataPenjualan[formatTanggal]!;
-      data['Terjual'] += jumlah;
-      data['Modal'] += modal;
-      data['Omset'] += omset;
-      data['Laba'] += laba;
+      data['TERJUAL'] += jumlah;
+      data['MODAL'] += modal;
+      data['OMSET'] += omset;
+      data['LABA'] += laba;
     }
 
     return dataPenjualan;
@@ -216,11 +223,11 @@ class PenjualanData extends StatelessWidget {
           .toList();
 
       dataPenjualan[item] = {
-        'Tahun': item,
-        'Terjual': 0,
-        'Modal': 0,
-        'Omset': 0,
-        'Laba': 0,
+        'TAHUN': item,
+        'TERJUAL': 0,
+        'MODAL': 0,
+        'OMSET': 0,
+        'LABA': 0,
       };
 
       for (var data in tahun) {
@@ -231,10 +238,10 @@ class PenjualanData extends StatelessWidget {
         final omset = jumlah * hargaJual;
         final laba = omset - modal;
         final update = dataPenjualan[item]!;
-        update['Terjual'] += jumlah;
-        update['Modal'] += modal;
-        update['Omset'] += omset;
-        update['Laba'] += laba;
+        update['TERJUAL'] += jumlah;
+        update['MODAL'] += modal;
+        update['OMSET'] += omset;
+        update['LABA'] += laba;
       }
     }
 
@@ -268,13 +275,13 @@ class PenjualanData extends StatelessWidget {
       int laba = omset - modal;
 
       dataPenjualan[itemTanggal + key] = {
-        'Tanggal': itemTanggal,
-        'Id': key,
-        'Produk': produk,
-        'Terjual': jumlah,
-        'Modal': modal,
-        'Omset': omset,
-        'Laba': laba,
+        'TANGGAL': itemTanggal,
+        'ID': key,
+        'PRODUK': produk,
+        'TERJUAL': jumlah,
+        'MODAL': modal,
+        'OMSET': omset,
+        'LABA': laba,
       };
     }
     return dataPenjualan;

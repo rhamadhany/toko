@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/laporan_controller.dart';
 
 import 'package:myapp/laporan/penambahan/penambahan_data.dart';
 
@@ -12,34 +13,102 @@ class LaporanPenjualan extends StatelessWidget {
   static final dariTahun = false.obs;
   static final dariBulan = false.obs;
   static final dariHari = false.obs;
+  static final LaporanController _laporanController = Get.find();
 
   const LaporanPenjualan({super.key});
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Column(
+      return Stack(
         children: [
-          Expanded(
-            child: indexLaporan.value == 1
-                ? PenjualanData()
-                : indexLaporan.value == 2
-                    ? PenambahanData()
-                    : DataPerubahan(),
-          ),
-          BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.edit_document), label: 'Perubahan'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart_checkout), label: 'Penjualan'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.add_circle), label: 'Penambahan')
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.blue),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  child: indexLaporan.value == 1
+                      ? PenjualanData()
+                      : indexLaporan.value == 2
+                          ? PenambahanData()
+                          : DataPerubahan(),
+                ),
+              ),
+              BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.edit_document), label: 'Perubahan'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.shopping_cart_checkout),
+                      label: 'Penjualan'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.add_circle), label: 'Penambahan')
+                ],
+                onTap: (value) {
+                  indexLaporan.value = value;
+                },
+                currentIndex: indexLaporan.value,
+              ),
             ],
-            onTap: (value) {
-              indexLaporan.value = value;
-            },
-            currentIndex: indexLaporan.value,
           ),
+          if (_laporanController.showSliderScaler.value)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: Get.height * 0.2,
+                child: Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Slider(
+                              label: _laporanController
+                                  .scaleTransformTable.value
+                                  .toStringAsFixed(2),
+                              // overlayColor: WidgetStatePropertyAll(Colors.blue),
+                              activeColor: Colors.blue,
+                              max: 2,
+                              min: 0.1,
+                              divisions: 101,
+                              value:
+                                  _laporanController.scaleTransformTable.value,
+                              onChanged: (value) => _laporanController
+                                  .scaleTransformTable.value = value),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  _laporanController.scaleTransformTable.value =
+                                      _laporanController
+                                          .oldScaleTransformTable.value;
+                                  _laporanController.showSliderScaler.value =
+                                      false;
+                                },
+                                child: Icon(Icons.clear)),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  _laporanController.showSliderScaler.value =
+                                      false;
+                                },
+                                child: Icon(Icons.check))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
         ],
       );
     });
