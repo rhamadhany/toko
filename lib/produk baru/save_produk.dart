@@ -44,7 +44,7 @@ class IconSave extends StatelessWidget {
           produkEdit['kategori'] = kategori;
           produkEdit['deskripsi'] = deskripsi;
 
-          await DBHelper.updateProduct(produkEdit);
+          await DBHelper.updateProduct(produkEdit, true);
         } else {
           await DBHelper.addProduct(product, hargaBeli, hargaJual, terjual,
               stock, listPictures, kategori, deskripsi);

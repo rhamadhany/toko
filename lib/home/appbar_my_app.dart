@@ -7,6 +7,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/laporan/kalender_picker.dart';
+import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/printing_qr.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -35,7 +36,7 @@ class AppBarMyApp extends StatelessWidget {
                             : "Laporan ${titleLaporan()}"
                         : "Pengaturan",
             style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
+                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
           ),
           const Spacer(),
           if (_biometrikController.tabIndex.value == 0 ||
@@ -87,11 +88,16 @@ class AppBarMyApp extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.select_all, color: Colors.white)),
-          if (_biometrikController.tabIndex.value == 2 &&
-              _laporanController.viewMode.value != 'Tahun')
+          if ((_biometrikController.tabIndex.value == 2 &&
+                  _laporanController.viewMode.value != 'Tahun' &&
+                  LaporanPenjualan.indexLaporan.value != 1) ||
+              (_biometrikController.tabIndex.value == 2 &&
+                  _laporanController.viewMode.value != 'Rincian' &&
+                  LaporanPenjualan.indexLaporan.value == 1))
             TextButton(
                 onPressed: () async {
-                  if (_laporanController.viewMode.value == 'Rincian') {
+                  if (_laporanController.viewMode.value == 'Rincian' ||
+                      _laporanController.viewMode.value == 'Transaksi') {
                     Get.dialog(KalenderPicker(
                       tampilkandaftarTahun: false.obs,
                       dariHari: false.obs,
@@ -115,7 +121,10 @@ class AppBarMyApp extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  _laporanController.viewMode.value == 'Rincian'
+                  (_laporanController.viewMode.value == 'Rincian' &&
+                              LaporanPenjualan.indexLaporan.value != 1) ||
+                          (_laporanController.viewMode.value == 'Transaksi' &&
+                              LaporanPenjualan.indexLaporan.value == 1)
                       ? _productController.tanggalHarian.value
                       : _laporanController.viewMode.value == 'Hari'
                           ? '${_laporanController.bulanTerpilih.value} ${_laporanController.tahunTerpilih.value}'
@@ -198,6 +207,18 @@ class AppBarMyApp extends StatelessWidget {
               Get.back();
             },
           ),
+          if (LaporanPenjualan.indexLaporan.value == 1)
+            ListTile(
+              leading: const Icon(Icons.money),
+              title: const Text('Transaksi'),
+              trailing: _laporanController.viewMode.value == 'Transaksi'
+                  ? const Icon(Icons.check)
+                  : null,
+              onTap: () {
+                _laporanController.viewMode.value = 'Transaksi';
+                Get.back();
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.access_time),
             title: const Text('Rincian'),
@@ -229,10 +250,13 @@ class AppBarMyApp extends StatelessWidget {
   }
 
   String titleLaporan() {
-    return _laporanController.viewMode.value == 'Hari'
-        ? 'Harian'
-        : _laporanController.viewMode.value == 'Bulan'
-            ? 'Bulanan'
-            : 'Tahunan';
+    return _laporanController.viewMode.value == 'Transaksi' &&
+            LaporanPenjualan.indexLaporan.value == 1
+        ? 'Transaksi'
+        : _laporanController.viewMode.value == 'Tahun'
+            ? 'Tahunan'
+            : _laporanController.viewMode.value == 'Bulan'
+                ? 'Bulanan'
+                : 'Harian';
   }
 }

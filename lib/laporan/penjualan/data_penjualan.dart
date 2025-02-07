@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/laporan/laporan_penjualan.dart';
 import 'package:myapp/lihat/lihat_produk.dart';
 
@@ -12,25 +15,39 @@ class PenjualanData extends StatelessWidget {
   });
   final LaporanController _laporanController = Get.find();
   final ProductController _productController = Get.find();
+  final TransaksiController _transaksiController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final headList = _laporanController.viewMode.value == 'Rincian'
-          ? ['TANGGAL', 'ID', 'PRODUK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
-          : _laporanController.viewMode.value == 'Hari'
-              ? ['TANGGAL', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
-              : _laporanController.viewMode.value == 'Bulan'
-                  ? ['BULAN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
-                  : ['TAHUN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
+      final headList = _laporanController.viewMode.value == 'Transaksi'
+          ? ['TANGGAL', 'TRANSAKSI', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+          : _laporanController.viewMode.value == 'Rincian'
+              ? [
+                  'TANGGAL',
+                  'ID',
+                  'PRODUK',
+                  'KATEGORI',
+                  'TERJUAL',
+                  'MODAL',
+                  'OMSET',
+                  'LABA'
+                ]
+              : _laporanController.viewMode.value == 'Hari'
+                  ? ['TANGGAL', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+                  : _laporanController.viewMode.value == 'Bulan'
+                      ? ['BULAN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+                      : ['TAHUN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
 
-      final dataPenjualan = _laporanController.viewMode.value == 'Rincian'
-          ? initRincianData()
-          : _laporanController.viewMode.value == 'Hari'
-              ? iniasiasiDataHarian()
-              : _laporanController.viewMode.value == 'Bulan'
-                  ? initDataBulanan()
-                  : initDataTahunan();
+      final dataPenjualan = _laporanController.viewMode.value == 'Transaksi'
+          ? initDataTransaksi()
+          : _laporanController.viewMode.value == 'Rincian'
+              ? initRincianData()
+              : _laporanController.viewMode.value == 'Hari'
+                  ? iniasiasiDataHarian()
+                  : _laporanController.viewMode.value == 'Bulan'
+                      ? initDataBulanan()
+                      : initDataTahunan();
       return SingleChildScrollView(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -78,6 +95,14 @@ class PenjualanData extends StatelessWidget {
                                   _productController.tanggalHarian.value =
                                       data.key;
                                   LaporanPenjualan.dariHari.value = true;
+
+                                  _laporanController.viewMode.value =
+                                      'Transaksi';
+                                } else if (_laporanController.viewMode.value ==
+                                    'Transaksi') {
+                                  LaporanPenjualan.dariHari.value = true;
+                                  _transaksiController.keyTransaksi.value =
+                                      data.value['TRANSAKSI'];
                                   _laporanController.viewMode.value = 'Rincian';
                                 } else if (_laporanController.viewMode.value ==
                                     'Rincian') {
@@ -99,7 +124,9 @@ class PenjualanData extends StatelessWidget {
                                               head == 'TAHUN' ||
                                               head == 'TANGGAL' ||
                                               head == "ID" ||
-                                              head == 'PRODUK'
+                                              head == 'PRODUK' ||
+                                              head == 'TRANSAKSI' ||
+                                              head == 'KATEGORI'
                                           ? data.value[head].toString()
                                           : data.value[head] == 0
                                               ? '-'
@@ -248,42 +275,128 @@ class PenjualanData extends StatelessWidget {
     return dataPenjualan;
   }
 
+  // Map<String, Map<String, dynamic>> initRincianData() {
+  //   Map<String, Map<String, dynamic>> dataPenjualan = {};
+  //   final produk = _laporanController.penjualan;
+  //   final splitTanggal =
+  //       int.tryParse(_productController.tanggalHarian.value.split('-')[0])!;
+  //   final splitBulan =
+  //       int.tryParse(_productController.tanggalHarian.value.split('-')[1])!;
+  //   final splitTahun =
+  //       int.tryParse(_productController.tanggalHarian.value.split('-')[2])!;
+  //   final date =
+  //       DateTime(splitTahun, splitBulan, splitTanggal).toString().split(' ')[0];
+
+  //   final tanggalProduk =
+  //       produk.where((p) => p['tanggal'].split(' ')[0] == date).toList();
+
+  //   for (var item in tanggalProduk) {
+  //     final itemTanggal = item['tanggal'].split('.')[0];
+  //     final produk = item['produk'];
+  //     final key = item['key'];
+  //     final jumlah = item['jumlah'];
+  //     final hargaBeli = int.tryParse(item['harga_beli'])!;
+  //     final hargaJual = int.tryParse(item['harga_jual'])!;
+  //     int modal = jumlah * hargaBeli;
+  //     int omset = jumlah * hargaJual;
+  //     int laba = omset - modal;
+
+  //     dataPenjualan[itemTanggal + key] = {
+  //       'TANGGAL': itemTanggal,
+  //       'ID': key,
+  //       'PRODUK': produk,
+  //       'TERJUAL': jumlah,
+  //       'MODAL': modal,
+  //       'OMSET': omset,
+  //       'LABA': laba,
+  //     };
+  //   }
+  //   return dataPenjualan;
+  // }
+
   Map<String, Map<String, dynamic>> initRincianData() {
-    Map<String, Map<String, dynamic>> dataPenjualan = {};
-    final produk = _laporanController.penjualan;
-    final splitTanggal =
-        int.tryParse(_productController.tanggalHarian.value.split('-')[0])!;
-    final splitBulan =
-        int.tryParse(_productController.tanggalHarian.value.split('-')[1])!;
-    final splitTahun =
-        int.tryParse(_productController.tanggalHarian.value.split('-')[2])!;
-    final date =
-        DateTime(splitTahun, splitBulan, splitTanggal).toString().split(' ')[0];
+    Map<String, Map<String, dynamic>> dataRincian = {};
 
-    final tanggalProduk =
-        produk.where((p) => p['tanggal'].split(' ')[0] == date).toList();
+    final keyT = _transaksiController.keyTransaksi.value;
 
-    for (var item in tanggalProduk) {
-      final itemTanggal = item['tanggal'].split('.')[0];
-      final produk = item['produk'];
-      final key = item['key'];
-      final jumlah = item['jumlah'];
-      final hargaBeli = int.tryParse(item['harga_beli'])!;
-      final hargaJual = int.tryParse(item['harga_jual'])!;
-      int modal = jumlah * hargaBeli;
-      int omset = jumlah * hargaJual;
-      int laba = omset - modal;
+    final transMap = _transaksiController.transaksiMap.where((t) {
+      final tK = t['key'];
 
-      dataPenjualan[itemTanggal + key] = {
-        'TANGGAL': itemTanggal,
-        'ID': key,
-        'PRODUK': produk,
-        'TERJUAL': jumlah,
-        'MODAL': modal,
-        'OMSET': omset,
-        'LABA': laba,
-      };
+      return tK == keyT;
+    }).first;
+
+    final List<dynamic> json = jsonDecode(transMap['keyProduk']);
+    final listKey = json.cast<String>();
+
+    for (var keyTransaksi in listKey) {
+      final tanggal = transMap['tanggal'].split(".")[0];
+
+      final daftarProduk =
+          _laporanController.penjualan.where((p) => p['key'] == keyTransaksi);
+
+      for (var item in daftarProduk) {
+        final keyProduk = item['key'];
+        final jumlah = item['jumlah'];
+        final hargaBeli = int.tryParse(item['harga_beli'])!;
+        final hargaJual = int.tryParse(item['harga_jual'])!;
+        int modal = jumlah * hargaBeli;
+        int omset = jumlah * hargaJual;
+        int laba = omset - modal;
+        dataRincian[keyProduk] = {
+          'TANGGAL': tanggal,
+          'ID': keyProduk,
+          'PRODUK': item['produk'],
+          'KATEGORI': item['kategori'],
+          'TERJUAL': jumlah.toString(),
+          'MODAL': modal,
+          'OMSET': omset,
+          'LABA': laba
+        };
+      }
     }
-    return dataPenjualan;
+    return dataRincian;
+  }
+
+  Map<String, Map<String, dynamic>> initDataTransaksi() {
+    Map<String, Map<String, dynamic>> dataTr = {};
+
+    final produkTr = _transaksiController.transaksiMap;
+    final tanggalTR = _productController.tanggalHarian.value;
+    // print(tanggalTR);
+
+    final daftarTR = produkTr.where((p) {
+      final tanggal = p['tanggal'];
+      final fT = formatTanggalFunction(tanggal);
+
+      return fT == tanggalTR;
+    });
+
+    for (var item in daftarTR) {
+      final itemTanggal = item['tanggal'].split(".")[0];
+      final parserTanggal = DateTime.parse(itemTanggal);
+      final formatTanggal =
+          DateFormat('dd-MM-yyyy HH:mm:ss').format(parserTanggal);
+
+      // final formatTanggal = formatTanggalFunction(itemTanggal);
+      // print(item);
+      dataTr[formatTanggal] = {
+        'TANGGAL': formatTanggal,
+        'TRANSAKSI': item['key'],
+        'TERJUAL': item['jumlah'].toString(),
+        'MODAL': item['modal'].toString(),
+        'OMSET': item['omset'].toString(),
+        'LABA': item['laba'].toString()
+        // 'PRODUK': item['produk'],
+      };
+      // print(formatTanggal);
+    }
+    return dataTr;
+  }
+
+  String formatTanggalFunction(String item) {
+    final itemTanggal = item;
+    final parserTanggal = DateTime.parse(itemTanggal);
+    final formatTanggal = DateFormat('dd-MM-yyyy').format(parserTanggal);
+    return formatTanggal;
   }
 }

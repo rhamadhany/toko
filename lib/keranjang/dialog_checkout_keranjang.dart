@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/db_helper.dart';
+import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -14,7 +16,8 @@ class DialogCheckoutKeranjang extends StatelessWidget {
 
   final KeranjangController _keranjangController = Get.find();
   final BiometrikController _biometrikController = Get.find();
-
+  final TransaksiController _transaksiController = Get.find();
+  final ProductController _productController = Get.find();
   final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -63,16 +66,35 @@ class DialogCheckoutKeranjang extends StatelessWidget {
 
   Future<void> confirmJual() async {
     if (HalamanKeranjang.haveValueBox()) {
+      int totaljumlah = 0;
+      int totalModal = 0;
+      int totalOmset = 0;
+      final List<String> listKey = [];
+
       for (int i = 0; i < _keranjangController.valueBox.length; i++) {
         if (_keranjangController.valueBox[i] == true) {
           final key = _keranjangController.keranjangProduk[i]['key'];
-          final jumlah =
+          listKey.add(key);
+          final item =
+              _productController.allProduct.where((p) => p['key'] == key).first;
+          final jumlahItem =
               int.tryParse(_keranjangController.jumlahControllers[i].text) ?? 1;
-          await DBHelper.updateTerjual(key, jumlah);
-          _laporanController.tambahJual(key, jumlah, 'penjualan');
+          final modal = int.tryParse(item['harga_beli'])!;
+          final omset = int.tryParse(item['harga_jual'])!;
+
+          totaljumlah += jumlahItem;
+          totalModal += modal * jumlahItem;
+          totalOmset += omset * jumlahItem;
+
+          await DBHelper.updateTerjual(key, jumlahItem);
+          _laporanController.tambahJual(key, jumlahItem, 'penjualan');
           await _keranjangController.removeProduk(key);
         }
       }
+
+      final totalLaba = totalOmset - totalModal;
+      await _transaksiController.addTransaksi(
+          totaljumlah, listKey, totalModal, totalOmset, totalLaba);
 
       await _keranjangController.initValueBox();
 

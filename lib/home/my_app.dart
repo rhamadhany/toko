@@ -142,8 +142,18 @@ class MyApp extends StatelessWidget {
   }
 
   void dialogTutup(didPop, result) {
-    if (LaporanPenjualan.dariHari.value &&
+    if (_laporanController.viewMode.value == 'Transaksi' &&
         _biometrikController.tabIndex.value == 2) {
+      LaporanPenjualan.dariHari.value = false;
+      _laporanController.viewMode.value = 'Hari';
+    } else if (LaporanPenjualan.dariHari.value &&
+        _biometrikController.tabIndex.value == 2 &&
+        LaporanPenjualan.indexLaporan.value == 1) {
+      LaporanPenjualan.dariHari.value = false;
+      _laporanController.viewMode.value = 'Transaksi';
+    } else if (LaporanPenjualan.dariHari.value &&
+        _biometrikController.tabIndex.value == 2 &&
+        LaporanPenjualan.indexLaporan.value != 1) {
       LaporanPenjualan.dariHari.value = false;
       _laporanController.viewMode.value = 'Hari';
     } else if (LaporanPenjualan.dariBulan.value &&

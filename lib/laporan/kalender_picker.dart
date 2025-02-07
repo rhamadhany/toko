@@ -109,7 +109,7 @@ class KalenderPicker extends StatelessWidget {
                               child: TextButton(
                                   onPressed: () {
                                     if (tampilkanTanggal.value) {
-                                      final i = index <= 9
+                                      final i = index <= 8
                                           ? '0${index + 1}'
                                           : index + 1;
 
@@ -119,10 +119,12 @@ class KalenderPicker extends StatelessWidget {
                                                   _laporanController
                                                       .bulanTerpilih.value) +
                                           1;
+                                      final iBulan =
+                                          bulan >= 10 ? bulan : '0$bulan';
                                       final tahun = _laporanController
                                           .tahunTerpilih.value;
                                       _productController.tanggalHarian.value =
-                                          '$i-$bulan-$tahun';
+                                          '$i-$iBulan-$tahun';
                                       Get.back();
                                     } else if (tampilkandaftarTahun.value) {
                                       _laporanController.tahunTerpilih.value =

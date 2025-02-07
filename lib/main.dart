@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 // import 'package:month_year_picker/month_year_picker.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/controller/laporan_controller.dart';
+import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/home/my_app.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
@@ -23,6 +24,7 @@ void main() async {
   Get.put(MainController());
 
   Get.put(QRScannerController());
+  Get.put(TransaksiController());
 
   runApp(GetMaterialApp(
     home: MyApp(),

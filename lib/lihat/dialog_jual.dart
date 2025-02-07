@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/db_helper.dart';
@@ -16,7 +17,7 @@ class DialogJual extends StatelessWidget {
   final KeranjangController _keranjangController = Get.find();
   final LaporanController _laporanController = Get.find();
   final BiometrikController _biometrikController = Get.find();
-
+  final TransaksiController _transaksiController = Get.find();
   final RxMap<String, dynamic> produk;
   final RxBool showSnackbarStok = false.obs;
   final RxBool finishLongPress = false.obs;
@@ -158,8 +159,20 @@ class DialogJual extends StatelessWidget {
                   Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
-                  await DBHelper.updateProduct(produk);
+                  await DBHelper.updateProduct(produk, false);
                   _laporanController.tambahJual(key, terjualBaru, 'penjualan');
+                  final item = _productController.allProduct
+                      .where((im) => im['key'] == key)
+                      .first;
+                  final hBeli = int.tryParse(item['harga_beli'])!;
+                  final hJual = int.tryParse(item['harga_jual'])!;
+                  final modal = hBeli * terjualBaru;
+                  final omset = hJual * terjualBaru;
+                  final laba = omset - modal;
+                  final List<String> listKey = [];
+                  listKey.add(key);
+                  await _transaksiController.addTransaksi(
+                      terjualBaru, listKey, modal, omset, laba);
                   Get.snackbar('Terjual',
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,

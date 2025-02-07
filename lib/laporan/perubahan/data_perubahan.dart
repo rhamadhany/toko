@@ -19,23 +19,24 @@ class DataPerubahan extends StatelessWidget {
               'ID',
               'PRODUK',
               'KATEGORI',
+              'STOK',
               'TERJUAL',
               'MODAL',
               'OMSET',
               'LABA'
             ]
-          : _laporanController.viewMode.value == 'Hari'
-              ? ['TANGGAL', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+          : _laporanController.viewMode.value == 'Tahun'
+              ? ['TAHUN', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
               : _laporanController.viewMode.value == 'Bulan'
                   ? ['BULAN', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
-                  : ['TAHUN', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
+                  : ['TANGGAL', 'STOK', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
       final dataPerubahan = _laporanController.viewMode.value == 'Rincian'
           ? initDataRincian()
-          : _laporanController.viewMode.value == 'Hari'
-              ? initDataHarian()
+          : _laporanController.viewMode.value == 'Tahun'
+              ? initDataTahunan()
               : _laporanController.viewMode.value == 'Bulan'
                   ? initDataBulanan()
-                  : initDataTahunan();
+                  : initDataHarian();
 
       return SingleChildScrollView(
         child: SingleChildScrollView(
@@ -80,19 +81,17 @@ class DataPerubahan extends StatelessWidget {
                                     data.key.split(' ')[0];
                                 _laporanController.viewMode.value = 'Hari';
                               } else if (_laporanController.viewMode.value ==
-                                  'Hari') {
-                                _productController.tanggalHarian.value =
-                                    data.key;
-
-                                // print(_productController.tanggalHarian.value);
-                                LaporanPenjualan.dariHari.value = true;
-                                _laporanController.viewMode.value = 'Rincian';
-                              } else if (_laporanController.viewMode.value ==
                                   'Rincian') {
                                 final produk = _productController.allProduct
                                     .where((p) => p['key'] == data.value['ID'])
                                     .first;
                                 Get.to(() => LihatProduk(produk: produk.obs));
+                              } else {
+                                _productController.tanggalHarian.value =
+                                    data.key;
+
+                                LaporanPenjualan.dariHari.value = true;
+                                _laporanController.viewMode.value = 'Rincian';
                               }
                             },
                             cells: headList.map((head) {

@@ -17,20 +17,29 @@ class PenambahanData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final headList = _laporanController.viewMode.value == 'Rincian'
-          ? ['TANGGAL', 'ID', 'PRODUK', 'JUMLAH', 'MODAL', 'OMSET', 'LABA']
-          : _laporanController.viewMode.value == 'Hari'
-              ? ['TANGGAL', 'JUMLAH', 'MODAL', 'OMSET', 'LABA']
-              : _laporanController.viewMode.value == 'Bulan'
-                  ? ['BULAN', 'JUMLAH', 'MODAL', 'OMSET', 'LABA']
-                  : ['TAHUN', 'JUMLAH', 'MODAL', 'OMSET', 'LABA'];
+          ? [
+              'TANGGAL',
+              'ID',
+              'PRODUK',
+              'KATEGORI',
+              'JUMLAH',
+              'MODAL',
+              'OMSET',
+              'LABA'
+            ]
+          : _laporanController.viewMode.value == 'Bulan'
+              ? ['BULAN', 'JUMLAH', 'MODAL', 'OMSET', 'LABA']
+              : _laporanController.viewMode.value == 'Tahun'
+                  ? ['TAHUN', 'JUMLAH', 'MODAL', 'OMSET', 'LABA']
+                  : ['TANGGAL', 'JUMLAH', 'MODAL', 'OMSET', 'LABA'];
 
       final dataPenambahan = _laporanController.viewMode.value == 'Rincian'
           ? initRincianData()
-          : _laporanController.viewMode.value == 'Hari'
-              ? iniasiasiDataHarian()
+          : _laporanController.viewMode.value == 'Tahun'
+              ? initDataTahunan()
               : _laporanController.viewMode.value == 'Bulan'
                   ? initDataBulanan()
-                  : initDataTahunan();
+                  : iniasiasiDataHarian();
       return SingleChildScrollView(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -74,12 +83,6 @@ class PenambahanData extends StatelessWidget {
                                       data.key.split(' ')[0];
                                   _laporanController.viewMode.value = 'Hari';
                                 } else if (_laporanController.viewMode.value ==
-                                    'Hari') {
-                                  _productController.tanggalHarian.value =
-                                      data.key;
-                                  LaporanPenjualan.dariHari.value = true;
-                                  _laporanController.viewMode.value = 'Rincian';
-                                } else if (_laporanController.viewMode.value ==
                                     'Rincian') {
                                   final produk = _productController.allProduct
                                       .where(
@@ -88,6 +91,11 @@ class PenambahanData extends StatelessWidget {
 
                                   // print(produk);
                                   Get.to(() => LihatProduk(produk: produk.obs));
+                                } else {
+                                  _productController.tanggalHarian.value =
+                                      data.key;
+                                  LaporanPenjualan.dariHari.value = true;
+                                  _laporanController.viewMode.value = 'Rincian';
                                 }
                               },
                               cells: headList
@@ -101,7 +109,8 @@ class PenambahanData extends StatelessWidget {
                                               head == 'TAHUN' ||
                                               head == 'TANGGAL' ||
                                               head == "ID" ||
-                                              head == 'PRODUK'
+                                              head == 'PRODUK' ||
+                                              head == 'KATEGORI'
                                           ? data.value[head].toString()
                                           : data.value[head] == 0
                                               ? '-'
@@ -279,6 +288,7 @@ class PenambahanData extends StatelessWidget {
         'TANGGAL': itemTanggal,
         'ID': key,
         'PRODUK': produk,
+        'KATEGORI': item['kategori'],
         'JUMLAH': jumlah,
         'MODAL': modal,
         'OMSET': omset,

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 
-import 'package:myapp/laporan/penambahan/penambahan_data.dart';
+import 'package:myapp/laporan/penambahan/data_penambahan.dart';
 
-import 'package:myapp/laporan/penjualan/penjualan_data.dart';
+import 'package:myapp/laporan/penjualan/data_penjualan.dart';
 import 'package:myapp/laporan/perubahan/data_perubahan.dart';
 
 class LaporanPenjualan extends StatelessWidget {
@@ -49,6 +49,13 @@ class LaporanPenjualan extends StatelessWidget {
                 ],
                 onTap: (value) {
                   indexLaporan.value = value;
+                  if (value == 1 &&
+                      _laporanController.viewMode.value == 'Rincian') {
+                    _laporanController.viewMode.value = 'Transaksi';
+                  } else if (value != 1 &&
+                      _laporanController.viewMode.value != 'Rincian') {
+                    _laporanController.viewMode.value = 'Rincian';
+                  }
                 },
                 currentIndex: indexLaporan.value,
               ),
@@ -57,56 +64,51 @@ class LaporanPenjualan extends StatelessWidget {
           if (_laporanController.showSliderScaler.value)
             Align(
               alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: Get.height * 0.2,
-                child: Dialog(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: Slider(
-                              label: _laporanController
-                                  .scaleTransformTable.value
-                                  .toStringAsFixed(2),
-                              // overlayColor: WidgetStatePropertyAll(Colors.blue),
-                              activeColor: Colors.blue,
-                              max: 2,
-                              min: 0.1,
-                              divisions: 101,
-                              value:
-                                  _laporanController.scaleTransformTable.value,
-                              onChanged: (value) => _laporanController
-                                  .scaleTransformTable.value = value),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  _laporanController.scaleTransformTable.value =
-                                      _laporanController
-                                          .oldScaleTransformTable.value;
-                                  _laporanController.showSliderScaler.value =
-                                      false;
-                                },
-                                child: Icon(Icons.clear)),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  _laporanController.showSliderScaler.value =
-                                      false;
-                                },
-                                child: Icon(Icons.check))
-                          ],
-                        ),
-                      ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Dialog(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Slider(
+                          label: _laporanController.scaleTransformTable.value
+                              .toStringAsFixed(2),
+                          // overlayColor: WidgetStatePropertyAll(Colors.blue),
+                          activeColor: Colors.blue,
+                          max: 2,
+                          min: 0.1,
+                          divisions: 101,
+                          value: _laporanController.scaleTransformTable.value,
+                          onChanged: (value) => _laporanController
+                              .scaleTransformTable.value = value),
                     ),
                   ),
-                ),
+                  // SizedBox(
+                  //   width: Get.width * 0.8,
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       ElevatedButton(
+                  //           onPressed: () {
+                  //             _laporanController.scaleTransformTable.value =
+                  //                 _laporanController
+                  //                     .oldScaleTransformTable.value;
+                  //             _laporanController.showSliderScaler.value = false;
+                  //           },
+                  //           child: Icon(Icons.clear)),
+                  //       SizedBox(
+                  //         width: 8,
+                  //       ),
+                  //       ElevatedButton(
+                  //           onPressed: () {
+                  //             _laporanController.showSliderScaler.value = false;
+                  //           },
+                  //           child: Icon(Icons.check))
+                  //     ],
+                  //   ),
+                  // ),
+                ],
               ),
             )
         ],

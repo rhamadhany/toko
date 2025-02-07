@@ -80,6 +80,7 @@ CREATE TABLE penjualan (
   key TEXT,
   tanggal TEXT,
   produk TEXT,
+  kategori TEXT,
   jumlah INTEGER,
   harga_beli TEXT,
   harga_jual TEXT
@@ -144,6 +145,7 @@ CREATE TABLE penambahan (
         'key': key,
         'tanggal': formattedDate,
         'produk': _productController.allProduct[indexKey]['produk'],
+        'kategori': _productController.allProduct[indexKey]['kategori'],
         'jumlah': jumlah,
         'harga_beli': _productController.allProduct[indexKey]['harga_beli'],
         'harga_jual': _productController.allProduct[indexKey]['harga_jual'],
