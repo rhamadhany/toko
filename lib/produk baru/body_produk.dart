@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+// import 'package:intl/intl.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/produk%20baru/edit_deskripsi.dart';
@@ -105,6 +106,7 @@ class BodyProduk extends StatelessWidget {
                             : [
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'[0-9]'))
+                                // CurrencyFormatter()
                               ],
                         decoration: InputDecoration(
                             labelText: textField['label'],
@@ -148,3 +150,37 @@ class BodyProduk extends StatelessWidget {
     )));
   }
 }
+
+// class CurrencyFormatter extends TextInputFormatter {
+//   final NumberFormat format =
+//       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+//   final lengthDot = 0;
+//   @override
+//   TextEditingValue formatEditUpdate(
+//       TextEditingValue oldValue, TextEditingValue newValue) {
+//     if (newValue.text.isEmpty) {
+//       return newValue;
+//     }
+
+//     final int selectionIndex = newValue.selection.baseOffset;
+//     // print(oldValue.text);
+//     // final splitterOld = oldValue.text.split('.').length;
+//     final splitterNew = newValue.text.split('.').length;
+
+//     final sIndex =
+//         splitterNew > lengthDot ? selectionIndex + 1 : selectionIndex;
+
+//     // print('splitterOld $splitterOld, splitterNew $splitterNew');
+//     // Hapus semua karakter non-digit
+//     String valueWithoutSymbol = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
+//     //Parsing ke Double
+//     double valueParsed = double.tryParse(valueWithoutSymbol) ?? 0;
+
+//     String formattedValue = format.format(valueParsed);
+
+//     return TextEditingValue(
+//       text: formattedValue,
+//       // selection: TextSelection.collapsed(offset: sIndex),
+//     );
+//   }
+// }

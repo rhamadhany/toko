@@ -13,8 +13,8 @@ class AppBarRow extends StatelessWidget {
       return Row(
         children: [
           const Text(
-            "Keranjang",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            "KERANJANG",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const Spacer(),
           IconButton(

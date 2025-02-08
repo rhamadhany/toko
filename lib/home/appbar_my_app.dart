@@ -24,19 +24,20 @@ class AppBarMyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             _biometrikController.tabIndex.value == 0
-                ? "Toko"
+                ? "PRODUK"
                 : _biometrikController.tabIndex.value == 1
-                    ? "Admin"
+                    ? "ADMIN"
                     : _biometrikController.tabIndex.value == 2
                         ? _laporanController.viewMode.value == 'Rincian'
-                            ? 'Rincian Produk'
-                            : "Laporan ${titleLaporan()}"
-                        : "Pengaturan",
+                            ? 'RINCIAN PRODUK'
+                            : "LAPORAN ${titleLaporan()}"
+                        : "PENGATURAN",
             style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
           ),
           const Spacer(),
           if (_biometrikController.tabIndex.value == 0 ||
@@ -140,12 +141,22 @@ class AppBarMyApp extends StatelessWidget {
           if (_biometrikController.tabIndex.value == 2)
             IconButton(
                 onPressed: () {
-                  _laporanController.oldScaleTransformTable.value =
-                      _laporanController.scaleTransformTable.value;
-                  _laporanController.showSliderScaler.value =
-                      !_laporanController.showSliderScaler.value;
+                  _laporanController.showMenuLaporan();
+                  // _laporanController.oldScaleTransformTable.value =
+                  //     _laporanController.scaleTransformTable.value;
+                  // _laporanController.showSliderScaler.value =
+                  //     !_laporanController.showSliderScaler.value;
                 },
-                icon: Icon(Icons.zoom_out))
+                icon: Icon(Icons.more_vert))
+
+          // IconButton(
+          //     onPressed: () {
+          //       _laporanController.oldScaleTransformTable.value =
+          //           _laporanController.scaleTransformTable.value;
+          //       _laporanController.showSliderScaler.value =
+          //           !_laporanController.showSliderScaler.value;
+          //     },
+          //     icon: Icon(Icons.zoom_out))
         ],
       );
     });
@@ -252,11 +263,11 @@ class AppBarMyApp extends StatelessWidget {
   String titleLaporan() {
     return _laporanController.viewMode.value == 'Transaksi' &&
             LaporanPenjualan.indexLaporan.value == 1
-        ? 'Transaksi'
+        ? 'TRANSAKSI'
         : _laporanController.viewMode.value == 'Tahun'
-            ? 'Tahunan'
+            ? 'TAHUNAN'
             : _laporanController.viewMode.value == 'Bulan'
-                ? 'Bulanan'
-                : 'Harian';
+                ? 'BULANAN'
+                : 'HARIAN';
   }
 }

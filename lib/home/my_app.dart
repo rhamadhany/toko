@@ -29,11 +29,13 @@ class MyApp extends StatelessWidget {
         canPop: false,
         onPopInvokedWithResult: dialogTutup,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            title: AppBarMyApp(),
-          ),
+          appBar: _laporanController.showBarLaporan.value
+              ? AppBar(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  title: AppBarMyApp(),
+                )
+              : null,
           body: TabBarView(
               physics: _biometrikController.tabIndex.value == 2
                   ? const NeverScrollableScrollPhysics()
@@ -51,29 +53,36 @@ class MyApp extends StatelessWidget {
                     : LaporanPenjualan(),
                 const Settings()
               ]),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(color: Colors.blue),
-            child: TabBar(
-                // overlayColor: WidgetStatePropertyAll(Colors.blue),
-                labelColor: Colors.white,
-                unselectedLabelColor: const Color.fromARGB(185, 255, 255, 255),
-                // dividerColor: Colors.blue,
-                // indicatorColor: Colors.blue,
-                // automaticIndicatorColorAdjustment: ,
-                controller: _biometrikController.tabController,
-                tabs: const [
-                  Tab(text: "Produk", icon: Icon(Icons.shop)),
-                  Tab(text: "Admin", icon: Icon(Icons.admin_panel_settings)),
-                  Tab(
-                    text: "Laporan",
-                    icon: Icon(Icons.bar_chart),
-                  ),
-                  Tab(
-                    text: "Pengaturan",
-                    icon: Icon(Icons.settings),
-                  )
-                ]),
-          ),
+          bottomNavigationBar: _laporanController.showBarLaporan.value
+              ? Container(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child:
+                      // if (_laporanController.showBarLaporan.value)
+                      TabBar(
+                          // overlayColor: WidgetStatePropertyAll(Colors.blue),
+                          labelColor: Colors.white,
+                          unselectedLabelColor:
+                              const Color.fromARGB(185, 255, 255, 255),
+                          // dividerColor: Colors.blue,
+                          // indicatorColor: Colors.blue,
+                          // automaticIndicatorColorAdjustment: ,
+                          controller: _biometrikController.tabController,
+                          tabs: const [
+                        Tab(text: "PRODUK", icon: Icon(Icons.shop)),
+                        Tab(
+                            text: "ADMIN",
+                            icon: Icon(Icons.admin_panel_settings)),
+                        Tab(
+                          text: "LAPORAN",
+                          icon: Icon(Icons.bar_chart),
+                        ),
+                        Tab(
+                          text: "PENGATURAN",
+                          icon: Icon(Icons.settings),
+                        )
+                      ]),
+                )
+              : null,
           floatingActionButton: _biometrikController.tabIndex.value == 3
               ? GenerateItem.textGenerate()
               : (!_biometrikController.hasAuthenticated.value &&

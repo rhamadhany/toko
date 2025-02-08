@@ -37,32 +37,33 @@ class LaporanPenjualan extends StatelessWidget {
                           : DataPerubahan(),
                 ),
               ),
-              BottomNavigationBar(
-                backgroundColor: Colors.blue,
-                // unselectedItemColor: Colors.white,
-                selectedItemColor: Colors.white,
-                unselectedItemColor: const Color.fromARGB(185, 255, 255, 255),
-                items: const [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.edit_document), label: 'Perubahan'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.shopping_cart_checkout),
-                      label: 'Penjualan'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.add_circle), label: 'Penambahan')
-                ],
-                onTap: (value) {
-                  indexLaporan.value = value;
-                  if (value == 1 &&
-                      _laporanController.viewMode.value == 'Rincian') {
-                    _laporanController.viewMode.value = 'Transaksi';
-                  } else if (value != 1 &&
-                      _laporanController.viewMode.value != 'Rincian') {
-                    _laporanController.viewMode.value = 'Rincian';
-                  }
-                },
-                currentIndex: indexLaporan.value,
-              ),
+              if (_laporanController.showBarLaporan.value)
+                BottomNavigationBar(
+                  backgroundColor: Colors.blue,
+                  // unselectedItemColor: Colors.white,
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: const Color.fromARGB(185, 255, 255, 255),
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.edit_document), label: 'PERUBAHAN'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.shopping_cart_checkout),
+                        label: 'PENJUALAN'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.add_circle), label: 'PENAMBAHAN')
+                  ],
+                  onTap: (value) {
+                    indexLaporan.value = value;
+                    if (value == 1 &&
+                        _laporanController.viewMode.value == 'Rincian') {
+                      _laporanController.viewMode.value = 'Transaksi';
+                    } else if (value != 1 &&
+                        _laporanController.viewMode.value != 'Rincian') {
+                      _laporanController.viewMode.value = 'Rincian';
+                    }
+                  },
+                  currentIndex: indexLaporan.value,
+                ),
             ],
           ),
           if (_laporanController.showSliderScaler.value)
@@ -114,7 +115,20 @@ class LaporanPenjualan extends StatelessWidget {
                   // ),
                 ],
               ),
-            )
+            ),
+          if (!_laporanController.showBarLaporan.value)
+            Positioned(
+              top: Get.height * 0.05,
+              right: Get.width * 0.05,
+              child: Container(
+                  decoration:
+                      BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                  child: IconButton(
+                      onPressed: () {
+                        _laporanController.showMenuLaporan();
+                      },
+                      icon: Icon(Icons.more_vert, color: Colors.white))),
+            ),
         ],
       );
     });

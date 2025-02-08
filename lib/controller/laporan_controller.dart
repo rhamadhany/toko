@@ -16,6 +16,7 @@ class LaporanController extends GetxController {
   final scaleTransformTable = 1.0.obs;
   final oldScaleTransformTable = 1.0.obs;
   final showSliderScaler = false.obs;
+  final showBarLaporan = true.obs;
 
   List<String> namaBulan = [
     'Januari',
@@ -157,5 +158,50 @@ CREATE TABLE penambahan (
       );
       await loadProduk();
     }
+  }
+
+  void showMenuLaporan() {
+    showMenu(
+        context: Get.overlayContext!,
+        position:
+            RelativeRect.fromLTRB(Get.width, Get.height * 0.1, 0, Get.height),
+        items: [
+          PopupMenuItem(
+              child: ListTile(
+            leading: Icon(Icons.zoom_out),
+            title: Text('ZOOM'),
+            onTap: () {
+              oldScaleTransformTable.value = scaleTransformTable.value;
+              showSliderScaler.value = !showSliderScaler.value;
+              Get.back();
+            },
+          )),
+          PopupMenuItem(
+              child: ListTile(
+            leading: Icon(Icons.navigation),
+            onTap: () {
+              showBarLaporan.value = !showBarLaporan.value;
+              Get.back();
+            },
+            title: Obx(() {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('BAR'),
+                  Spacer(),
+                  SizedBox(
+                      width: 50,
+                      child: Checkbox(
+                          activeColor: Colors.blue,
+                          value: showBarLaporan.value,
+                          onChanged: (_) {
+                            showBarLaporan.value = !showBarLaporan.value;
+                          })),
+                  Spacer(),
+                ],
+              );
+            }),
+          ))
+        ]);
   }
 }
