@@ -70,7 +70,7 @@ class DataSettings {
     final path = tempDir.path.replaceAll(sub, "");
     final gambar = '${path}images';
     final database = '${path}databases';
-    // final pathPrefs = '${path}shared_prefs';
+
     final appFlutter = '${path}app_flutter';
     if (output != null) {
       progressFinish.value = false;
@@ -82,17 +82,27 @@ class DataSettings {
 
         encoder.create(output);
 
-        progress.value = "Menyimpan gambar ke $output";
-        await encoder.addDirectory(Directory(gambar));
-        progress.value = "Menyimpan database ke $output";
-        await encoder.addDirectory(Directory(database));
-        progress.value = "Menyimpan pengaturan ke $output";
-        await encoder.addDirectory(Directory(appFlutter));
+        final folderGambar = Directory(gambar);
+        if (folderGambar.existsSync()) {
+          progress.value = "Menyimpan gambar ke $output";
+
+          await encoder.addDirectory(folderGambar);
+        }
+        final folderDatabase = Directory(database);
+        if (folderDatabase.existsSync()) {
+          progress.value = "Menyimpan database ke $output";
+          await encoder.addDirectory(Directory(database));
+        }
+        final folderAppsFlutter = Directory(appFlutter);
+        if (folderAppsFlutter.existsSync()) {
+          progress.value = "Menyimpan pengaturan ke $output";
+          await encoder.addDirectory(Directory(appFlutter));
+        }
+
         encoder.closeSync();
         progress.value = 'Data telah disimpan ke $output';
         progressFinish.value = true;
       } catch (e) {
-        // print(e);
         Get.snackbar("Error", '$e',
             snackPosition: SnackPosition.BOTTOM,
             colorText: Colors.white,
