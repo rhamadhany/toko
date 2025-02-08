@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
-import 'package:myapp/laporan/laporan_penjualan.dart';
+import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/lihat/lihat_produk.dart';
 
 class PenjualanData extends StatelessWidget {
@@ -57,12 +57,14 @@ class PenjualanData extends StatelessWidget {
                 scale: _laporanController.scaleTransformTable.value,
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: Colors.blue),
+                    border: Border.all(
+                        width: 2, color: Color.fromARGB(255, 167, 29, 180)),
                     borderRadius: BorderRadius.circular(0),
                   ),
                   child: DataTable(
                       showCheckboxColumn: false,
-                      headingRowColor: WidgetStatePropertyAll(Colors.blue),
+                      headingRowColor: WidgetStatePropertyAll(
+                          const Color.fromARGB(255, 167, 29, 180)),
                       columnSpacing: 20,
                       columns: headList
                           .map((head) => DataColumn(

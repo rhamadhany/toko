@@ -7,7 +7,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
-import 'package:myapp/laporan/laporan_penjualan.dart';
+import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk%20baru/produk_baru.dart';
@@ -51,20 +51,29 @@ class MyApp extends StatelessWidget {
                     : LaporanPenjualan(),
                 const Settings()
               ]),
-          bottomNavigationBar: TabBar(
-              controller: _biometrikController.tabController,
-              tabs: const [
-                Tab(text: "Produk", icon: Icon(Icons.shop)),
-                Tab(text: "Admin", icon: Icon(Icons.admin_panel_settings)),
-                Tab(
-                  text: "Laporan",
-                  icon: Icon(Icons.bar_chart),
-                ),
-                Tab(
-                  text: "Pengaturan",
-                  icon: Icon(Icons.settings),
-                )
-              ]),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: TabBar(
+                // overlayColor: WidgetStatePropertyAll(Colors.blue),
+                labelColor: Colors.white,
+                unselectedLabelColor: const Color.fromARGB(185, 255, 255, 255),
+                // dividerColor: Colors.blue,
+                // indicatorColor: Colors.blue,
+                // automaticIndicatorColorAdjustment: ,
+                controller: _biometrikController.tabController,
+                tabs: const [
+                  Tab(text: "Produk", icon: Icon(Icons.shop)),
+                  Tab(text: "Admin", icon: Icon(Icons.admin_panel_settings)),
+                  Tab(
+                    text: "Laporan",
+                    icon: Icon(Icons.bar_chart),
+                  ),
+                  Tab(
+                    text: "Pengaturan",
+                    icon: Icon(Icons.settings),
+                  )
+                ]),
+          ),
           floatingActionButton: _biometrikController.tabIndex.value == 3
               ? GenerateItem.textGenerate()
               : (!_biometrikController.hasAuthenticated.value &&
@@ -142,7 +151,9 @@ class MyApp extends StatelessWidget {
   }
 
   void dialogTutup(didPop, result) {
-    if (_laporanController.viewMode.value == 'Transaksi' &&
+    if (_laporanController.showSliderScaler.value) {
+      _laporanController.showSliderScaler.value = false;
+    } else if (_laporanController.viewMode.value == 'Transaksi' &&
         _biometrikController.tabIndex.value == 2) {
       LaporanPenjualan.dariHari.value = false;
       _laporanController.viewMode.value = 'Hari';

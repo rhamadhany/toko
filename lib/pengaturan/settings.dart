@@ -40,6 +40,7 @@ class Settings extends StatelessWidget {
                       ),
                     ),
                     Checkbox(
+                      activeColor: Colors.blue,
                       value: autentikasiAktif.value,
                       onChanged: (value) async {
                         final hasAuth =

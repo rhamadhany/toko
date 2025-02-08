@@ -27,7 +27,7 @@ class LaporanPenjualan extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: Colors.blue),
+                    // border: Border.all(width: 2, color: Colors.blue),
                     borderRadius: BorderRadius.circular(0),
                   ),
                   child: indexLaporan.value == 1
@@ -38,6 +38,10 @@ class LaporanPenjualan extends StatelessWidget {
                 ),
               ),
               BottomNavigationBar(
+                backgroundColor: Colors.blue,
+                // unselectedItemColor: Colors.white,
+                selectedItemColor: Colors.white,
+                unselectedItemColor: const Color.fromARGB(185, 255, 255, 255),
                 items: const [
                   BottomNavigationBarItem(
                       icon: Icon(Icons.edit_document), label: 'Perubahan'),

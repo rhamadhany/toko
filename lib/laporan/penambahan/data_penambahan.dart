@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/laporan/laporan_penjualan.dart';
+import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/lihat/lihat_produk.dart';
 
 class PenambahanData extends StatelessWidget {
@@ -49,11 +49,13 @@ class PenambahanData extends StatelessWidget {
                 scale: _laporanController.scaleTransformTable.value,
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: Colors.blue),
+                    border: Border.all(
+                        width: 2, color: Color.fromARGB(255, 167, 29, 180)),
                     borderRadius: BorderRadius.circular(0),
                   ),
                   child: DataTable(
-                      headingRowColor: WidgetStatePropertyAll(Colors.blue),
+                      headingRowColor: WidgetStatePropertyAll(
+                          const Color.fromARGB(255, 167, 29, 180)),
                       showCheckboxColumn: false,
                       columnSpacing: 20,
                       columns: headList

@@ -7,7 +7,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/laporan/kalender_picker.dart';
-import 'package:myapp/laporan/laporan_penjualan.dart';
+import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/printing_qr.dart';
 import 'package:myapp/pengaturan/settings.dart';
