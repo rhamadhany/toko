@@ -10,10 +10,10 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/lihat/logo_produk.dart';
 
 class HalamanKeranjang extends StatelessWidget {
-  const HalamanKeranjang({super.key});
+  const HalamanKeranjang({super.key, required this.isManager});
   static final KeranjangController _keranjangController = Get.find();
   static final ProductController _productController = Get.find();
-
+  final bool isManager;
   @override
   Widget build(BuildContext context) {
     _keranjangController.initValueBox();
@@ -23,7 +23,9 @@ class HalamanKeranjang extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
-              title: const AppBarRow()),
+              title: AppBarRow(
+                isManager: isManager,
+              )),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: _keranjangController.isLoading.value

@@ -92,7 +92,10 @@ class PenambahanData extends StatelessWidget {
                                       .first;
 
                                   // print(produk);
-                                  Get.to(() => LihatProduk(produk: produk.obs));
+                                  Get.to(() => LihatProduk(
+                                        produk: produk.obs,
+                                        isManager: true,
+                                      ));
                                 } else {
                                   _productController.tanggalHarian.value =
                                       data.key;

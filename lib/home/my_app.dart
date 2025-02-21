@@ -1,17 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
-import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
-import 'package:myapp/produk%20baru/produk_baru.dart';
-import 'package:myapp/tes/generate.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -19,9 +16,10 @@ class MyApp extends StatelessWidget {
   final BiometrikController _biometrikController = Get.find();
 
   final ProductController _productController = Get.find();
-  final KeranjangController _keranjangController =
-      Get.put(KeranjangController());
+  // final KeranjangController _keranjangController =
+
   final LaporanController _laporanController = Get.find();
+  final SplashController _splashController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -33,7 +31,9 @@ class MyApp extends StatelessWidget {
               ? AppBar(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  title: AppBarMyApp(),
+                  title: AppBarMyApp(
+                    isManager: false,
+                  ),
                 )
               : null,
           body: TabBarView(
@@ -42,118 +42,43 @@ class MyApp extends StatelessWidget {
                   : null,
               controller: _biometrikController.tabController,
               children: [
-                HomeToko(),
-                !_biometrikController.hasAuthenticated.value &&
-                        Settings.autentikasiAktif.value
-                    ? const Center(child: CircularProgressIndicator())
-                    : HomeToko(),
-                !_biometrikController.hasAuthenticated.value &&
-                        Settings.autentikasiAktif.value
-                    ? const Center(child: CircularProgressIndicator())
-                    : LaporanPenjualan(),
+                HomeToko(
+                  isManager: false,
+                ),
+                // !_biometrikController.hasAuthenticated.value &&
+                //         Settings.autentikasiAktif.value
+                //     ? const Center(child: CircularProgressIndicator())
+                //     : HomeToko(),
+                // !_biometrikController.hasAuthenticated.value &&
+                //         Settings.autentikasiAktif.value
+                //     ? const Center(child: CircularProgressIndicator())
+                //     : LaporanPenjualan(),
                 const Settings()
               ]),
           bottomNavigationBar: _laporanController.showBarLaporan.value
               ? Container(
                   decoration: BoxDecoration(color: Colors.blue),
-                  child:
-                      // if (_laporanController.showBarLaporan.value)
-                      TabBar(
-                          // overlayColor: WidgetStatePropertyAll(Colors.blue),
-                          labelColor: Colors.white,
-                          unselectedLabelColor:
-                              const Color.fromARGB(185, 255, 255, 255),
-                          // dividerColor: Colors.blue,
-                          // indicatorColor: Colors.blue,
-                          // automaticIndicatorColorAdjustment: ,
-                          controller: _biometrikController.tabController,
-                          tabs: const [
-                        Tab(text: "PRODUK", icon: Icon(Icons.shop)),
+                  child: TabBar(
+                      labelColor: Colors.white,
+                      unselectedLabelColor:
+                          const Color.fromARGB(185, 255, 255, 255),
+                      controller: _biometrikController.tabController,
+                      tabs: [
+                        const Tab(text: "PRODUK", icon: Icon(Icons.shop)),
+                        // const Tab(
+                        //     text: "ADMIN",
+                        //     icon: Icon(Icons.admin_panel_settings)),
+                        // const Tab(
+                        //   text: "LAPORAN",
+                        //   icon: Icon(Icons.bar_chart),
+                        // ),
                         Tab(
-                            text: "ADMIN",
-                            icon: Icon(Icons.admin_panel_settings)),
-                        Tab(
-                          text: "LAPORAN",
-                          icon: Icon(Icons.bar_chart),
-                        ),
-                        Tab(
-                          text: "PENGATURAN",
-                          icon: Icon(Icons.settings),
+                          text: _splashController.username.value.toUpperCase(),
+                          icon: const Icon(Icons.admin_panel_settings),
                         )
                       ]),
                 )
               : null,
-          floatingActionButton: _biometrikController.tabIndex.value == 3
-              ? GenerateItem.textGenerate()
-              : (!_biometrikController.hasAuthenticated.value &&
-                          Settings.autentikasiAktif.value) ||
-                      _biometrikController.tabIndex.value != 1
-                  ? null
-                  : FloatingActionButton(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      onPressed: () async {
-                        if (_productController.showCheckBoxRemove.value &&
-                            _productController.filterProduct.isNotEmpty) {
-                          final existSelect = _productController
-                              .mapCheckBoxRemove
-                              .any((any) => any['isSelected'] == 'true');
-
-                          if (!existSelect) {
-                            Get.snackbar("Error", "Pilih setidaknya 1 produk",
-                                snackPosition: SnackPosition.BOTTOM,
-                                colorText: Colors.white,
-                                backgroundColor: Colors.red);
-                            return;
-                          }
-
-                          bool? confirm = await confirmationDelete();
-                          if (!confirm) {
-                            return;
-                          }
-                          List<String> listKey = [];
-                          for (int i = 0;
-                              i < _productController.filterProduct.length;
-                              i++) {
-                            if (_productController.mapCheckBoxRemove[i]
-                                        ['isSelected'] ==
-                                    'true' &&
-                                _productController.mapCheckBoxRemove[i]
-                                        ['key'] !=
-                                    "") {
-                              listKey.add(_productController
-                                  .mapCheckBoxRemove[i]['key']!);
-                            }
-                          }
-                          for (int k = 0; k < listKey.length; k++) {
-                            await _keranjangController.removeProduk(listKey[k]);
-                          }
-
-                          await DBHelper.deleteProduct(listKey);
-                          await _keranjangController.loadProduk();
-                          await _productController.generateMapCheckBox();
-                        } else {
-                          _productController.kategoriAdd.value = 'Semua';
-                          for (final controller
-                              in _productController.listTextField) {
-                            if (controller['label'] != 'Terjual') {
-                              controller['controller'].clear();
-                            } else {
-                              controller['controller'].text = "0";
-                            }
-                          }
-
-                          Get.to(() => NewProduct());
-                        }
-                      },
-                      child: Icon(
-                        _productController.showCheckBoxRemove.value &&
-                                _productController.filterProduct.isNotEmpty
-                            ? Icons.clear
-                            : Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
         ),
       );
     });
@@ -200,25 +125,5 @@ class MyApp extends StatelessWidget {
         ),
       );
     }
-  }
-
-  Future<bool> confirmationDelete() async {
-    final bool? confirm = await Get.dialog<bool?>(AlertDialog(
-      title: const Text("Konfirmasi"),
-      content: const Text("Anda yakin untuk menghapus produk ini?"),
-      actions: [
-        ElevatedButton(
-            onPressed: () {
-              Get.back(result: false);
-            },
-            child: const Text("Batal")),
-        ElevatedButton(
-            onPressed: () {
-              Get.back(result: true);
-            },
-            child: const Text("Ya")),
-      ],
-    ));
-    return confirm ?? false;
   }
 }

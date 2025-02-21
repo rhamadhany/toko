@@ -5,8 +5,8 @@ import 'package:myapp/keranjang/dialog_hapus_keranjang.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
 class AppBarRow extends StatelessWidget {
-  const AppBarRow({super.key});
-
+  const AppBarRow({super.key, required this.isManager});
+  final bool isManager;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -20,6 +20,7 @@ class AppBarRow extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Get.to(() => QRScanner(
+                      isManager: isManager,
                       dariKeranjang: true,
                     ));
               },

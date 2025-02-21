@@ -10,7 +10,10 @@ import 'package:myapp/controller/product_controller.dart';
 class HomeToko extends StatelessWidget {
   HomeToko({
     super.key,
+    required this.isManager,
   });
+
+  final bool isManager;
   final BiometrikController _biometrikController = Get.find();
   final ProductController _productController = Get.find();
   static final focusPencarian = FocusNode();
@@ -35,6 +38,7 @@ class HomeToko extends StatelessWidget {
                           focusPencarian.unfocus();
                           await Future.delayed(const Duration(seconds: 1));
                           Get.to(() => QRScanner(
+                                isManager: isManager,
                                 dariKeranjang: false,
                               ));
                         },
@@ -155,11 +159,15 @@ class HomeToko extends StatelessWidget {
 
                               _productController.mapCheckBoxRemove.refresh();
                             } else {
-                              Get.to(() => LihatProduk(produk: listProduk));
+                              Get.to(() => LihatProduk(
+                                    produk: listProduk,
+                                    isManager: isManager,
+                                  ));
                             }
                           },
                           onLongPress: () async {
-                            if (_biometrikController.tabIndex.value == 1) {
+                            // if (_biometrikController.tabIndex.value == 1)
+                            if (isManager) {
                               _productController.showCheckBoxRemove.value =
                                   !_productController.showCheckBoxRemove.value;
                               if (_productController.showCheckBoxRemove.value) {

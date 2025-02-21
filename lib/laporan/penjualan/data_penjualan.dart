@@ -112,7 +112,10 @@ class PenjualanData extends StatelessWidget {
                                       .where(
                                           (p) => p['key'] == data.value['ID'])
                                       .first;
-                                  Get.to(() => LihatProduk(produk: produk.obs));
+                                  Get.to(() => LihatProduk(
+                                        produk: produk.obs,
+                                        isManager: true,
+                                      ));
                                 }
                               },
                               cells: headList

@@ -8,11 +8,12 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/lihat/lihat_produk.dart';
 
 class QRScanner extends StatelessWidget {
-  QRScanner({super.key, required this.dariKeranjang});
+  QRScanner({super.key, required this.dariKeranjang, required this.isManager});
   final QRScannerController _qrScannerController = Get.find();
   final ProductController _productController = Get.find();
   final KeranjangController _keranjangController = Get.find();
   final bool dariKeranjang;
+  final bool isManager;
   final hasShowSnackBar = false.obs;
   @override
   Widget build(BuildContext context) {
@@ -178,6 +179,7 @@ class QRScanner extends StatelessWidget {
           Get.back(closeOverlays: true);
 
           Get.to(() => LihatProduk(
+                isManager: isManager,
                 produk: produk.obs,
               ));
         }

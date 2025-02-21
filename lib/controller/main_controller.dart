@@ -12,7 +12,7 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
   @override
   void onInit() {
     super.onInit();
-    _biometrikController.tabController = TabController(length: 4, vsync: this);
+    _biometrikController.tabController = TabController(length: 2, vsync: this);
     tabListener();
   }
 

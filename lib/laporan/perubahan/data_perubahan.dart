@@ -87,7 +87,10 @@ class DataPerubahan extends StatelessWidget {
                                 final produk = _productController.allProduct
                                     .where((p) => p['key'] == data.value['ID'])
                                     .first;
-                                Get.to(() => LihatProduk(produk: produk.obs));
+                                Get.to(() => LihatProduk(
+                                      produk: produk.obs,
+                                      isManager: true,
+                                    ));
                               } else {
                                 _productController.tanggalHarian.value =
                                     data.key;
