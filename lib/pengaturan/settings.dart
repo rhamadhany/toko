@@ -104,7 +104,9 @@ class Settings extends StatelessWidget {
                   leading: const Icon(Icons.warehouse),
                   onTap: () {
                     Get.put(ManagerController());
-                    Get.to(() => ManagerToko());
+                    Get.to(() => ManagerToko(),
+                        transition: Transition.zoom,
+                        duration: Duration(milliseconds: 1500));
                   },
                 ),
               ),

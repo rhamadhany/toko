@@ -27,14 +27,15 @@ class SplashController extends GetxController {
     try {
       token.value = await box.read('token');
       username.value = await box.read('username');
-      final url = Uri.parse(
-          'https://8080-idx-toko-1740067488955.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/verifikasi.php');
+      final url = Uri.parse('http://192.168.230.228:9999/');
 
       final response = await http
           .post(url, body: {'username': username.value, 'token': token.value});
       final data = jsonDecode(response.body);
       if (data['status'] == 'sukses') {
-        Get.offAll(() => MyApp());
+        Get.offAll(() => MyApp(),
+            transition: Transition.fade, duration: Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         isLoading.value = false;
       } else {
         isLoading.value = false;
@@ -45,8 +46,7 @@ class SplashController extends GetxController {
   }
 
   Future<void> loginUser() async {
-    final url = Uri.parse(
-        'https://8080-idx-toko-1740067488955.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/login.php');
+    final url = Uri.parse('http://192.168.230.228:9999/login.php');
     final response = await http.post(url, body: {
       'username': usernameController.text,
       'password': passwordController.text,
@@ -56,6 +56,7 @@ class SplashController extends GetxController {
 
       if (data['status'] == 'sukses') {
         box.write('username', usernameController.text);
+
         box.write('token', data['token']);
         username.value = box.read('username');
         Get.snackbar('Berhasil', data['message'],

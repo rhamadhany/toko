@@ -45,6 +45,7 @@ class SplashLogin extends GetView<SplashController> {
                                 height: 10,
                               ),
                               TextFormField(
+                                style: TextStyle(color: Colors.black),
                                 keyboardType: TextInputType.text,
                                 controller: controller.usernameController,
                                 decoration: InputDecoration(
@@ -64,11 +65,13 @@ class SplashLogin extends GetView<SplashController> {
                                     controller.passwordTersembunyi.value,
                                 keyboardType: TextInputType.visiblePassword,
                                 controller: controller.passwordController,
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     suffixIcon: Padding(
                                       padding:
                                           const EdgeInsets.only(right: 8.0),
                                       child: IconButton(
+                                          color: Colors.black,
                                           onPressed: () {
                                             controller
                                                     .passwordTersembunyi.value =
@@ -92,10 +95,15 @@ class SplashLogin extends GetView<SplashController> {
                                 height: 10,
                               ),
                               ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue),
                                   onPressed: () async {
                                     await controller.loginUser();
                                   },
-                                  child: Text('Login')),
+                                  child: Text(
+                                    'Login',
+                                    style: TextStyle(color: Colors.white),
+                                  )),
                             ],
                           ),
                         ),
