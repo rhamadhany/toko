@@ -1,21 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-import 'package:myapp/laporan/body_laporan.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+// import 'package:myapp/laporan/body_laporan.dart';
+// import 'package:myapp/pengaturan/biometrik.dart';
 
 class AppBarMyApp extends StatelessWidget {
   AppBarMyApp({super.key, required this.isManager});
 
-  final BiometrikController _biometrikController = Get.find();
+  // final BiometrikController _biometrikController = Get.find();
 
   final ProductController _productController = Get.find();
   final LaporanController _laporanController = Get.find();
+  final MainController _mainController = Get.find();
   final bool isManager;
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class AppBarMyApp extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            _biometrikController.tabIndex.value == 0
+            _mainController.tabIndex.value == 0
                 ? "PRODUK"
                 // : _biometrikController.tabIndex.value == 1
                 : "ADMIN",
@@ -42,9 +44,9 @@ class AppBarMyApp extends StatelessWidget {
           //             (_biometrikController.hasAuthenticated.value ||
           //                 !Settings.autentikasiAktif.value)) &&
           //         !_productController.showCheckBoxRemove.value)
-
-          dynamicIconAppBar(_productController, isManager),
-          if (_biometrikController.tabIndex.value == 2)
+          if (_mainController.tabIndex.value == 0)
+            dynamicIconAppBar(_productController, isManager),
+          if (_mainController.tabIndex.value == 2)
             IconButton(
                 onPressed: () {
                   _laporanController.showMenuLaporan();
@@ -80,17 +82,6 @@ class AppBarMyApp extends StatelessWidget {
             })),
       ),
     ));
-  }
-
-  String titleLaporan() {
-    return _laporanController.viewMode.value == 'Transaksi' &&
-            LaporanPenjualan.indexLaporan.value == 1
-        ? 'TRANSAKSI'
-        : _laporanController.viewMode.value == 'Tahun'
-            ? 'TAHUNAN'
-            : _laporanController.viewMode.value == 'Bulan'
-                ? 'BULANAN'
-                : 'HARIAN';
   }
 }
 

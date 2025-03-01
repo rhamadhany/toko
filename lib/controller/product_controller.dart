@@ -63,13 +63,15 @@ class ProductController extends GetxController {
 
   final storage = GetStorage();
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     tanggalHarian.value =
         dateFormat.format(DateTime.now()).toString().split(' ')[0];
     loadDaftarKategori();
 
-    initDatabase();
+    // initDatabase();
+    allProduct.value = await DBHelper.loadProducts();
+
     filteringProduk();
 
     kategoriListener();
@@ -98,7 +100,7 @@ class ProductController extends GetxController {
             produk['produk']
                 .toLowerCase()
                 .contains(searchText.value.toLowerCase()) ||
-            produk['key'] == searchText.value)
+            produk['kode_produk'] == searchText.value)
         .toList();
   }
 
@@ -135,13 +137,13 @@ class ProductController extends GetxController {
         filterProduct.value = allProduct
             .where((produk) =>
                 produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
-                produk['key'] == data)
+                produk['kode_produk'] == data)
             .toList();
       } else {
         filterProduct.value = allProduct
             .where((produk) =>
                 (produk['produk'].toLowerCase().contains(data.toLowerCase()) ||
-                    produk['key'] == data) &&
+                    produk['kode_produk'] == data) &&
                 produk['kategori'] == kategoriAktif.value)
             .toList();
       }
@@ -171,36 +173,38 @@ class ProductController extends GetxController {
     } else {
       mapCheckBoxRemove.value = List.generate(
           filterProduct.length,
-          (index) =>
-              {'isSelected': 'false', 'key': filterProduct[index]['key']});
+          (index) => {
+                'isSelected': 'false',
+                'kode_produk': filterProduct[index]['kode_produk']
+              });
     }
   }
 
-  Future<void> initDatabase() async {
-    final pathDatabase = await getDatabasesPath();
-    final path = '$pathDatabase/product_database.db';
-    database.value = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''CREATE TABLE products
-          (
-            key TEXT,
-            produk TEXT,
-            harga_beli TEXT,
-            harga_jual TEXT,
-            terjual INTEGER,
-            stok INTEGER,
-            gambar TEXT,
-            kategori TEXT,
-            deskripsi TEXT
-          )
-          ''');
-      },
-    );
+  // Future<void> initDatabase() async {
+  //   final pathDatabase = await getDatabasesPath();
+  //   final path = '$pathDatabase/product_database.db';
+  //   database.value = await openDatabase(
+  //     path,
+  //     version: 1,
+  //     onCreate: (db, version) async {
+  //       await db.execute('''CREATE TABLE products
+  //         (
+  //           key TEXT,
+  //           produk TEXT,
+  //           harga_beli TEXT,
+  //           harga_jual TEXT,
+  //           terjual INTEGER,
+  //           stok INTEGER,
+  //           gambar TEXT,
+  //           kategori TEXT,
+  //           deskripsi TEXT
+  //         )
+  //         ''');
+  //     },
+  //   );
 
-    allProduct.value = await DBHelper.loadProducts();
+  //   allProduct.value = await DBHelper.loadProducts();
 
-    if (allProduct.isEmpty) {}
-  }
+  //   if (allProduct.isEmpty) {}
+  // }
 }

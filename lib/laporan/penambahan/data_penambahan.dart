@@ -86,9 +86,10 @@ class PenambahanData extends StatelessWidget {
                                   _laporanController.viewMode.value = 'Hari';
                                 } else if (_laporanController.viewMode.value ==
                                     'Rincian') {
+                                  // print(_productController.allProduct);
                                   final produk = _productController.allProduct
-                                      .where(
-                                          (p) => p['key'] == data.value['ID'])
+                                      .where((p) =>
+                                          p['kode_produk'] == data.value['ID'])
                                       .first;
 
                                   // print(produk);
@@ -281,7 +282,7 @@ class PenambahanData extends StatelessWidget {
     for (var item in tanggalProduk) {
       final itemTanggal = item['tanggal'].split('.')[0];
       final produk = item['produk'];
-      final key = item['key'];
+      final key = item['kode_produk'];
       final jumlah = item['stok'];
       final hargaBeli = int.tryParse(item['harga_beli'])!;
       final hargaJual = int.tryParse(item['harga_jual'])!;

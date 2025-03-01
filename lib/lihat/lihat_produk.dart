@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_view.dart';
+import 'package:myapp/controller/main_controller.dart';
 
-import 'package:myapp/pengaturan/biometrik.dart';
+// import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/lihat/dialog_jual.dart';
 import 'package:myapp/lihat/gambar_penuh.dart';
@@ -20,7 +21,8 @@ class LihatProduk extends StatelessWidget {
   final ProductController _productController = Get.find();
 
   final KeranjangController _keranjangController = Get.find();
-  final BiometrikController _biometrikController = Get.find();
+  // final BiometrikController _biometrikController = Get.find();
+  final MainController _mainController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -63,73 +65,114 @@ class LihatProduk extends StatelessWidget {
             ],
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (produk['gambar'].toString() == '[]') noLogoProduk(300, 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+        body: SizedBox(
+          height: Get.height,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: SingleChildScrollView(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: Get.width * 0.09),
-                      ...(produk['gambar'] as List<dynamic>).map((picPath) {
-                        return InkWell(
-                          onTap: () {
-                            Get.to(() => GambarPenuh(gambar: picPath));
-                          },
-                          child: logoProduk(picPath, 10, 300, 2.5),
-                        );
-                      }),
+                      if (produk['gambar'].toString() == '[]')
+                        noLogoProduk(300, 10),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: Get.width * 0.09),
+                            ...(produk['gambar'] as List<dynamic>)
+                                .map((picPath) {
+                              return InkWell(
+                                onTap: () {
+                                  Get.to(() => GambarPenuh(gambar: picPath));
+                                },
+                                child: logoProduk(picPath, 10, 300, 2.5),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4),
+                        child: Container(
+                          // height: Get.height,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blue,
+                          ),
+                          // color: Colors.blue,
+                          // shape: RoundedRectangleBorder(
+                          //   side: BorderSide(color: Colors.blue),
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      produkTerjual(),
+                                      if (sisa > 0) sisaProduk(sisa),
+                                      if (isManager) profitJual(),
+                                      if (isManager) biayaBeli(),
+                                      if (isManager) omsetJual(),
+                                    ],
+                                  ),
+                                ),
+                                // Expanded(child: Spacer()),
+                                // SizedBox(
+                                //   width: double.infinity,
+                                // ),
+                                // const siz(),
+                                if (produk['kategori'] != null &&
+                                    produk['kategori'] != '')
+                                  kategoriView(),
+                                // hargaProduk(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (produk['deskripsi'] != null &&
+                          produk['deskripsi'] != '')
+                        deskripsiView(),
                     ],
                   ),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            hargaProduk(),
-                            produkTerjual(),
-                            if (sisa > 0) sisaProduk(sisa),
-                            if (isManager) profitJual(),
-                            if (isManager) biayaBeli(),
-                            if (isManager) omsetJual(),
-                          ],
-                        ),
-                        const Spacer(),
-                        if (produk['kategori'] != null &&
-                            produk['kategori'] != '')
-                          kategoriView(),
-                      ],
-                    ),
-                  ),
-                ),
-                if (produk['deskripsi'] != null && produk['deskripsi'] != '')
-                  deskripsiView(),
-              ],
-            ),
+              ),
+              hargaProduk(),
+            ],
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.blue,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
           items: [
             if (isManager)
               const BottomNavigationBarItem(
-                icon: Icon(Icons.edit_note),
+                icon: Icon(
+                  Icons.edit_note,
+                ),
                 label: 'Edit',
               ),
             if (!isManager)
@@ -146,10 +189,10 @@ class LihatProduk extends StatelessWidget {
           onTap: (value) {
             _productController.bottomIndex.value = value;
             if (value == 0 &&
-                (_biometrikController.tabIndex.value == 1 ||
-                    _biometrikController.tabIndex.value == 2)) {
+                (_mainController.tabIndex.value == 1 ||
+                    _mainController.tabIndex.value == 2)) {
               editProduk();
-            } else if (value == 0 && _biometrikController.tabIndex.value == 0) {
+            } else if (value == 0 && _mainController.tabIndex.value == 0) {
               _keranjangController.langsungtambahkeKeranjang(sisa, produk);
             } else {
               final sisa = produk['stok'] - produk['terjual'];
@@ -206,8 +249,12 @@ class LihatProduk extends StatelessWidget {
 
   Text sisaProduk(int sisa) {
     return Text(
-      sisa > 0 ? "Sisa: $sisa" : "",
-      style: const TextStyle(fontSize: 18),
+      sisa > 0 ? "SISA: $sisa" : "",
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -222,26 +269,26 @@ class LihatProduk extends StatelessWidget {
     return omset;
   }
 
-  Row omsetJual() {
+  Text omsetJual() {
     final omsetNormal = nilaiOmset().toString();
     final omsetFinal = _productController.regexNominal(omsetNormal);
-    return Row(
-      children: [
-        const Text("Omset: ", style: TextStyle(fontSize: 18)),
-        Text("Rp $omsetFinal", style: const TextStyle(fontSize: 18)),
-      ],
-    );
+    return Text("OMSET: Rp $omsetFinal",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ));
   }
 
-  Row biayaBeli() {
+  Text biayaBeli() {
     final nilaiNormal = nilaiBeli().toString();
     final nilaiFinal = _productController.regexNominal(nilaiNormal);
-    return Row(
-      children: [
-        const Text("Modal: ", style: TextStyle(fontSize: 18)),
-        Text("Rp $nilaiFinal", style: const TextStyle(fontSize: 18)),
-      ],
-    );
+    return Text("MODAL: Rp $nilaiFinal",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ));
   }
 
   int nilaiBeli() {
@@ -264,26 +311,34 @@ class LihatProduk extends StatelessWidget {
     return profit;
   }
 
-  Row profitJual() {
+  Text profitJual() {
     final profitNormal = nilaiProfit().toString();
     final profitFinal = _productController.regexNominal(profitNormal);
-    return Row(
-      children: [
-        const Text("Laba : ", style: TextStyle(fontSize: 18)),
-        Text('Rp $profitFinal', style: const TextStyle(fontSize: 18)),
-      ],
-    );
+    return Text("LABA: Rp $profitFinal",
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          color: Colors.white,
+        ));
   }
 
-  Padding hargaProduk() {
+  Widget hargaProduk() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        "Rp ${_productController.hargaProduk(produk)}",
-        style: const TextStyle(
-          fontSize: 35,
-          color: Colors.deepOrangeAccent,
-          fontWeight: FontWeight.bold,
+      padding: const EdgeInsets.all(20.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.deepOrangeAccent,
+            borderRadius: BorderRadius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20),
+          child: Text(
+            "Rp ${_productController.hargaProduk(produk)}",
+            style: const TextStyle(
+              fontSize: 30,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );
@@ -291,22 +346,29 @@ class LihatProduk extends StatelessWidget {
 
   Text produkTerjual() {
     return Text(
-      'Terjual: ${produk['terjual']}/${produk['stok']}',
-      style: const TextStyle(fontSize: 18),
+      'TERJUAL: ${produk['terjual']}/${produk['stok']}',
+      style: const TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 18,
+        color: Colors.white,
+      ),
     );
   }
 
-  kategoriView() {
+  Widget kategoriView() {
     final indexIcons = _productController.daftarKategori
         .indexWhere((ind) => ind['kategori'] == produk['kategori']);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        color: Colors.blue,
+    return Container(
+      // width: Get.width * 0.4,
+      decoration: BoxDecoration(
+          color: Colors.deepPurple, borderRadius: BorderRadius.circular(5)),
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      // color: Colors.deepPurple,
+      child: IntrinsicWidth(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 IconData(_productController.daftarKategori[indexIcons]['icon'],
@@ -316,12 +378,16 @@ class LihatProduk extends StatelessWidget {
               SizedBox(
                 width: 5,
               ),
-              Text(
-                produk['kategori'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+              Expanded(
+                child: Text(
+                  produk['kategori'].length > 12
+                      ? produk['kategori'].substring(0, 12) + '...'
+                      : produk['kategori'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ],
@@ -332,29 +398,56 @@ class LihatProduk extends StatelessWidget {
   }
 
   deskripsiView() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  'Deskripsi',
-                  softWrap: true,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue),
+            borderRadius: BorderRadius.circular(10)),
+        // color: const Color.fromARGB(255, 255, 255, 0),
+        // shape: RoundedRectangleBorder(
+        //     side: BorderSide(color: Colors.blue),
+        //     borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text(
+                        textAlign: TextAlign.center,
+                        'DESKRIPSI',
+                        softWrap: true,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
-                Text(
-                  produk['deskripsi'],
-                  softWrap: true,
-                  style: const TextStyle(fontSize: 14),
+              ),
+              SelectableText(
+                produk['deskripsi'],
+                maxLines: null,
+                // softWrap: true,
+                style: const TextStyle(
+                  fontSize: 14,
                 ),
-              ],
-            ),
-            const Spacer(),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

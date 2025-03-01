@@ -26,7 +26,7 @@ class QRView extends StatelessWidget {
             QrImageView(
               backgroundColor: Colors.white,
               // embeddedImage: Icon(icon),
-              data: produk['key'],
+              data: produk['kode_produk'],
               version: QrVersions.auto,
               size: 320,
               gapless: false,
@@ -35,12 +35,13 @@ class QRView extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: InkWell(
                 onTap: () async {
-                  await Clipboard.setData(ClipboardData(text: produk['key']));
+                  await Clipboard.setData(
+                      ClipboardData(text: produk['kode_produk']));
                   Get.snackbar(
                     'Berhasil',
                     'Kode QR berhasil disalin ke clipboard',
                     snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.green,
                     colorText: Colors.white,
                   );
                 },

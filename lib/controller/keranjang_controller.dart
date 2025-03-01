@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/product_controller.dart';
 
 import 'package:sqflite/sqflite.dart';
+import 'package:http/http.dart' as http;
 
 class KeranjangController extends GetxController {
   Database? database;
@@ -23,28 +27,28 @@ class KeranjangController extends GetxController {
     super.onInit();
     keranjangProdukListener();
 
-    inisiasiDatabase();
+    // inisiasiDatabase();
   }
 
-  Future<void> inisiasiDatabase() async {
-    final rootPath = await getDatabasesPath();
-    final dbPath = '$rootPath/keranjang.db';
-    database = await openDatabase(
-      dbPath,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-CREATE TABLE keranjang (
-  key TEXT,
-  produk TEXT,
-  jumlah INTEGER,
-  gambar TEXT
-)
-''');
-      },
-    );
-    await loadProduk();
-  }
+//   Future<void> inisiasiDatabase() async {
+//     final rootPath = await getDatabasesPath();
+//     final dbPath = '$rootPath/keranjang.db';
+//     database = await openDatabase(
+//       dbPath,
+//       version: 1,
+//       onCreate: (db, version) async {
+//         await db.execute('''
+// CREATE TABLE keranjang (
+//   key TEXT,
+//   produk TEXT,
+//   jumlah INTEGER,
+//   gambar TEXT
+// )
+// ''');
+//       },
+//     );
+//     await loadProduk();
+//   }
 
   void keranjangProdukListener() {
     keranjangProduk.listen((_) async {
@@ -65,70 +69,101 @@ CREATE TABLE keranjang (
     isLoading.value = true;
     hargaJual.clear();
 
-    // Load produk before manipulating lists to avoid inconsistencies
     await loadProduk();
 
-    // Use a more efficient approach to update lists
     final keranjangLength = keranjangProduk.length;
-    // final valueBoxLength = valueBox.length;
-    // final jumlahControllersLength = jumlahControllers.length;
 
-    // if (keranjangLength != valueBoxLength) {
     valueBox.clear();
     jumlahControllers.clear();
     valueBox.addAll(List.generate(keranjangLength, (_) => false));
-    // }
 
-    // if (keranjangLength != jumlahControllersLength) {
     jumlahControllers.clear();
     jumlahControllers.addAll(List.generate(keranjangLength, (index) {
       return TextEditingController(
           text: keranjangProduk[index]['jumlah'].toString());
     }));
-    // }
 
-    hargaJual.clear(); // Clear before adding new values
+    hargaJual.clear();
     hargaJual.addAll(List.generate(keranjangLength, (index) {
       final product = _productController.allProduct.firstWhere(
-          (produk) => produk['key'] == keranjangProduk[index]['key'],
-          orElse: () => {}); // Handle case where product is not found
-      return product['harga_jual'] ?? 0; // Handle case where harga_jual is null
+          (produk) =>
+              produk['kode_produk'] == keranjangProduk[index]['kode_produk'],
+          orElse: () => {});
+      return product['harga_jual'] ?? 0;
     }));
-
-    // print(hargaJual);
 
     isLoading.value = false;
   }
 
+  // Future<void> loadProduk() async {
+  //   const query = 'SELECT * FROM keranjang';
+  //   await database!.rawQuery(query).then((result) {
+  //     keranjangProduk.value =
+  //         result.map((e) => e as Map<String, dynamic>).toList();
+  //   });
+  //   // update();
+  // }
+
   Future<void> loadProduk() async {
-    const query = 'SELECT * FROM keranjang';
-    await database!.rawQuery(query).then((result) {
-      keranjangProduk.value =
-          result.map((e) => e as Map<String, dynamic>).toList();
-    });
-    // update();
+    try {
+      final uri = Uri.parse('$domain/produk/load.php');
+      final response = await http.post(uri, body: {'tabel': 'keranjang'});
+      if (response.statusCode == 200) {
+        final decode = jsonDecode(response.body);
+        keranjangProduk.value = List<Map<String, dynamic>>.from(decode);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed load produk keranjang',
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
+    }
   }
 
   Future<void> addProduk(key, produk, jumlah, gambar) async {
-    final indexKeys = keranjangProduk.indexWhere((pro) => pro['key'] == key);
+    final indexKeys =
+        keranjangProduk.indexWhere((pro) => pro['kode_produk'] == key);
     // print("indexKeys: $indexKeys");
     if (indexKeys != -1) {
-      final updateKey = keranjangProduk[indexKeys]['key'];
+      final updateKey = keranjangProduk[indexKeys]['kode_produk'];
       final jumlahBaru = keranjangProduk[indexKeys]['jumlah'] + jumlah;
       // print('jumlah baru: $jumlahBaru');
       await updateJumlah(updateKey, jumlahBaru);
     } else {
-      const query =
-          'INSERT INTO keranjang (key, produk, jumlah, gambar) VALUES (?, ?, ?, ?)';
-      await database!.rawInsert(query, [key, produk, jumlah, gambar]);
+      // const query =
+      // 'INSERT INTO keranjang (key, produk, jumlah, gambar) VALUES (?, ?, ?, ?)';
+      final map = jsonEncode([
+        {
+          'tanggal': DateTime.now().toString(),
+          'kode_produk': key,
+          'produk': produk,
+          'jumlah': jumlah,
+          'gambar': gambar,
+        }
+      ]);
+      final uri = Uri.parse('$domain/produk/tambah.php');
+      await http.post(uri, body: {'tabel': 'keranjang', 'produk': map});
+      // await database!.rawInsert(query, [key, produk, jumlah, gambar]);
     }
     // await loadProduk();
     await initValueBox();
   }
 
-  Future<void> removeProduk(String key) async {
-    const query = 'DELETE FROM keranjang WHERE key = ?';
-    await database!.rawDelete(query, [key]);
+  Future<void> removeProduk(List<String> listKey) async {
+    // const query = 'DELETE FROM keranjang WHERE key = ?';
+
+    try {
+      final uri = Uri.parse('$domain/produk/delete.php');
+      await http.post(uri,
+          body: {'tabel': 'keranjang', 'list_kode': jsonEncode(listKey)});
+      await loadProduk();
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to remove produk dari keranjang $e',
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+    // await database!.rawDelete(query, [key]);
   }
 
   void refreshProduk() {
@@ -160,20 +195,24 @@ CREATE TABLE keranjang (
         }
       }
 
-      const query = 'UPDATE keranjang SET jumlah = ? WHERE key = ?';
-      await database!.rawUpdate(query, [jumlahUpdate, key]);
+      // const query = 'UPDATE keranjang SET jumlah = ? WHERE key = ?';
+      // await database!.rawUpdate(query, [jumlahUpdate, key]);
+      final url = Uri.parse('$domain/produk/update_keranjang.php');
+      await http.post(url,
+          body: {'kode_produk': key, 'jumlah': jumlahUpdate.toString()});
       await loadProduk();
     }
   }
 
   int indexKey(String key) {
-    return _productController.allProduct.indexWhere((pro) => pro['key'] == key);
+    return _productController.allProduct
+        .indexWhere((pro) => pro['kode_produk'] == key);
   }
 
   int sisaPadaAllProduk(String key) {
     int sisa = -1;
     final indexkey = _productController.allProduct
-        .indexWhere((produk) => produk['key'] == key);
+        .indexWhere((produk) => produk['kode_produk'] == key);
     if (indexkey != -1) {
       final stok = _productController.allProduct[indexkey]['stok'];
       final terjual = _productController.allProduct[indexkey]['terjual'];
@@ -187,7 +226,8 @@ CREATE TABLE keranjang (
     if (sisa > 0) {
       final gambar =
           produkBaru['gambar'].isEmpty ? "" : produkBaru['gambar'][0];
-      await addProduk(produkBaru['key'], produkBaru['produk'], 1, gambar);
+      await addProduk(
+          produkBaru['kode_produk'], produkBaru['produk'], 1, gambar);
 
       Get.back(closeOverlays: true);
 
@@ -196,7 +236,7 @@ CREATE TABLE keranjang (
       Get.snackbar(
           "Keranjang", '${produkBaru['produk']} ditambahkan ke keranjang',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.green,
           colorText: Colors.white,
           duration: const Duration(seconds: 1));
     } else {

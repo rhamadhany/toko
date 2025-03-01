@@ -81,6 +81,14 @@ class BodyProduk extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 child: ListTile(
+                    leading: Icon(IconData(
+                        _productController.daftarKategori.firstWhere(
+                          (d) =>
+                              d['kategori'] ==
+                              _productController.kategoriAdd.value,
+                          orElse: () => {'icon': Icons.error.codePoint},
+                        )['icon'],
+                        fontFamily: 'MaterialIcons')),
                     onTap: () {
                       Get.dialog(KategoriProduk());
                     },

@@ -109,8 +109,8 @@ class PenjualanData extends StatelessWidget {
                                 } else if (_laporanController.viewMode.value ==
                                     'Rincian') {
                                   final produk = _productController.allProduct
-                                      .where(
-                                          (p) => p['key'] == data.value['ID'])
+                                      .where((p) =>
+                                          p['kode_produk'] == data.value['ID'])
                                       .first;
                                   Get.to(() => LihatProduk(
                                         produk: produk.obs,
@@ -178,7 +178,7 @@ class PenjualanData extends StatelessWidget {
       final bulan = _laporanController.namaBulan[splitBulan! - 1];
 
       final formatTanggal = '$bulan $splitTahun';
-      final jumlah = item['jumlah'];
+      final jumlah = item['terjual'];
       final hargaBeli = int.tryParse(item['harga_beli']);
       final hargaJual = int.tryParse(item['harga_jual']);
       final modal = jumlah * hargaBeli;
@@ -226,7 +226,8 @@ class PenjualanData extends StatelessWidget {
       if (bulanParse != indexBulan || tahunParse != tahun) {
         continue;
       }
-      int jumlah = item['jumlah'];
+      print(item);
+      int jumlah = item['terjual'];
       int hargaBeli = int.tryParse(item['harga_beli'])!;
       int hargaJual = int.tryParse(item['harga_jual'])!;
       int modal = jumlah * hargaBeli;
@@ -263,7 +264,7 @@ class PenjualanData extends StatelessWidget {
       };
 
       for (var data in tahun) {
-        final jumlah = data['jumlah'];
+        final jumlah = data['terjual'];
         final hargaBeli = int.tryParse(data['harga_beli']);
         final hargaJual = int.tryParse(data['harga_jual']);
         final modal = jumlah * hargaBeli;
@@ -280,68 +281,30 @@ class PenjualanData extends StatelessWidget {
     return dataPenjualan;
   }
 
-  // Map<String, Map<String, dynamic>> initRincianData() {
-  //   Map<String, Map<String, dynamic>> dataPenjualan = {};
-  //   final produk = _laporanController.penjualan;
-  //   final splitTanggal =
-  //       int.tryParse(_productController.tanggalHarian.value.split('-')[0])!;
-  //   final splitBulan =
-  //       int.tryParse(_productController.tanggalHarian.value.split('-')[1])!;
-  //   final splitTahun =
-  //       int.tryParse(_productController.tanggalHarian.value.split('-')[2])!;
-  //   final date =
-  //       DateTime(splitTahun, splitBulan, splitTanggal).toString().split(' ')[0];
-
-  //   final tanggalProduk =
-  //       produk.where((p) => p['tanggal'].split(' ')[0] == date).toList();
-
-  //   for (var item in tanggalProduk) {
-  //     final itemTanggal = item['tanggal'].split('.')[0];
-  //     final produk = item['produk'];
-  //     final key = item['key'];
-  //     final jumlah = item['jumlah'];
-  //     final hargaBeli = int.tryParse(item['harga_beli'])!;
-  //     final hargaJual = int.tryParse(item['harga_jual'])!;
-  //     int modal = jumlah * hargaBeli;
-  //     int omset = jumlah * hargaJual;
-  //     int laba = omset - modal;
-
-  //     dataPenjualan[itemTanggal + key] = {
-  //       'TANGGAL': itemTanggal,
-  //       'ID': key,
-  //       'PRODUK': produk,
-  //       'TERJUAL': jumlah,
-  //       'MODAL': modal,
-  //       'OMSET': omset,
-  //       'LABA': laba,
-  //     };
-  //   }
-  //   return dataPenjualan;
-  // }
-
   Map<String, Map<String, dynamic>> initRincianData() {
     Map<String, Map<String, dynamic>> dataRincian = {};
 
     final keyT = _transaksiController.keyTransaksi.value;
 
     final transMap = _transaksiController.transaksiMap.where((t) {
-      final tK = t['key'];
+      final tK = t['kode_transaksi'];
 
       return tK == keyT;
     }).first;
 
-    final List<dynamic> json = jsonDecode(transMap['keyProduk']);
+    final List<dynamic> json = jsonDecode(transMap['kode_produk']);
     final listKey = json.cast<String>();
+    print('listkey ${transMap['kode_produk']}');
 
     for (var keyTransaksi in listKey) {
       final tanggal = transMap['tanggal'].split(".")[0];
 
-      final daftarProduk =
-          _laporanController.penjualan.where((p) => p['key'] == keyTransaksi);
+      final daftarProduk = _laporanController.penjualan
+          .where((p) => p['kode_produk'] == keyTransaksi);
 
       for (var item in daftarProduk) {
-        final keyProduk = item['key'];
-        final jumlah = item['jumlah'];
+        final keyProduk = item['kode_produk'];
+        final jumlah = item['terjual'];
         final hargaBeli = int.tryParse(item['harga_beli'])!;
         final hargaJual = int.tryParse(item['harga_jual'])!;
         int modal = jumlah * hargaBeli;
@@ -367,7 +330,6 @@ class PenjualanData extends StatelessWidget {
 
     final produkTr = _transaksiController.transaksiMap;
     final tanggalTR = _productController.tanggalHarian.value;
-    // print(tanggalTR);
 
     final daftarTR = produkTr.where((p) {
       final tanggal = p['tanggal'];
@@ -382,18 +344,14 @@ class PenjualanData extends StatelessWidget {
       final formatTanggal =
           DateFormat('dd-MM-yyyy HH:mm:ss').format(parserTanggal);
 
-      // final formatTanggal = formatTanggalFunction(itemTanggal);
-      // print(item);
       dataTr[formatTanggal] = {
         'TANGGAL': formatTanggal,
-        'TRANSAKSI': item['key'],
+        'TRANSAKSI': item['kode_transaksi'],
         'TERJUAL': item['jumlah'].toString(),
         'MODAL': item['modal'].toString(),
         'OMSET': item['omset'].toString(),
         'LABA': item['laba'].toString()
-        // 'PRODUK': item['produk'],
       };
-      // print(formatTanggal);
     }
     return dataTr;
   }

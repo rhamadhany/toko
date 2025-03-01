@@ -85,7 +85,8 @@ class DataPerubahan extends StatelessWidget {
                               } else if (_laporanController.viewMode.value ==
                                   'Rincian') {
                                 final produk = _productController.allProduct
-                                    .where((p) => p['key'] == data.value['ID'])
+                                    .where((p) =>
+                                        p['kode_produk'] == data.value['ID'])
                                     .first;
                                 Get.to(() => LihatProduk(
                                       produk: produk.obs,
@@ -448,7 +449,7 @@ class DataPerubahan extends StatelessWidget {
     }).toList();
 
     for (var item in daftarProduk) {
-      final id = item['key'];
+      final id = item['kode_produk'];
       final tanggal = item['tanggal'].split('.')[0];
       final stokLama = item['stok_lama'];
       final stokBaru = item['stok_baru'];

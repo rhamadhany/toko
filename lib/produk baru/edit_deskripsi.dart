@@ -11,13 +11,24 @@ class EditDeskripsi extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
-        title: const Text(
-          'Deskripsi',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            const Text(
+              'Deskripsi',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                Get.back();
+              },
+            )
+          ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: TextField(
           controller: _productController.listTextField[5]['controller'],
           textAlign: TextAlign.start,
@@ -25,7 +36,9 @@ class EditDeskripsi extends StatelessWidget {
           expands: true,
           maxLines: null,
           decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+            focusedBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+            border: OutlineInputBorder(borderSide: BorderSide()),
             // label: Text(
             //   _productController.listTextField[5]['label'],
             // ),

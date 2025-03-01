@@ -42,5 +42,3 @@ class NewProduct extends StatelessWidget {
     });
   }
 }
-
-

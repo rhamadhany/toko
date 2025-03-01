@@ -35,6 +35,12 @@ class PrintingQR {
   void dialogQR() {
     Get.dialog(Obx(() {
       return AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            )),
         title: Text(
           'Simpan QRCode',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -116,11 +122,11 @@ class PrintingQR {
       daftarQR = _productController.mapCheckBoxRemove
           .where((i) => i['isSelected'] == 'true')
           .toList()
-          .map((f) => f['key'] as String)
+          .map((f) => f['kode_produk'] as String)
           .toList();
     } else {
       daftarQR = _productController.allProduct
-          .map((produk) => produk['key'].toString())
+          .map((produk) => produk['kode_produk'].toString())
           .toList();
     }
 

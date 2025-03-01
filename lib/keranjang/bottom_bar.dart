@@ -56,9 +56,11 @@ class BottomBar extends StatelessWidget {
     int totalHarga = 0;
     for (int i = 0; i < _keranjangController.valueBox.length; i++) {
       if (_keranjangController.valueBox[i] == true) {
-        final harga = int.tryParse(_keranjangController.hargaJual[i]) ?? 0;
+        final hargaController = _keranjangController.hargaJual[i] ?? 0;
+        final harga = int.tryParse(hargaController) ?? 0;
         final jumlah =
             int.tryParse(_keranjangController.jumlahControllers[i].text) ?? 1;
+        // print('harga $harga');
         final hargaJumlah = harga * jumlah;
         totalHarga = totalHarga + hargaJumlah;
       }

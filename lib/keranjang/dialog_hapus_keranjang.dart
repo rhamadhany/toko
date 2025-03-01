@@ -27,13 +27,22 @@ class DialogHapusKeranjang extends StatelessWidget {
             onPressed: () async {
               Get.back();
 
+              final listKey = <String>[];
+
+              // _keranjangController.valueBox
+              //     .where((v) => v == true)
+              //     .toList();
+              // print(listKey);
               for (int i = 0; i < _keranjangController.valueBox.length; i++) {
                 if (_keranjangController.valueBox[i] == true) {
-                  final key = _keranjangController.keranjangProduk[i]['key'];
-                  _keranjangController.removeProduk(key);
+                  final key =
+                      _keranjangController.keranjangProduk[i]['kode_produk'];
+                  // _keranjangController.removeProduk(key);
+                  listKey.add(key);
                   // _keranjangController.loadProduk();
                 }
               }
+              await _keranjangController.removeProduk(listKey);
 
               await _keranjangController.initValueBox();
               // _keranjangController.refreshProduk();

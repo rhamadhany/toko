@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/lihat/lihat_produk.dart';
 import 'package:myapp/lihat/logo_produk.dart';
@@ -14,8 +14,9 @@ class HomeToko extends StatelessWidget {
   });
 
   final bool isManager;
-  final BiometrikController _biometrikController = Get.find();
+
   final ProductController _productController = Get.find();
+  final MainController _mainController = Get.find();
   static final focusPencarian = FocusNode();
 
   @override
@@ -54,216 +55,255 @@ class HomeToko extends StatelessWidget {
                   },
                 ),
               ),
+            KategoriToko(),
+            // _productController.daftarKategori.map((kategori){
+            //   return Row()
+            // })
             if (_productController.allProduct.isNotEmpty &&
                 _productController.daftarKategori.length > 1)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ..._productController.daftarKategori
-                          .map((kategori) => Card(
-                                color: kategori['kategori'] ==
-                                        _productController.kategoriAktif.value
-                                    ? Colors.blue
-                                    : null,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _productController.kategoriAktif.value =
-                                          kategori['kategori'];
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          IconData(kategori['icon'],
-                                              fontFamily: 'MaterialIcons'),
-                                          color: kategori['kategori'] ==
-                                                  _productController
-                                                      .kategoriAktif.value
-                                              ? Colors.white
-                                              : null,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          kategori['kategori'],
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: kategori['kategori'] ==
-                                                      _productController
-                                                          .kategoriAktif.value
-                                                  ? Colors.white
-                                                  : null),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                              ))
-                    ],
+              IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            if (_productController.filterProduct.isEmpty) const Spacer(),
-            _productController.filterProduct.isEmpty
-                ? Center(
-                    child: Icon(
-                    Icons.shop,
-                    size: Get.height * 0.3,
-                  )
-                    //   Text(
-                    //   "Tidak ada produk",
-                    //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    // )
+            Expanded(
+              child: Column(
+                children: [
+                  if (_productController.filterProduct.isEmpty) const Spacer(),
+                  _productController.filterProduct.isEmpty
+                      ? Center(
+                          child: Icon(
+                          Icons.shop,
+                          size: Get.height * 0.3,
+                        ))
+                      : Expanded(
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.7,
+                            ),
+                            itemCount: _productController.filterProduct.length,
+                            itemBuilder: (context, indexProduct) {
+                              final listProduk = _productController
+                                  .filterProduct[indexProduct].obs;
 
-                    )
-                : Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.7,
-                      ),
-                      itemCount: _productController.filterProduct.length,
-                      itemBuilder: (context, indexProduct) {
-                        final listProduk =
-                            _productController.filterProduct[indexProduct].obs;
+                              final terjual = listProduk['terjual'];
+                              final stok = listProduk['stok'];
+                              final sisa = stok - terjual;
+                              return InkWell(
+                                onTap: () {
+                                  if (_productController
+                                      .showCheckBoxRemove.value) {
+                                    bool isChecked = _productController
+                                                .mapCheckBoxRemove[indexProduct]
+                                            ['isSelected'] ==
+                                        'true';
+                                    isChecked = !isChecked;
 
-                        final terjual = listProduk['terjual'];
-                        final stok = listProduk['stok'];
-                        final sisa = stok - terjual;
-                        return InkWell(
-                          onTap: () {
-                            if (_productController.showCheckBoxRemove.value) {
-                              bool isChecked = _productController
-                                          .mapCheckBoxRemove[indexProduct]
-                                      ['isSelected'] ==
-                                  'true';
-                              isChecked = !isChecked;
+                                    _productController
+                                                .mapCheckBoxRemove[indexProduct]
+                                            ['isSelected'] =
+                                        isChecked
+                                            ? true.toString()
+                                            : false.toString();
 
-                              _productController.mapCheckBoxRemove[indexProduct]
-                                      ['isSelected'] =
-                                  isChecked
-                                      ? true.toString()
-                                      : false.toString();
-
-                              _productController.mapCheckBoxRemove.refresh();
-                            } else {
-                              Get.to(() => LihatProduk(
-                                    produk: listProduk,
-                                    isManager: isManager,
-                                  ));
-                            }
-                          },
-                          onLongPress: () async {
-                            // if (_biometrikController.tabIndex.value == 1)
-                            if (isManager) {
-                              _productController.showCheckBoxRemove.value =
-                                  !_productController.showCheckBoxRemove.value;
-                              if (_productController.showCheckBoxRemove.value) {
-                                await _productController.generateMapCheckBox();
-                              }
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Stack(
-                                    children: [
-                                      if (listProduk['gambar'].isNotEmpty)
-                                        logoProduk(listProduk['gambar'][0],
-                                            sisa, 200, 2.5),
-                                      if (listProduk['gambar'].isEmpty)
-                                        noLogoProduk(170, sisa),
-                                      if (_productController
-                                              .showCheckBoxRemove.value &&
-                                          _biometrikController.tabIndex.value ==
-                                              1)
-                                        Obx(() {
-                                          final isChecked = RxBool(
-                                              _productController
-                                                              .mapCheckBoxRemove[
-                                                          indexProduct]
-                                                      ['isSelected'] ==
-                                                  'true');
-
-                                          return Positioned(
-                                            top: -8,
-                                            right: -8,
-                                            child: Transform.scale(
-                                              scale: 1.2,
-                                              child: Checkbox(
-                                                activeColor: Colors.blue,
-                                                value: isChecked.value,
-                                                onChanged: (value) {
-                                                  _productController
-                                                                  .mapCheckBoxRemove[
-                                                              indexProduct]
-                                                          ['isSelected'] =
-                                                      value.toString();
-
-                                                  _productController
-                                                      .mapCheckBoxRemove
-                                                      .refresh();
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        })
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                    _productController.mapCheckBoxRemove
+                                        .refresh();
+                                  } else {
+                                    Get.to(() => LihatProduk(
+                                          produk: listProduk,
+                                          isManager: isManager,
+                                        ));
+                                  }
+                                },
+                                onLongPress: () async {
+                                  if (isManager) {
+                                    _productController
+                                            .showCheckBoxRemove.value =
+                                        !_productController
+                                            .showCheckBoxRemove.value;
+                                    if (_productController
+                                        .showCheckBoxRemove.value) {
+                                      await _productController
+                                          .generateMapCheckBox();
+                                    }
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        listProduk['produk'],
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            overflow: TextOverflow.ellipsis),
+                                      Expanded(
+                                        child: Stack(
+                                          children: [
+                                            if (listProduk['gambar'].isNotEmpty)
+                                              logoProduk(
+                                                  listProduk['gambar'][0],
+                                                  sisa,
+                                                  200,
+                                                  2.5),
+                                            if (listProduk['gambar'].isEmpty)
+                                              noLogoProduk(170, sisa),
+                                            if (_productController
+                                                    .showCheckBoxRemove.value &&
+                                                _mainController
+                                                        .tabIndex.value ==
+                                                    1)
+                                              Obx(() {
+                                                final isChecked = RxBool(
+                                                    _productController
+                                                                    .mapCheckBoxRemove[
+                                                                indexProduct]
+                                                            ['isSelected'] ==
+                                                        'true');
+
+                                                return Positioned(
+                                                  top: -8,
+                                                  right: -8,
+                                                  child: Transform.scale(
+                                                    scale: 1.2,
+                                                    child: Checkbox(
+                                                      activeColor: Colors.blue,
+                                                      value: isChecked.value,
+                                                      onChanged: (value) {
+                                                        _productController
+                                                                        .mapCheckBoxRemove[
+                                                                    indexProduct]
+                                                                ['isSelected'] =
+                                                            value.toString();
+
+                                                        _productController
+                                                            .mapCheckBoxRemove
+                                                            .refresh();
+                                                      },
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        "Rp ${_productController.hargaProduk(listProduk)}",
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.deepOrangeAccent,
-                                            fontWeight: FontWeight.bold),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              listProduk['produk'],
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                            ),
+                                            Text(
+                                              "Rp ${_productController.hargaProduk(listProduk)}",
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Terjual ${listProduk['terjual']}/${listProduk['stok']}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        'Terjual ${listProduk['terjual']}/${listProduk['stok']}',
-                                        style: const TextStyle(fontSize: 12),
-                                      )
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
-            if (_productController.filterProduct.isEmpty) const Spacer()
+                        ),
+                  if (_productController.filterProduct.isEmpty) const Spacer()
+                ],
+              ),
+            ),
           ],
         ),
       );
     });
+  }
+}
+
+class KategoriToko extends GetView<ProductController> {
+  const KategoriToko({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return
+        // return Container();
+        //  return   ..._productController.daftarKategori
+        // .map((kategori) =>
+        Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            ...controller.daftarKategori.map((kategori) {
+              return Card(
+                color: kategori['kategori'] == controller.kategoriAktif.value
+                    ? Colors.blue
+                    : null,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      controller.kategoriAktif.value = kategori['kategori'];
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          IconData(kategori['icon'],
+                              fontFamily: 'MaterialIcons'),
+                          color: kategori['kategori'] ==
+                                  controller.kategoriAktif.value
+                              ? Colors.white
+                              : null,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          kategori['kategori'],
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: kategori['kategori'] ==
+                                      controller.kategoriAktif.value
+                                  ? Colors.white
+                                  : null),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+              );
+            })
+          ],
+        ),
+      ),
+    );
   }
 }

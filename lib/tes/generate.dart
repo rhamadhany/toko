@@ -75,7 +75,7 @@ class GenerateItem extends StatelessWidget {
     Get.snackbar("Berhasil", "$nilaiRandom random ditambahkan ke daftar produk",
         snackPosition: SnackPosition.BOTTOM,
         colorText: Colors.white,
-        backgroundColor: Colors.blue);
+        backgroundColor: Colors.green);
   }
 
   static ElevatedButton textGenerate() {

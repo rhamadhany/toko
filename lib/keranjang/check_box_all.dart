@@ -9,6 +9,9 @@ class CheckBoxAll extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.blue)),
         child: InkWell(
           onTap: () {
             _keranjangController.boxAll.value =

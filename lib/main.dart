@@ -6,6 +6,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/home/splash_login.dart';
+import 'package:myapp/manager/manager_toko.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/main_controller.dart';
@@ -57,6 +58,7 @@ void main() async {
     final transaksiController = TransaksiController();
     return transaksiController;
   });
+  Get.put(ManagerController());
 
   runApp(
     GetMaterialApp(

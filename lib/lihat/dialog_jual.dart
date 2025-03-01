@@ -27,7 +27,10 @@ class DialogJual extends StatelessWidget {
 
     return Obx(() {
       return AlertDialog(
-        title: const Text("Jual Produk"),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.blue),
+            borderRadius: BorderRadius.circular(10)),
+        title: Text(produk['produk'].toUpperCase()),
         content: Row(
           children: [
             GestureDetector(
@@ -92,8 +95,8 @@ class DialogJual extends StatelessWidget {
                     }
                     final gambar =
                         produk['gambar'].isEmpty ? "" : produk['gambar'][0];
-                    _keranjangController.addProduk(
-                        produk['key'], produk['produk'], jumlah, gambar);
+                    _keranjangController.addProduk(produk['kode_produk'],
+                        produk['produk'], jumlah, gambar);
 
                     Get.back(closeOverlays: true);
                     Get.back(closeOverlays: true);
@@ -102,7 +105,7 @@ class DialogJual extends StatelessWidget {
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
                         snackPosition: SnackPosition.BOTTOM,
                         colorText: Colors.white,
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.green,
                         duration: const Duration(seconds: 1));
                   } else {
                     Get.snackbar("Tidak Cukup",
@@ -155,14 +158,16 @@ class DialogJual extends StatelessWidget {
                   }
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
-                  final key = produk['key'];
+                  final key = produk['kode_produk'];
                   Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
                   await DBHelper.updateProduct(produk, false);
-                  _laporanController.tambahJual(key, terjualBaru, 'penjualan');
+                  await _laporanController.tambahJual([
+                    {'kode_produk': key, 'terjual': terjualBaru}
+                  ], 'penjualan');
                   final item = _productController.allProduct
-                      .where((im) => im['key'] == key)
+                      .where((im) => im['kode_produk'] == key)
                       .first;
                   final hBeli = int.tryParse(item['harga_beli'])!;
                   final hJual = int.tryParse(item['harga_jual'])!;
@@ -177,7 +182,7 @@ class DialogJual extends StatelessWidget {
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,
                       colorText: Colors.white,
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.green,
                       duration: const Duration(seconds: 1));
                 } else {
                   await stokTidakCukup(true);

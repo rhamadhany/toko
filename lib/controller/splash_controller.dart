@@ -6,6 +6,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/home/my_app.dart';
 
+final domain = 'http://192.168.89.228:8080';
+
 class SplashController extends GetxController {
   final box = GetStorage();
   final usernameController = TextEditingController();
@@ -17,6 +19,7 @@ class SplashController extends GetxController {
 
   final isConnected = false.obs;
   final isLoading = true.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -27,7 +30,7 @@ class SplashController extends GetxController {
     try {
       token.value = await box.read('token');
       username.value = await box.read('username');
-      final url = Uri.parse('http://192.168.230.228:9999/');
+      final url = Uri.parse('$domain/token.php');
 
       final response = await http
           .post(url, body: {'username': username.value, 'token': token.value});
@@ -46,12 +49,12 @@ class SplashController extends GetxController {
   }
 
   Future<void> loginUser() async {
-    final url = Uri.parse('http://192.168.230.228:9999/login.php');
-    final response = await http.post(url, body: {
-      'username': usernameController.text,
-      'password': passwordController.text,
-    });
     try {
+      final url = Uri.parse('$domain/login.php');
+      final response = await http.post(url, body: {
+        'username': usernameController.text,
+        'password': passwordController.text,
+      });
       final data = jsonDecode(response.body);
 
       if (data['status'] == 'sukses') {

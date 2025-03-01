@@ -46,7 +46,7 @@ class JumlahKeranjang extends StatelessWidget {
                   if (value.isNotEmpty) {
                     // jumlahControllers[indexKeranjang].text = '1';
                     final keyUpdate = _keranjangController
-                        .keranjangProduk[indexKeranjang]['key'];
+                        .keranjangProduk[indexKeranjang]['kode_produk'];
                     final newJumlah = int.tryParse(value) ??
                         _keranjangController.keranjangProduk[indexKeranjang]
                             ['jumlah'];
@@ -92,7 +92,7 @@ class JumlahKeranjang extends StatelessWidget {
     }
 
     final keyUpdate =
-        _keranjangController.keranjangProduk[indexKeranjang]['key'];
+        _keranjangController.keranjangProduk[indexKeranjang]['kode_produk'];
     await _keranjangController.updateJumlah(keyUpdate, newJumlah);
     _keranjangController.jumlahControllers[indexKeranjang].text =
         _keranjangController.keranjangProduk[indexKeranjang]['jumlah']

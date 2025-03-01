@@ -167,7 +167,7 @@ class QRScanner extends StatelessWidget {
   Future<void> updateKePencarian(String? keyScan) async {
     if (keyScan != null) {
       final indexKey = _productController.allProduct
-          .indexWhere((pr) => pr['key'] == keyScan);
+          .indexWhere((pr) => pr['kode_produk'] == keyScan);
 
       if (indexKey != -1) {
         final produk = _productController.allProduct[indexKey];
