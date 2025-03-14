@@ -9,12 +9,14 @@ class NewProduct extends StatelessWidget {
   NewProduct(
       {super.key,
       RxList<dynamic>? listPictures,
-      RxMap<String, dynamic>? produkEdit})
+      RxMap<String, dynamic>? produkEdit,
+      this.refreshGambar})
       : listPictures = listPictures ?? <dynamic>[].obs,
         produkEdit = produkEdit ?? <String, dynamic>{}.obs;
 
   final RxList<dynamic> listPictures;
   final RxMap<String, dynamic> produkEdit;
+  final Function? refreshGambar;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,11 @@ class NewProduct extends StatelessWidget {
               ),
               const Spacer(),
               IconSave(
-                  productController: _productController,
-                  produkEdit: produkEdit,
-                  listPictures: listPictures),
+                productController: _productController,
+                produkEdit: produkEdit,
+                listPictures: listPictures,
+                refreshGambar: refreshGambar,
+              ),
             ],
           ),
         ),

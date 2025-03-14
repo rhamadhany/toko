@@ -1,0 +1,245 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/lihat/gambar_penuh.dart';
+import 'package:myapp/lihat/harga_produk.dart';
+import 'package:myapp/lihat/logo_produk.dart';
+import 'package:myapp/lihat/view_deskripsi.dart';
+import 'package:myapp/lihat/view_kategori_produk.dart';
+
+class BodyLihatProduk extends GetView<ProductController> {
+  const BodyLihatProduk(
+      {super.key,
+      required this.produk,
+      required this.isManager,
+      required this.sisa});
+  final RxMap<String, dynamic> produk;
+  final int sisa;
+  final bool isManager;
+  @override
+  Widget build(BuildContext context) {
+    // return Container();
+    return SizedBox(
+      height: Get.height,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (produk['gambar'].toString() == '[]')
+                    noLogoProduk(300, 10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (produk['gambar'] is List<dynamic>)
+                          ...(produk['gambar'] as List<dynamic>).map((picPath) {
+                            return InkWell(
+                              onTap: () {
+                                Get.to(() => GambarPenuh(
+                                    gambar: picPath is String
+                                        ? picPath
+                                        : picPath['base64']));
+                              },
+                              child: picPath is String
+                                  ? FutureBuilder(
+                                      future: logoProdukOnline(
+                                          picPath, 10, 300, 2.5),
+                                      builder: (context, snapshots) {
+                                        if (snapshots.hasData &&
+                                            snapshots.data != null) {
+                                          return snapshots.data!;
+                                        } else {
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              noLogoProduk(300, 10),
+                                              CircularProgressIndicator(
+                                                color: Colors.blue,
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      })
+                                  : cardGambar64(10, 2.5,
+                                      base64Decode(picPath['base64']), 300),
+                            );
+                          }),
+                        if (produk['gambar'] is String)
+                          InkWell(
+                            onTap: () {
+                              if (produk['gambar'] != '') {
+                                Get.to(() =>
+                                    GambarPenuh(gambar: produk['gambar']));
+                              }
+                            },
+                            child: FutureBuilder(
+                                future: logoProdukOnline(
+                                    produk['gambar'], 10, 300, 2.5),
+                                builder: (context, snapshots) {
+                                  if (snapshots.hasData &&
+                                      snapshots.data != null) {
+                                    return snapshots.data!;
+                                  } else {
+                                    return Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        noLogoProduk(300, 10),
+                                        CircularProgressIndicator(
+                                          color: Colors.blue,
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                }),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 4),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  produkTerjual(),
+                                  if (sisa > 0) sisaProduk(sisa),
+                                  if (isManager) profitJual(),
+                                  if (isManager) biayaBeli(),
+                                  if (isManager) omsetJual(),
+                                ],
+                              ),
+                            ),
+                            if (produk['kategori'] != null &&
+                                produk['kategori'] != '')
+                              ViewKategoriProduk(produk: produk),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (produk['deskripsi'] != null && produk['deskripsi'] != '')
+                    // deskripsiView(),
+                    ViewDeskripsi(
+                      produk: produk,
+                    )
+                ],
+              ),
+            ),
+          ),
+          HargaProduk(
+            produk: produk,
+          )
+        ],
+      ),
+    );
+  }
+
+  Text sisaProduk(int sisa) {
+    return Text(
+      sisa > 0 ? "SISA: $sisa" : "",
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  int nilaiOmset() {
+    final terjual = produk['terjual'] ?? 0;
+    final int hargaJual = int.tryParse(produk['harga_jual']) ?? 0;
+    int omset = 0;
+
+    if (terjual != 0) {
+      omset = terjual * hargaJual;
+    }
+    return omset;
+  }
+
+  Text omsetJual() {
+    final omsetNormal = nilaiOmset().toString();
+    final omsetFinal = controller.regexNominal(omsetNormal);
+    return Text("OMSET: Rp $omsetFinal",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ));
+  }
+
+  Text biayaBeli() {
+    final nilaiNormal = nilaiBeli().toString();
+    final nilaiFinal = controller.regexNominal(nilaiNormal);
+    return Text("MODAL: Rp $nilaiFinal",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ));
+  }
+
+  int nilaiBeli() {
+    final terjual = produk['terjual'] ?? 0;
+    final int hargaBeli = int.tryParse(produk['harga_beli']) ?? 0;
+    int biaya = 0;
+
+    if (terjual != 0) {
+      biaya = terjual * hargaBeli;
+    }
+    return biaya;
+  }
+
+  int nilaiProfit() {
+    final terjual = produk['terjual'] ?? 0;
+    final hargaBeli = int.tryParse(produk['harga_beli'] ?? '') ?? 0;
+
+    final int nilaiBeli = terjual * hargaBeli;
+    final int profit = nilaiOmset() - nilaiBeli;
+    return profit;
+  }
+
+  Text profitJual() {
+    final profitNormal = nilaiProfit().toString();
+    final profitFinal = controller.regexNominal(profitNormal);
+    return Text("LABA: Rp $profitFinal",
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          color: Colors.white,
+        ));
+  }
+
+  Text produkTerjual() {
+    return Text(
+      'TERJUAL: ${produk['terjual']}/${produk['stok']}',
+      style: const TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 18,
+        color: Colors.white,
+      ),
+    );
+  }
+}

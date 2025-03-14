@@ -17,11 +17,13 @@ class IconSave extends StatelessWidget {
     required ProductController productController,
     required this.produkEdit,
     required this.listPictures,
+    this.refreshGambar,
   }) : _productController = productController;
 
   final ProductController _productController;
   final RxMap<String, dynamic> produkEdit;
   final RxList listPictures;
+  final Function? refreshGambar;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +98,9 @@ class IconSave extends StatelessWidget {
                 stock, listGambar, kategori, deskripsi);
           }
           _productController.isNeedRefreshProduk.value = true;
+          if (refreshGambar != null) {
+            refreshGambar!();
+          }
           Get.back();
         } catch (e) {
           SnackHelper.snackError(content: 'Error inisiasi produk');
