@@ -91,9 +91,9 @@ class LihatProduk extends GetView<ProductController> {
             controller.bottomIndex.value = value;
             if (isManager) {
               editProduk();
-            } else if (!isManager) {
+            } else if (!isManager && value == 0) {
               _keranjangController.langsungtambahkeKeranjang(sisa, produk);
-            } else {
+            } else if (!isManager && value == 1) {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
                 controller.jualController.value.text = '0';
