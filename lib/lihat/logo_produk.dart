@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/controller/splash_controller.dart';
 
-Future<Card> logoProdukOnline(
+Future<Widget> logoProdukOnline(
     String gambar, int sisa, double size, double scale) async {
   if (gambar.startsWith('/data')) {
     return logoProduk(gambar, sisa, size, scale);
   } else if (gambar == '') {
-    return noLogoProduk(size, sisa).child as Card;
+    return noLogoProduk(size, sisa).child as Widget;
   } else {
     Uri? url;
     http.Response? response;
@@ -40,52 +40,35 @@ Future<Card> logoProdukOnline(
   }
 }
 
-Card cardGambar64(int sisa, double scale, Uint8List gambarDecode, double size) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      side: BorderSide(
-        color: sisa <= 0 ? Colors.red : Colors.transparent,
-        width: 2,
-      ),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Transform.scale(
-          scale: scale,
-          child: Image.memory(
-            gambarDecode,
-            width: size,
-            height: size,
-          ),
+Padding cardGambar64(
+    int sisa, double scale, Uint8List gambarDecode, double size) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Transform.scale(
+        scale: scale,
+        child: Image.memory(
+          gambarDecode,
+          width: size,
+          height: size,
         ),
       ),
     ),
   );
 }
 
-Card logoProduk(dynamic gambar, int sisa, double size, double scale) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      side: BorderSide(
-        color: sisa <= 0 ? Colors.red : Colors.transparent,
-        width: 2,
-      ),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Transform.scale(
-          scale: scale,
-          child: Image.file(
-            File(gambar),
-            width: size,
-            height: size,
-          ),
+Padding logoProduk(dynamic gambar, int sisa, double size, double scale) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Transform.scale(
+        scale: scale,
+        child: Image.file(
+          File(gambar),
+          width: size,
+          height: size,
         ),
       ),
     ),
@@ -94,16 +77,10 @@ Card logoProduk(dynamic gambar, int sisa, double size, double scale) {
 
 Center noLogoProduk(double size, int sisa) {
   return Center(
-    child: Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: sisa <= 0 ? Colors.red : Colors.transparent,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Transform.scale(
-        scale: 1.25,
+    child: Transform.scale(
+      scale: 1.25,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
         child: Icon(
           Icons.image,
           size: size,

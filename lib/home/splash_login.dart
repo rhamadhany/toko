@@ -8,106 +8,160 @@ class SplashLogin extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Scaffold(
-          body: controller.isLoading.value
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.blue,
-                  ),
-                )
-              : Center(
-                  child: IntrinsicHeight(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            // height: Get.height * 0.5,
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(20)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 10,
+      // return Scaffold(
+      // body:
+      return Material(
+          child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.blue, Colors.green, Colors.purple])),
+        child: controller.isLoading.value
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+              )
+            : Center(
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        // vertical: 20,
+                        horizontal: Get.width * 0.1),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          // height: Get.height * 0.5,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 2),
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Text(
+                              //     'Username',
+                              //     style: TextStyle(
+                              //         color: Colors.black,
+                              //         fontWeight: FontWeight.bold),
+                              //   ),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: SizedBox(
+                                  height: 50,
+                                  child: TextFormField(
+                                    style: TextStyle(color: Colors.black),
+                                    keyboardType: TextInputType.text,
+                                    controller: controller.usernameController,
+                                    decoration: InputDecoration(
+                                        hintText: 'Username',
+                                        hintStyle:
+                                            TextStyle(color: Colors.black54),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white))),
+                                  ),
                                 ),
-                                TextFormField(
-                                  style: TextStyle(color: Colors.black),
-                                  keyboardType: TextInputType.text,
-                                  controller: controller.usernameController,
-                                  decoration: InputDecoration(
-                                      hintText: 'Username',
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide:
-                                              BorderSide(color: Colors.white))),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: SizedBox(
+                                  height: 50,
+                                  child: TextFormField(
+                                    obscureText:
+                                        controller.passwordTersembunyi.value,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    controller: controller.passwordController,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                        suffixIcon: Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: IconButton(
+                                              color: Colors.black,
+                                              onPressed: () {
+                                                controller.passwordTersembunyi
+                                                        .value =
+                                                    !controller
+                                                        .passwordTersembunyi
+                                                        .value;
+                                              },
+                                              icon: Icon(controller
+                                                      .passwordTersembunyi.value
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off)),
+                                        ),
+                                        hintText: 'Password',
+                                        hintStyle:
+                                            TextStyle(color: Colors.black54),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white))),
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                TextFormField(
-                                  obscureText:
-                                      controller.passwordTersembunyi.value,
-                                  keyboardType: TextInputType.visiblePassword,
-                                  controller: controller.passwordController,
-                                  style: TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                      suffixIcon: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: IconButton(
-                                            color: Colors.black,
-                                            onPressed: () {
-                                              controller.passwordTersembunyi
-                                                      .value =
-                                                  !controller
-                                                      .passwordTersembunyi
-                                                      .value;
-                                            },
-                                            icon: Icon(controller
-                                                    .passwordTersembunyi.value
-                                                ? Icons.visibility
-                                                : Icons.visibility_off)),
-                                      ),
-                                      hintText: 'Password',
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide:
-                                              BorderSide(color: Colors.white))),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                ElevatedButton(
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // Card(
+                              //   color: Colors.black,
+                              //   child: ListTile(
+                              //     title: Text('Sign in'),
+                              //   ),
+                              // ),
+                              Center(
+                                child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.purple),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        backgroundColor: Colors.black),
                                     onPressed: () async {
                                       await controller.loginUser();
                                     },
-                                    child: Text(
-                                      'Login',
-                                      style: TextStyle(color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Sign in',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
                                     )),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ));
+                ),
+                // )
+              ),
+      ));
     });
   }
 }

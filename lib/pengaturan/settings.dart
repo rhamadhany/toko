@@ -16,13 +16,9 @@ class Settings extends StatelessWidget {
   static final storage = GetStorage();
   @override
   Widget build(BuildContext context) {
-    // return Obx(() {
-    // return Padding(
-    // padding: const EdgeInsets.all(8),
     return Center(
       child: IntrinsicHeight(
         child: Container(
-          // height: Get.height * 0.35,
           width: Get.width * 0.8,
           decoration: BoxDecoration(
             color: Colors.blue,
@@ -64,19 +60,11 @@ class Settings extends StatelessWidget {
                     },
                     leading: Icon(
                       Icons.lock,
-                      // color: Colors.white,
                       color: Colors.black,
                     ),
                     trailing: Obx(() => Checkbox(
-                          // fillColor: WidgetStatePropertyAll(Colors.white),
-                          // hoverColor: Colors.white,
-                          // overlayColor: WidgetStatePropertyAll(Colors.white),
-                          // focusColor: Colors.white,
                           activeColor: Colors.black,
-                          // checkColor: Colors.white,
                           checkColor: Colors.white,
-
-                          // fillColor: WidgetStatePropertyAll(Colors.white),
                           value: autentikasiAktif.value,
                           onChanged: (value) async {
                             final hasAuth =
@@ -101,7 +89,6 @@ class Settings extends StatelessWidget {
                   },
                   leading: Icon(
                     Icons.picture_as_pdf,
-                    // color: Colors.white,
                     color: Colors.black,
                   ),
                   title: Text(
@@ -116,6 +103,9 @@ class Settings extends StatelessWidget {
                     onTap: () {
                       Get.dialog(
                         AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.blue)),
                           title: Text(
                             'Konfirmasi',
                             style: TextStyle(
@@ -160,153 +150,9 @@ class Settings extends StatelessWidget {
               ],
             ),
           ),
-          // );
-          // Column(
-          //   children: [
-          //     Card(
-          //       child: Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: Row(
-          //           children: [
-          //             Expanded(
-          //               child: ListTile(
-          //                 onTap: () async {
-          //                   final hasAuth =
-          //                       await _biometrikController.authReuired();
-          //                   if (hasAuth) {
-          //                     autentikasiAktif.value = !autentikasiAktif.value;
-          //                     saveSettingsPrefs();
-          //                   }
-          //                 },
-          //                 title: const Text("Aktifkan Autentikasi"),
-          //                 leading: Icon(
-          //                   autentikasiAktif.value ? Icons.lock : Icons.lock_open,
-          //                 ),
-          //               ),
-          //             ),
-          //             Checkbox(
-          //               activeColor: Colors.blue,
-          //               value: autentikasiAktif.value,
-          //               onChanged: (value) async {
-          //                 final hasAuth =
-          //                     await _biometrikController.authReuired();
-          //                 if (hasAuth) {
-          //                   autentikasiAktif.value = value ?? false;
-          //                   saveSettingsPrefs();
-          //                 }
-          //               },
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     Card(
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //         child: ListTile(
-          //           title: const Text("Import Data"),
-          //           leading: const Icon(Icons.download),
-          //           onTap: () {
-          //             DataSettings.importData();
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //     Card(
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //         child: ListTile(
-          //           title: const Text("Backup Data"),
-          //           leading: const Icon(Icons.backup),
-          //           onTap: () {
-          //             DataSettings.backupData();
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //     Card(
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //         child: ListTile(
-          //           title: const Text("Simpan QRCode"),
-          //           leading: const Icon(Icons.picture_as_pdf),
-          //           onTap: () {
-          //             // DataSettings.backupData();
-          //             PrintingQR(dariBox: false.obs).dialogQR();
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //     Card(
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //         child: ListTile(
-          //           title: const Text("Manager"),
-          //           leading: const Icon(Icons.warehouse),
-          //           onTap: () {
-          //             Get.put(ManagerController());
-          //             Get.to(() => ManagerToko(),
-          //                 transition: Transition.zoom,
-          //                 duration: Duration(milliseconds: 500));
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //     InkWell(
-          //       onTap: () {
-          //         Get.dialog(
-          //           AlertDialog(
-          //             title: Text(
-          //               'Konfirmasi',
-          //               style:
-          //                   TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          //             ),
-          //             alignment: Alignment.center,
-          //             content: Text(
-          //                 'Keluar dari akun ${_splashController.username.value}?'),
-          //             actions: [
-          //               ElevatedButton(
-          //                   onPressed: () {
-          //                     Get.back();
-          //                   },
-          //                   child: Text('Batal')),
-          //               ElevatedButton(
-          //                   onPressed: () {
-          //                     Get.back();
-          //                     _splashController.box.remove('token');
-          //                     _splashController.box.remove('username');
-          //                     Get.offAll(SplashLogin());
-          //                   },
-          //                   child: Text('Keluar')),
-          //             ],
-          //           ),
-          //         );
-          //       },
-          //       child: Card(
-          //         child: Padding(
-          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //           child: Container(
-          //             alignment: Alignment.center,
-          //             width: Get.width * 0.3,
-          //             child: Padding(
-          //               padding: const EdgeInsets.all(8.0),
-          //               child: Text(
-          //                 "Keluar",
-          //                 style: TextStyle(
-          //                     fontSize: 18,
-          //                     color: const Color.fromARGB(255, 255, 29, 13)),
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
-    // });
   }
 
   static Future<void> saveSettingsPrefs() async {
