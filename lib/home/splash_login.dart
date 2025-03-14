@@ -92,7 +92,7 @@ class SplashLogin extends GetView<SplashController> {
                                 ),
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green),
+                                        backgroundColor: Colors.purple),
                                     onPressed: () async {
                                       await controller.loginUser();
                                     },

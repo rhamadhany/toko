@@ -66,7 +66,8 @@ class GenerateItem extends StatelessWidget {
           hargaJualRandom.toString(),
           0,
           stokRandom,
-          RxList<dynamic>.empty(),
+          // RxList<dynamic>.empty(),
+          [],
           'Semua',
           '');
       // await Future.delayed(Duration(seconds: 1));
@@ -75,7 +76,7 @@ class GenerateItem extends StatelessWidget {
     Get.snackbar("Berhasil", "$nilaiRandom random ditambahkan ke daftar produk",
         snackPosition: SnackPosition.BOTTOM,
         colorText: Colors.white,
-        backgroundColor: Colors.green);
+        backgroundColor: Colors.purple);
   }
 
   static ElevatedButton textGenerate() {

@@ -31,7 +31,7 @@ class TambahGambar extends StatelessWidget {
                     if (images != null) {
                       final outputFile = await newPath(images);
                       await File(images.path).copy(outputFile);
-                      // print('newPath: $outputFile');
+
                       listPictures.add(outputFile);
                     }
                     Get.back();
@@ -52,17 +52,14 @@ class TambahGambar extends StatelessWidget {
                     final pickedImages = await picker.pickMultiImage();
 
                     for (final XFile image in pickedImages) {
-                      // final imageName = image.path.split('/').last;
-                      // final newPath = '$outputDirectory/$imageName';
-                      // final outputName = await image.copy(outputDirectory.path);
-
                       try {
-                        final outputFile = await newPath(image);
-                        await File(image.path).copy(outputFile);
-                        // print('newPath: $outputFile');
-                        listPictures.add(outputFile);
+                        // final outputFile = await newPath(image);
+                        // await File(image.path).copy(outputFile);
+
+                        listPictures.add(image.path);
                       } catch (e) {
-                        // print('Error moving image: $e');
+                        //
+                        debugPrint('error $e');
                       }
                     }
 
@@ -87,7 +84,6 @@ class TambahGambar extends StatelessWidget {
 
     final outputDirectory = Directory('/data/user/0/$packageName/images/');
 
-    // Ensure directory exists
     if (!outputDirectory.existsSync()) {
       outputDirectory.createSync(recursive: true);
     }

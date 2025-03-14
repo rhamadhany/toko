@@ -60,8 +60,15 @@ class ProductController extends GetxController {
   final iconsTerpilih = Icons.grid_view.codePoint.obs;
   final dateFormat = DateFormat('dd-MM-yyyy');
   final tanggalHarian = DateTime.now().toString().split(' ')[0].obs;
-
+  final isNeedRefreshProduk = false.obs;
   final storage = GetStorage();
+
+  dynamic refreshProdukUpdate(String kodeProduk) {
+    final produk =
+        allProduct.where((p) => p['kode_produk'] == kodeProduk).first;
+    return produk['gambar'];
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();

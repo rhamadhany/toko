@@ -15,69 +15,70 @@ class JumlahKeranjang extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-              iconSize: 12,
-              onPressed: () {
-                jumlahCount(indexKeranjang, false);
-              },
-              icon: const Icon(Icons.remove)),
-          IntrinsicWidth(
-            child: ConstrainedBox(
+    // return Obx(() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        IconButton(
+            iconSize: 12,
+            onPressed: () {
+              jumlahCount(indexKeranjang, false);
+            },
+            icon: const Icon(Icons.remove)),
+        IntrinsicWidth(
+          child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 50),
-              child: TextField(
-                style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                keyboardType: TextInputType.number,
-                controller:
-                    _keranjangController.jumlahControllers[indexKeranjang],
-                decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(5),
-                ),
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    // jumlahControllers[indexKeranjang].text = '1';
-                    final keyUpdate = _keranjangController
-                        .keranjangProduk[indexKeranjang]['kode_produk'];
-                    final newJumlah = int.tryParse(value) ??
-                        _keranjangController.keranjangProduk[indexKeranjang]
-                            ['jumlah'];
-                    _keranjangController.updateJumlah(keyUpdate, newJumlah);
-
-                    final sisa =
-                        _keranjangController.sisaPadaAllProduk(keyUpdate);
-                    if (newJumlah > sisa) {
-                      _keranjangController
-                              .jumlahControllers[indexKeranjang].text =
+              child: Obx(
+                () => TextField(
+                  style: const TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
+                  controller:
+                      _keranjangController.jumlahControllers[indexKeranjang],
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(5),
+                  ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      // jumlahControllers[indexKeranjang].text = '1';
+                      final keyUpdate = _keranjangController
+                          .keranjangProduk[indexKeranjang]['kode_produk'];
+                      final newJumlah = int.tryParse(value) ??
                           _keranjangController.keranjangProduk[indexKeranjang]
-                                  ['jumlah']
-                              .toString();
-                      _keranjangController.jumlahControllers.refresh();
+                              ['jumlah'];
+                      _keranjangController.updateJumlah(keyUpdate, newJumlah);
+
+                      final sisa =
+                          _keranjangController.sisaPadaAllProduk(keyUpdate);
+                      if (newJumlah > sisa) {
+                        _keranjangController
+                                .jumlahControllers[indexKeranjang].text =
+                            _keranjangController.keranjangProduk[indexKeranjang]
+                                    ['jumlah']
+                                .toString();
+                        _keranjangController.jumlahControllers.refresh();
+                      }
                     }
-                  }
-                },
-              ),
-            ),
-          ),
-          IconButton(
-              iconSize: 12,
-              onPressed: () async {
-                await jumlahCount(indexKeranjang, true);
-              },
-              icon: const Icon(
-                Icons.add,
+                  },
+                ),
               )),
-        ],
-      );
-    });
+        ),
+        IconButton(
+            iconSize: 12,
+            onPressed: () async {
+              await jumlahCount(indexKeranjang, true);
+            },
+            icon: const Icon(
+              Icons.add,
+            )),
+      ],
+    );
+    // });
   }
 
   Future<void> jumlahCount(int indexKeranjang, bool tambah) async {

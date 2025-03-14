@@ -127,7 +127,20 @@ class HalamanKeranjang extends StatelessWidget {
                                                                               onTap: () {
                                                                                 Get.to(() => GambarPenuh(gambar: gambar));
                                                                               },
-                                                                              child: logoProduk(gambar, 10, Get.height * 0.5, 1),
+                                                                              child: FutureBuilder(
+                                                                                  future: logoProdukOnline(gambar, 10, Get.height * 0.5, 1),
+                                                                                  builder: (context, snapshots) {
+                                                                                    if (snapshots.hasData && snapshots.data != null) {
+                                                                                      return snapshots.data!;
+                                                                                    } else {
+                                                                                      return Center(
+                                                                                        child: CircularProgressIndicator(
+                                                                                          color: Colors.blue,
+                                                                                        ),
+                                                                                      );
+                                                                                    }
+                                                                                  }),
+                                                                              // child: logoProduk(gambar, 10, Get.height * 0.5, 1),
                                                                             ))
                                                                         .toList(),
                                                                   ),
@@ -135,11 +148,37 @@ class HalamanKeranjang extends StatelessWidget {
                                                               ));
                                                             }
                                                           },
-                                                          child: logoProduk(
-                                                              gambarThumb,
-                                                              10,
-                                                              Get.height * 0.1,
-                                                              2.5),
+                                                          child: FutureBuilder(
+                                                              future: logoProdukOnline(
+                                                                  gambarThumb!,
+                                                                  10,
+                                                                  Get.height *
+                                                                      0.1,
+                                                                  2.5),
+                                                              builder: (context,
+                                                                  snapshots) {
+                                                                if (snapshots
+                                                                        .hasData &&
+                                                                    snapshots
+                                                                            .data !=
+                                                                        null) {
+                                                                  return snapshots
+                                                                      .data!;
+                                                                } else {
+                                                                  return Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              }),
+                                                          // child: logoProduk(
+                                                          //     gambarThumb,
+                                                          //     10,
+                                                          //     Get.height * 0.1,
+                                                          //     2.5),
                                                         )
                                                       : noLogoProduk(
                                                           Get.height * 0.1, 10),

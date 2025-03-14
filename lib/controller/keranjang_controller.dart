@@ -236,7 +236,7 @@ class KeranjangController extends GetxController {
       Get.snackbar(
           "Keranjang", '${produkBaru['produk']} ditambahkan ke keranjang',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.purple,
           colorText: Colors.white,
           duration: const Duration(seconds: 1));
     } else {

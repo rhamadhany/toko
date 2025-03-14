@@ -98,14 +98,14 @@ class DialogJual extends StatelessWidget {
                     _keranjangController.addProduk(produk['kode_produk'],
                         produk['produk'], jumlah, gambar);
 
-                    Get.back(closeOverlays: true);
+                    // Get.back(closeOverlays: true);
                     Get.back(closeOverlays: true);
                     HomeToko.focusPencarian.unfocus();
                     Get.snackbar('Keranjang',
                         '$jumlah ${produk['produk']} ditambahkan ke keranjang',
                         snackPosition: SnackPosition.BOTTOM,
                         colorText: Colors.white,
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.purple,
                         duration: const Duration(seconds: 1));
                   } else {
                     Get.snackbar("Tidak Cukup",
@@ -159,7 +159,7 @@ class DialogJual extends StatelessWidget {
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
                   final key = produk['kode_produk'];
-                  Get.back(closeOverlays: true);
+                  // Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
                   await DBHelper.updateProduct(produk, false);
@@ -182,7 +182,7 @@ class DialogJual extends StatelessWidget {
                       '$terjualBaru ${produk['produk']} telah dijual',
                       snackPosition: SnackPosition.BOTTOM,
                       colorText: Colors.white,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.purple,
                       duration: const Duration(seconds: 1));
                 } else {
                   await stokTidakCukup(true);

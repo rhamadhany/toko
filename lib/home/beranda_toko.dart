@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
@@ -7,7 +8,7 @@ import 'package:myapp/lihat/lihat_produk.dart';
 import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/controller/product_controller.dart';
 
-class HomeToko extends StatelessWidget {
+class HomeToko extends GetView<ProductController> {
   HomeToko({
     super.key,
     required this.isManager,
@@ -15,7 +16,7 @@ class HomeToko extends StatelessWidget {
 
   final bool isManager;
 
-  final ProductController _productController = Get.find();
+  // final ProductController _productController = Get.find();
   final MainController _mainController = Get.find();
   static final focusPencarian = FocusNode();
 
@@ -26,12 +27,12 @@ class HomeToko extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           children: [
-            if (_productController.showSearch.value)
+            if (controller.showSearch.value)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8, left: 8),
                 child: TextField(
                   autofocus: true,
-                  controller: _productController.pencarianController,
+                  controller: controller.pencarianController,
                   focusNode: focusPencarian,
                   decoration: InputDecoration(
                       suffixIcon: IconButton(
@@ -51,7 +52,7 @@ class HomeToko extends StatelessWidget {
                       hintText: "Cari Produk",
                       labelText: "Cari Produk"),
                   onChanged: (value) {
-                    _productController.searchText.value = value;
+                    controller.searchText.value = value;
                   },
                 ),
               ),
@@ -59,8 +60,8 @@ class HomeToko extends StatelessWidget {
             // _productController.daftarKategori.map((kategori){
             //   return Row()
             // })
-            if (_productController.allProduct.isNotEmpty &&
-                _productController.daftarKategori.length > 1)
+            if (controller.allProduct.isNotEmpty &&
+                controller.daftarKategori.length > 1)
               IntrinsicHeight(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -80,8 +81,8 @@ class HomeToko extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  if (_productController.filterProduct.isEmpty) const Spacer(),
-                  _productController.filterProduct.isEmpty
+                  if (controller.filterProduct.isEmpty) const Spacer(),
+                  controller.filterProduct.isEmpty
                       ? Center(
                           child: Icon(
                           Icons.shop,
@@ -90,37 +91,34 @@ class HomeToko extends StatelessWidget {
                       : Expanded(
                           child: GridView.builder(
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: kIsWeb ? 4 : 2,
                               childAspectRatio: 0.7,
                             ),
-                            itemCount: _productController.filterProduct.length,
+                            itemCount: controller.filterProduct.length,
                             itemBuilder: (context, indexProduct) {
-                              final listProduk = _productController
-                                  .filterProduct[indexProduct].obs;
+                              final listProduk =
+                                  controller.filterProduct[indexProduct].obs;
 
                               final terjual = listProduk['terjual'];
                               final stok = listProduk['stok'];
                               final sisa = stok - terjual;
                               return InkWell(
                                 onTap: () {
-                                  if (_productController
-                                      .showCheckBoxRemove.value) {
-                                    bool isChecked = _productController
+                                  if (controller.showCheckBoxRemove.value) {
+                                    bool isChecked = controller
                                                 .mapCheckBoxRemove[indexProduct]
                                             ['isSelected'] ==
                                         'true';
                                     isChecked = !isChecked;
 
-                                    _productController
-                                                .mapCheckBoxRemove[indexProduct]
+                                    controller.mapCheckBoxRemove[indexProduct]
                                             ['isSelected'] =
                                         isChecked
                                             ? true.toString()
                                             : false.toString();
 
-                                    _productController.mapCheckBoxRemove
-                                        .refresh();
+                                    controller.mapCheckBoxRemove.refresh();
                                   } else {
                                     Get.to(() => LihatProduk(
                                           produk: listProduk,
@@ -130,14 +128,10 @@ class HomeToko extends StatelessWidget {
                                 },
                                 onLongPress: () async {
                                   if (isManager) {
-                                    _productController
-                                            .showCheckBoxRemove.value =
-                                        !_productController
-                                            .showCheckBoxRemove.value;
-                                    if (_productController
-                                        .showCheckBoxRemove.value) {
-                                      await _productController
-                                          .generateMapCheckBox();
+                                    controller.showCheckBoxRemove.value =
+                                        !controller.showCheckBoxRemove.value;
+                                    if (controller.showCheckBoxRemove.value) {
+                                      await controller.generateMapCheckBox();
                                     }
                                   }
                                 },
@@ -152,22 +146,42 @@ class HomeToko extends StatelessWidget {
                                         child: Stack(
                                           children: [
                                             if (listProduk['gambar'].isNotEmpty)
-                                              logoProduk(
-                                                  listProduk['gambar'][0],
-                                                  sisa,
-                                                  200,
-                                                  2.5),
+                                              // logoProduk(
+                                              //     listProduk['gambar'][0],
+                                              //     sisa,
+                                              //     200,
+                                              //     2.5),
+                                              FutureBuilder(
+                                                  future: logoProdukOnline(
+                                                      listProduk['gambar'][0],
+                                                      sisa,
+                                                      200,
+                                                      2.5),
+                                                  builder:
+                                                      (context, snapshots) {
+                                                    if (snapshots.hasData &&
+                                                        snapshots.data !=
+                                                            null) {
+                                                      return snapshots.data!;
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Colors.blue,
+                                                        ),
+                                                      );
+                                                    }
+                                                  }),
                                             if (listProduk['gambar'].isEmpty)
                                               noLogoProduk(170, sisa),
-                                            if (_productController
+                                            if (controller
                                                     .showCheckBoxRemove.value &&
                                                 _mainController
                                                         .tabIndex.value ==
                                                     1)
                                               Obx(() {
                                                 final isChecked = RxBool(
-                                                    _productController
-                                                                    .mapCheckBoxRemove[
+                                                    controller.mapCheckBoxRemove[
                                                                 indexProduct]
                                                             ['isSelected'] ==
                                                         'true');
@@ -181,13 +195,12 @@ class HomeToko extends StatelessWidget {
                                                       activeColor: Colors.blue,
                                                       value: isChecked.value,
                                                       onChanged: (value) {
-                                                        _productController
-                                                                        .mapCheckBoxRemove[
+                                                        controller.mapCheckBoxRemove[
                                                                     indexProduct]
                                                                 ['isSelected'] =
                                                             value.toString();
 
-                                                        _productController
+                                                        controller
                                                             .mapCheckBoxRemove
                                                             .refresh();
                                                       },
@@ -212,7 +225,7 @@ class HomeToko extends StatelessWidget {
                                                       TextOverflow.ellipsis),
                                             ),
                                             Text(
-                                              "Rp ${_productController.hargaProduk(listProduk)}",
+                                              "Rp ${controller.hargaProduk(listProduk)}",
                                               style: const TextStyle(
                                                   fontSize: 18,
                                                   color:
@@ -234,7 +247,7 @@ class HomeToko extends StatelessWidget {
                             },
                           ),
                         ),
-                  if (_productController.filterProduct.isEmpty) const Spacer()
+                  if (controller.filterProduct.isEmpty) const Spacer()
                 ],
               ),
             ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/laporan_controller.dart';
-import 'package:myapp/home/animasi_transisi_tab.dart';
+// import 'package:myapp/home/animasi_transisi_tab.dart';
 
 import 'package:myapp/laporan/penambahan/data_penambahan.dart';
 
 import 'package:myapp/laporan/penjualan/data_penjualan.dart';
 import 'package:myapp/laporan/perubahan/data_perubahan.dart';
-import 'package:myapp/manager/manager_toko.dart';
+// import 'package:myapp/manager/manager_toko.dart';
 
 class LaporanPenjualan extends StatelessWidget {
   static final indexLaporan = 1.obs;
@@ -16,7 +16,7 @@ class LaporanPenjualan extends StatelessWidget {
   static final dariBulan = false.obs;
   static final dariHari = false.obs;
   static final LaporanController _laporanController = Get.find();
-  static final ManagerController _managerController = Get.find();
+  // static final ManagerController _managerController = Get.find();
   const LaporanPenjualan({super.key});
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,9 @@ class LaporanPenjualan extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
+                  alignment: Alignment.center,
+                  height: Get.height,
+                  width: Get.width,
                   decoration: BoxDecoration(
                     // border: Border.all(width: 2, color: Colors.blue),
                     borderRadius: BorderRadius.circular(0),

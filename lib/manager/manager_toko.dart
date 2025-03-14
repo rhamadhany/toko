@@ -5,7 +5,6 @@ import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/home/animasi_transisi_tab.dart';
 import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/laporan/body_laporan.dart';
@@ -29,9 +28,10 @@ class ManagerToko extends GetView<ManagerController> {
   Widget build(BuildContext context) {
     return Obx(() {
       return PopScope(
-        canPop: controller.tabIndex.value == 0 || controller.canPop,
+        canPop: controller.tabIndex.value == 0 ||
+            !_laporanController.showSliderScaler.value,
         onPopInvokedWithResult: (didPop, result) {
-          controller.canPop = false;
+          // controller.canPop = false;
           if (_laporanController.showSliderScaler.value) {
             _laporanController.showSliderScaler.value = false;
           } else if (_laporanController.viewMode.value == 'Transaksi' &&
@@ -58,9 +58,10 @@ class ManagerToko extends GetView<ManagerController> {
             _laporanController.viewMode.value = 'Tahun';
           } else if (_productController.showCheckBoxRemove.value) {
             _productController.showCheckBoxRemove.value = false;
-          } else {
-            controller.canPop = true;
           }
+          // else {
+          //   controller.canPop = true;
+          // }
         },
         child: Scaffold(
           appBar: _laporanController.showBarLaporan.value
@@ -306,7 +307,7 @@ class ManagerController extends GetxController
     with GetSingleTickerProviderStateMixin {
   TabController? tabController;
   final tabIndex = 0.obs;
-  bool canPop = true;
+  // bool canPop = true;
   final skalaAnimation = 1.0.obs;
   @override
   void onInit() {

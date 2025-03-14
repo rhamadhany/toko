@@ -226,7 +226,7 @@ class PenjualanData extends StatelessWidget {
       if (bulanParse != indexBulan || tahunParse != tahun) {
         continue;
       }
-      print(item);
+      // print(item);
       int jumlah = item['terjual'];
       int hargaBeli = int.tryParse(item['harga_beli'])!;
       int hargaJual = int.tryParse(item['harga_jual'])!;
@@ -294,7 +294,7 @@ class PenjualanData extends StatelessWidget {
 
     final List<dynamic> json = jsonDecode(transMap['kode_produk']);
     final listKey = json.cast<String>();
-    print('listkey ${transMap['kode_produk']}');
+    // print('listkey ${transMap['kode_produk']}');
 
     for (var keyTransaksi in listKey) {
       final tanggal = transMap['tanggal'].split(".")[0];

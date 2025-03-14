@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/laporan_controller.dart';
@@ -7,39 +8,10 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:http/http.dart' as http;
 
-class DBHelper {
+class DBHelper with SnackHelper {
   static final ProductController _productController =
       Get.find<ProductController>();
   static final LaporanController _laporanController = Get.find();
-
-//  static Future<bool> columnExists( Database db, String tableName, String columnName) async {
-//     final List<Map<String, dynamic>> result =
-//         await db.rawQuery('PRAGMA table_info($tableName)');
-//     for (var column in result) {
-//       if (column['name'] == columnName) {
-//         return true; // Kolom ada
-//       }
-//     }
-//     return false; // Kolom tidak ada
-//   }
-
-  // static Future<List<Map<String, dynamic>>> loadProducts() async {
-  //   final db = _productController.database.value;
-  //   if (db == null) {
-  //     throw Exception('Database not initialized');
-  //   }
-  //   final result = await db.query('products');
-  //   final processedResult = result.map((row) {
-  //     final newRow = Map<String, dynamic>.from(row);
-  //     try {
-  //       newRow['gambar'] = jsonDecode(row['gambar'].toString());
-  //     } catch (e) {
-  //       newRow['gambar'] = "";
-  //     }
-  //     return newRow;
-  //   }).toList();
-  //   return processedResult;
-  // }
 
   static Future<List<Map<String, dynamic>>> loadProducts() async {
     try {
@@ -48,11 +20,12 @@ class DBHelper {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final result = List<Map<String, dynamic>>.from(data);
-        // print(data);
+
         final processedResult = result.map((row) {
           final newRow = Map<String, dynamic>.from(row);
           try {
-            newRow['gambar'] = jsonDecode(row['gambar'].toString());
+            newRow['gambar'] = jsonDecode(row['gambar']);
+            // print(newRow['gambar']);
           } catch (e) {
             newRow['gambar'] = "";
           }
@@ -61,7 +34,8 @@ class DBHelper {
         return processedResult;
       }
     } catch (e) {
-      print('error $e');
+      // print('error $e');
+      SnackHelper.snackError(content: 'Error load produk');
       return [];
     }
     return [];
@@ -73,125 +47,71 @@ class DBHelper {
       String hargaJual,
       int terjual,
       int stock,
-      RxList<dynamic> pictures,
+      List<Map<String, dynamic>> listGambar,
       String kategori,
       String deskripsi) async {
-    // final db = _productController.database.value;
-    // if (db == null) {
-    //   throw Exception('Database not initialized');
-    // }
-    _productController.allProduct.value = await loadProducts();
-    final jsonPictures = jsonEncode(pictures);
-
-    final random = Random();
-
-    final date = DateTime.now();
-    final format = DateFormat('HHmmss');
-    final formattedDate = format.format(date);
-    const chars =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-    final rString = String.fromCharCodes(Iterable.generate(
-        8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
-    final keyString = formattedDate + rString;
-    final key = base64Encode(utf8.encode(keyString));
-
-    // await db.insert('products', {
-    //   'kode_produk: key,
-    //   'produk': product,
-    //   'harga_beli': hargaBeli,
-    //   'harga_jual': hargaJual,
-    //   'terjual': terjual,
-    //   'stok': stock,
-    //   'gambar': jsonPictures,
-    //   'kategori': kategori,
-    //   'deskripsi': deskripsi,
-    // });
-
-    final mapProduk = {
-      'kode_produk': key,
-      'tanggal': DateTime.now().toString(),
-      'produk': product,
-      'harga_beli': hargaBeli,
-      'harga_jual': hargaJual,
-      'terjual': terjual,
-      'stok': stock,
-      'gambar': jsonPictures,
-      'kategori': kategori,
-      'deskripsi': deskripsi,
-    };
+    // _productController.allProduct.value = await loadProducts();
 
     try {
-      final decodeMap = jsonEncode([mapProduk]);
+      final random = Random();
+
+      final date = DateTime.now();
+      final format = DateFormat('HHmmss');
+      final formattedDate = format.format(date);
+      const chars =
+          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+      final rString = String.fromCharCodes(Iterable.generate(
+          8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+      final keyString = formattedDate + rString;
+      final key = base64Encode(utf8.encode(keyString));
+
+      final mapProduk = {
+        'kode_produk': key,
+        'tanggal': DateTime.now().toString(),
+        'produk': product,
+        'harga_beli': hargaBeli,
+        'harga_jual': hargaJual,
+        'terjual': terjual,
+        'stok': stock,
+        'gambar': listGambar,
+        'kategori': kategori,
+        'deskripsi': deskripsi,
+      };
+
       final uri = Uri.parse('$domain/produk/tambah.php');
+
+      final decodeMap = jsonEncode([mapProduk]);
       await http.post(uri, body: {'produk': decodeMap, 'tabel': 'produk'});
 
       await http.post(uri, body: {'produk': decodeMap, 'tabel': 'penambahan'});
+      await _laporanController.loadProduk();
+      _productController.allProduct.value = await loadProducts();
     } catch (error) {
-      print(error);
+      // print(error);
+
+      await SnackHelper.snackError(content: 'Gagal menambahkan produk');
     }
-    // await _laporanController.database?.insert('penambahan', {
-    //   'kode_produk: key,
-    //   'tanggal': DateTime.now().toString(),
-    //   'produk': product,
-    //   'harga_beli': hargaBeli,
-    //   'harga_jual': hargaJual,
-    //   'terjual': terjual,
-    //   'stok': stock,
-    //   'gambar': jsonPictures,
-    //   'kategori': kategori,
-    //   'deskripsi': deskripsi
-    // });
-    await _laporanController.loadProduk();
-    _productController.allProduct.value = await loadProducts();
   }
 
   static Future updateTerjual(String key, int terjual) async {
-    // final db = _productController.database.value;
-    // if (db != null) {
-    // const queryBaca = 'SELECT terjual FROM products WHERE key = ?';
-    // final result = await db.rawQuery(queryBaca, [key]);
-    // // final uri = Uri.parse('$domain/produk/load.php');
-    // final int terjualSebelumnya = (result.first['terjual'] as int?) ?? 0;
-
-    // final int updateTerjual = terjualSebelumnya + terjual;
-    // const query = 'UPDATE products SET terjual = ? WHERE key = ?';
-    // await db.rawUpdate(query, [updateTerjual, key]);
     final url = Uri.parse('$domain/produk/update_produk_terjual.php');
     final encode = jsonEncode({'kode_produk': key, 'terjual': terjual});
     await http.post(url, body: {'encode': encode});
     _productController.allProduct.value = await loadProducts();
-    // }
   }
 
   static Future updateProduct(
       RxMap<String, dynamic> produk, bool isEditing) async {
-    // final db = _productController.database.value;
-    // if (db == null) {
-    //   throw Exception('Database not initialized');
-    // }
+    // final gambarJson = jsonEncode(produk['gambar']);
 
-    final gambarJson = jsonEncode(produk['gambar']);
-
-    // final query = 'SELECT * FROM products WHERE key = ?';
-    // final old = await db.rawQuery(query, [produk['kode_produk]]);
-
-    // if (old.isEmpty) {
-    //   return {};
-    // }
-
-    // final oldProduk = old.first;
-
-    // print(old);
     final tanggal = DateTime.now().toString();
 
-    final mapProduk = {...produk, 'gambar': gambarJson, 'tanggal': tanggal};
+    final mapProduk = {...produk, 'tanggal': tanggal};
 
-    // print('map produk $mapProduk');
     if (isEditing) {
       final url = Uri.parse('$domain/produk/update_perubahan.php');
       final newMap = jsonEncode({
-        // 'id_produk': mapProduk['id_produk'],
         'tanggal': mapProduk['tanggal'],
         'kode_produk': mapProduk['kode_produk'],
         'produk_baru': mapProduk['produk'],
@@ -206,46 +126,7 @@ class DBHelper {
       await http.post(url, body: {
         'produk': newMap,
       });
-      // final mapPerubahan = {
-      //   'kode_produk: produk['kode_produk],
-      //   'tanggal': tanggal,
-      //   'produk_baru': produk['produk'],
-      //   'produk_lama': oldProduk['produk'],
-      //   'harga_beli_baru': produk['harga_beli'],
-      //   'harga_beli_lama': oldProduk['harga_beli'],
-      //   'harga_jual_baru': produk['harga_jual'],
-      //   'harga_jual_lama': oldProduk['harga_jual'],
-      //   'terjual_baru': produk['terjual'],
-      //   'terjual_lama': oldProduk['terjual'],
-      //   'stok_baru': produk['stok'],
-      //   'stok_lama': oldProduk['stok'],
-      //   'gambar_baru': gambarJson,
-      //   'gambar_lama': oldProduk['gambar'],
-      //   'kategori_baru': produk['kategori'],
-      //   'kategori_lama': oldProduk['kategori'],
-      //   'deskripsi_baru': produk['deskripsi'],
-      //   'deskripsi_lama': oldProduk['deskripsi']
-      // };
-      // await _laporanController.database?.insert('perubahan', {
-      //   'kode_produk: produk['kode_produk],
-      //   'tanggal': tanggal,
-      //   'produk_baru': produk['produk'],
-      //   'produk_lama': oldProduk['produk'],
-      //   'harga_beli_baru': produk['harga_beli'],
-      //   'harga_beli_lama': oldProduk['harga_beli'],
-      //   'harga_jual_baru': produk['harga_jual'],
-      //   'harga_jual_lama': oldProduk['harga_jual'],
-      //   'terjual_baru': produk['terjual'],
-      //   'terjual_lama': oldProduk['terjual'],
-      //   'stok_baru': produk['stok'],
-      //   'stok_lama': oldProduk['stok'],
-      //   'gambar_baru': gambarJson,
-      //   'gambar_lama': oldProduk['gambar'],
-      //   'kategori_baru': produk['kategori'],
-      //   'kategori_lama': oldProduk['kategori'],
-      //   'deskripsi_baru': produk['deskripsi'],
-      //   'deskripsi_lama': oldProduk['deskripsi']
-      // });
+
       await _laporanController.loadProduk();
     }
 
@@ -254,31 +135,47 @@ class DBHelper {
     await http.post(url, body: {
       'produk': encodeMap,
     });
-    // print('mapProduk $mapProduk');
-    // final mapProdukEncode =
-    // await db.update(
-    //   'products',
-    //   {
-    //     ...produk,
-    //     'gambar': gambarJson,
-    //   },
-    //   where: 'key = ?',
-    //   whereArgs: [produk['kode_produk]],
-    // );
+
     _productController.allProduct.value = await loadProducts();
   }
 
   static Future<void> deleteProduct(List<String> key) async {
-    // final db = _productController.database.value;
-    // if (db == null) {
-    //   throw Exception('Database not initialized');
-    // }
-    // for (var id in key) {
-    //   await db.delete('products', where: 'key = ?', whereArgs: [id]);
-    // }
     final uri = Uri.parse('$domain/produk/delete.php');
     final encode = jsonEncode(key);
     http.post(uri, body: {'tabel': 'produk', 'list_kode': encode});
     _productController.allProduct.value = await loadProducts();
+  }
+}
+
+mixin class SnackHelper {
+  static final hasShow = false.obs;
+  static Future<void> snackError(
+      {String title = 'Error', required String content}) async {
+    await Future.delayed(Duration(seconds: 1));
+
+    if (!hasShow.value) {
+      hasShow.value = true;
+
+      Get.snackbar(title, content,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM);
+      await Future.delayed(Duration(seconds: 3));
+      hasShow.value = false;
+    }
+  }
+
+  static Future<void> snackSucces(
+      {String title = 'Error', required String content}) async {
+    if (!hasShow.value) {
+      hasShow.value = true;
+
+      Get.snackbar(title, content,
+          colorText: Colors.white,
+          backgroundColor: Colors.purple,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+    await Future.delayed(const Duration(seconds: 3));
+    hasShow.value = false;
   }
 }
