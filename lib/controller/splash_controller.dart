@@ -12,6 +12,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
+import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/manager/manager_toko.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 

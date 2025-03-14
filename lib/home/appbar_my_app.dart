@@ -7,13 +7,10 @@ import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-// import 'package:myapp/laporan/body_laporan.dart';
-// import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/manager/manager_toko.dart';
 
 class AppBarMyApp extends StatelessWidget {
   AppBarMyApp({super.key, required this.isManager});
-
-  // final BiometrikController _biometrikController = Get.find();
 
   final ProductController _productController = Get.find();
   final LaporanController _laporanController = Get.find();
@@ -25,46 +22,27 @@ class AppBarMyApp extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+              onPressed: () {
+                Get.to(() => ManagerToko(),
+                    transition: Transition.zoom,
+                    duration: Duration(milliseconds: 500));
+              },
+              icon: Icon(Icons.admin_panel_settings)),
           Text(
-            _mainController.tabIndex.value == 0
-                ? "PRODUK"
-                // : _biometrikController.tabIndex.value == 1
-                : "ADMIN",
-            // : _biometrikController.tabIndex.value == 2
-            //     ? _laporanController.viewMode.value == 'Rincian'
-            //         ? 'RINCIAN PRODUK'
-            //         : "LAPORAN ${titleLaporan()}"
-            //     : "PENGATURAN",
+            _mainController.tabIndex.value == 0 ? "PRODUK" : "ADMIN",
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
           ),
           const Spacer(),
-          // if (_biometrikController.tabIndex.value == 0 ||
-          //     (_biometrikController.tabIndex.value == 1 &&
-          //             (_biometrikController.hasAuthenticated.value ||
-          //                 !Settings.autentikasiAktif.value)) &&
-          //         !_productController.showCheckBoxRemove.value)
           if (_mainController.tabIndex.value == 0)
             dynamicIconAppBar(_productController, isManager),
           if (_mainController.tabIndex.value == 2)
             IconButton(
                 onPressed: () {
                   _laporanController.showMenuLaporan();
-                  // _laporanController.oldScaleTransformTable.value =
-                  //     _laporanController.scaleTransformTable.value;
-                  // _laporanController.showSliderScaler.value =
-                  //     !_laporanController.showSliderScaler.value;
                 },
                 icon: Icon(Icons.more_vert))
-
-          // IconButton(
-          //     onPressed: () {
-          //       _laporanController.oldScaleTransformTable.value =
-          //           _laporanController.scaleTransformTable.value;
-          //       _laporanController.showSliderScaler.value =
-          //           !_laporanController.showSliderScaler.value;
-          //     },
-          //     icon: Icon(Icons.zoom_out))
         ],
       );
     });
@@ -99,11 +77,6 @@ Row dynamicIconAppBar(ProductController productController, bool isManager) {
             }
           },
           icon: const Icon(Icons.search, color: Colors.white)),
-      // if (!_productController.showCheckBoxRemove.value &&
-      //     (_biometrikController.tabIndex.value == 0 ||
-      //         _biometrikController.tabIndex.value == 1)
-
-      //         )
       IconButton(
           onPressed: () {
             Get.to(() => HalamanKeranjang(

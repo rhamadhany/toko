@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/main_controller.dart';
-import 'package:myapp/home/animasi_transisi_tab.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/home/appbar_my_app.dart';
@@ -31,41 +30,45 @@ class MyApp extends GetView<MainController> {
                 : null,
             controller: controller.tabController,
             children: [
-              AnimasiTransisiTab(
-                widgetChild: HomeToko(
-                  isManager: false,
-                ),
-                skalaAnimation: controller.skalaAnimation,
+              // AnimasiTransisiTab(
+              //   widgetChild: HomeToko(
+              //     isManager: false,
+              //   ),
+              //   skalaAnimation: controller.skalaAnimation,
+              // ),
+              HomeToko(
+                isManager: false,
               ),
-              AnimasiTransisiTab(
-                widgetChild: const Settings(),
-                skalaAnimation: controller.skalaAnimation,
-              )
+              const Settings(),
+              // AnimasiTransisiTab(
+              //   widgetChild: const Settings(),
+              //   skalaAnimation: controller.skalaAnimation,
+              // )
             ]),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(color: Colors.blue),
-          child: TabBar(
-              onTap: (_) async {
-                for (int i = 0; i < 60; i++) {
-                  if (i < 30) {
-                    controller.skalaAnimation.value -= 0.01;
-                  } else {
-                    controller.skalaAnimation.value += 0.01;
-                  }
-                  await Future.delayed(Duration(microseconds: 5000));
-                }
-              },
-              labelColor: Colors.white,
-              unselectedLabelColor: const Color.fromARGB(185, 255, 255, 255),
-              controller: controller.tabController,
-              tabs: [
-                const Tab(text: "PRODUK", icon: Icon(Icons.shop)),
-                Tab(
-                  text: 'ADMIN',
-                  icon: const Icon(Icons.admin_panel_settings),
-                )
-              ]),
-        ),
+        // bottomNavigationBar: Container(
+        //   decoration: BoxDecoration(color: Colors.blue),
+        //   child: TabBar(
+        //       onTap: (_) async {
+        //         for (int i = 0; i < 60; i++) {
+        //           if (i < 30) {
+        //             controller.skalaAnimation.value -= 0.01;
+        //           } else {
+        //             controller.skalaAnimation.value += 0.01;
+        //           }
+        //           await Future.delayed(Duration(microseconds: 5000));
+        //         }
+        //       },
+        //       labelColor: Colors.white,
+        //       unselectedLabelColor: const Color.fromARGB(185, 255, 255, 255),
+        //       controller: controller.tabController,
+        //       tabs: [
+        //         const Tab(text: "PRODUK", icon: Icon(Icons.shop)),
+        //         Tab(
+        //           text: 'ADMIN',
+        //           icon: const Icon(Icons.admin_panel_settings),
+        //         )
+        //       ]),
+        // ),
       ),
     );
   }

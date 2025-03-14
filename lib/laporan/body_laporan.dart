@@ -78,20 +78,26 @@ class LaporanPenjualan extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Dialog(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Slider(
-                          label: _laporanController.scaleTransformTable.value
-                              .toStringAsFixed(2),
-                          // overlayColor: WidgetStatePropertyAll(Colors.blue),
-                          activeColor: Colors.blue,
-                          max: 2,
-                          min: 0.1,
-                          divisions: 101,
-                          value: _laporanController.scaleTransformTable.value,
-                          onChanged: (value) => _laporanController
-                              .scaleTransformTable.value = value),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Slider(
+                            label: _laporanController.scaleTransformTable.value
+                                .toStringAsFixed(2),
+                            // overlayColor: WidgetStatePropertyAll(Colors.blue),
+                            activeColor: Colors.blue,
+                            max: 2,
+                            min: 0.1,
+                            divisions: 101,
+                            value: _laporanController.scaleTransformTable.value,
+                            onChanged: (value) => _laporanController
+                                .scaleTransformTable.value = value),
+                      ),
                     ),
                   ),
                   // SizedBox(

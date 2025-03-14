@@ -22,7 +22,7 @@ class Settings extends StatelessWidget {
           width: Get.width * 0.8,
           decoration: BoxDecoration(
             color: Colors.blue,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -30,25 +30,25 @@ class Settings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                containerChild(
-                  ListTile(
-                    onTap: () {
-                      Get.to(() => ManagerToko(),
-                          transition: Transition.zoom,
-                          duration: Duration(milliseconds: 500));
-                    },
-                    leading: Icon(
-                      Icons.warehouse,
-                      color: Colors.black,
-                    ),
-                    title: Text(
-                      'Manager',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+                // containerChild(
+                //   ListTile(
+                //     onTap: () {
+                //       Get.to(() => ManagerToko(),
+                //           transition: Transition.zoom,
+                //           duration: Duration(milliseconds: 500));
+                //     },
+                //     leading: Icon(
+                //       Icons.warehouse,
+                //       color: Colors.black,
+                //     ),
+                //     title: Text(
+                //       'Manager',
+                //       style: TextStyle(
+                //         color: Colors.black,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 containerChild(
                   ListTile(
                     onTap: () async {
