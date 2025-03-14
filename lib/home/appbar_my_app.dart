@@ -7,7 +7,6 @@ import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-import 'package:myapp/manager/manager_toko.dart';
 
 class AppBarMyApp extends StatelessWidget {
   AppBarMyApp({super.key, required this.isManager});
@@ -22,13 +21,6 @@ class AppBarMyApp extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-              onPressed: () {
-                Get.to(() => ManagerToko(),
-                    transition: Transition.zoom,
-                    duration: Duration(milliseconds: 500));
-              },
-              icon: Icon(Icons.admin_panel_settings)),
           Text(
             _mainController.tabIndex.value == 0 ? "PRODUK" : "ADMIN",
             style: const TextStyle(

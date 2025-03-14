@@ -7,8 +7,6 @@ import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/manager/manager_toko.dart';
 
-import 'package:myapp/pengaturan/settings.dart';
-
 class MyApp extends GetView<MainController> {
   const MyApp({super.key});
 

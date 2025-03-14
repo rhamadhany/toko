@@ -162,7 +162,8 @@ class DialogJual extends StatelessWidget {
                   // Get.back(closeOverlays: true);
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
-                  await DBHelper.updateProduct(produk, false);
+                  // await DBHelper.updateProduct(produk, false);
+                  await DBHelper.updateTerjual(key, terjualBaru);
                   await _laporanController.tambahJual([
                     {'kode_produk': key, 'terjual': terjualBaru}
                   ], 'penjualan');

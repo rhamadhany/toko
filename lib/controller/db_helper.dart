@@ -101,6 +101,9 @@ class DBHelper with SnackHelper {
     _productController.allProduct.value = await loadProducts();
   }
 
+// static Future<void> updateTerjual()async {
+
+// }
   static Future updateProduct(
       RxMap<String, dynamic> produk, bool isEditing) async {
     // final gambarJson = jsonEncode(produk['gambar']);
@@ -108,7 +111,7 @@ class DBHelper with SnackHelper {
     final tanggal = DateTime.now().toString();
 
     final mapProduk = {...produk, 'tanggal': tanggal};
-
+    // print(mapProduk);
     if (isEditing) {
       final url = Uri.parse('$domain/produk/update_perubahan.php');
       final newMap = jsonEncode({
@@ -129,6 +132,8 @@ class DBHelper with SnackHelper {
 
       await _laporanController.loadProduk();
     }
+
+    // print(mapProduk);
 
     final encodeMap = jsonEncode(mapProduk);
     final url = Uri.parse('$domain/produk/update_produk.php');

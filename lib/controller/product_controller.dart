@@ -66,6 +66,7 @@ class ProductController extends GetxController {
   dynamic refreshProdukUpdate(String kodeProduk) {
     final produk =
         allProduct.where((p) => p['kode_produk'] == kodeProduk).first;
+    // print(produk['gambar']);
     return produk['gambar'];
   }
 

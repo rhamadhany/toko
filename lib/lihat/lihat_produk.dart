@@ -18,7 +18,6 @@ class LihatProduk extends GetView<ProductController> {
 
   final KeranjangController _keranjangController = Get.find();
 
-  final MainController _mainController = Get.find();
   @override
   Widget build(BuildContext context) {
     final sisa = produk['stok'] - produk['terjual'];
@@ -90,11 +89,9 @@ class LihatProduk extends GetView<ProductController> {
           currentIndex: controller.bottomIndex.value,
           onTap: (value) {
             controller.bottomIndex.value = value;
-            if (value == 0 &&
-                (_mainController.tabIndex.value == 1 ||
-                    _mainController.tabIndex.value == 2)) {
+            if (isManager) {
               editProduk();
-            } else if (value == 0 && _mainController.tabIndex.value == 0) {
+            } else if (!isManager) {
               _keranjangController.langsungtambahkeKeranjang(sisa, produk);
             } else {
               final sisa = produk['stok'] - produk['terjual'];
