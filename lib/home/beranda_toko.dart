@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
-import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/home/kategori_toko.dart';
 
 import 'package:myapp/lihat/lihat_produk.dart';

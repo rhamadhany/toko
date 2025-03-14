@@ -8,15 +8,13 @@ class SplashLogin extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // return Scaffold(
-      // body:
       return Material(
           child: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.blue, Colors.green, Colors.purple])),
+                colors: [Colors.blue, Colors.purple[400]!])),
         child: controller.isLoading.value
             ? Center(
                 child: CircularProgressIndicator(
@@ -26,14 +24,11 @@ class SplashLogin extends GetView<SplashController> {
             : Center(
                 child: IntrinsicHeight(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        // vertical: 20,
-                        horizontal: Get.width * 0.1),
+                    padding: EdgeInsets.symmetric(horizontal: Get.width * 0.1),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
                         Container(
-                          // height: Get.height * 0.5,
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 2),
                               color: Colors.blue,
@@ -48,15 +43,6 @@ class SplashLogin extends GetView<SplashController> {
                               SizedBox(
                                 height: 10,
                               ),
-                              // Padding(
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: Text(
-                              //     'Username',
-                              //     style: TextStyle(
-                              //         color: Colors.black,
-                              //         fontWeight: FontWeight.bold),
-                              //   ),
-                              // ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
@@ -127,12 +113,6 @@ class SplashLogin extends GetView<SplashController> {
                               SizedBox(
                                 height: 10,
                               ),
-                              // Card(
-                              //   color: Colors.black,
-                              //   child: ListTile(
-                              //     title: Text('Sign in'),
-                              //   ),
-                              // ),
                               Center(
                                 child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
@@ -159,7 +139,6 @@ class SplashLogin extends GetView<SplashController> {
                     ),
                   ),
                 ),
-                // )
               ),
       ));
     });

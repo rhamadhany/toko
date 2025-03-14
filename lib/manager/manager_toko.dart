@@ -24,6 +24,8 @@ class ManagerToko extends GetView<ManagerController> {
   final MainController _mainController = Get.find();
   @override
   Widget build(BuildContext context) {
+    // _biometrikController.initBeometrik();
+    controller.inisiasiAuthController();
     return Obx(() {
       return PopScope(
         canPop: false,
@@ -35,13 +37,20 @@ class ManagerToko extends GetView<ManagerController> {
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               title: AppBarManager()),
-          body: TabBarView(controller: controller.tabController, children: [
-            HomeToko(
-              isManager: true,
-            ),
-            LaporanPenjualan(),
-            Settings()
-          ]),
+          body: !_biometrikController.hasAuthenticated.value &&
+                  Settings.autentikasiAktif.value
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                )
+              : TabBarView(controller: controller.tabController, children: [
+                  HomeToko(
+                    isManager: true,
+                  ),
+                  LaporanPenjualan(),
+                  Settings()
+                ]),
           bottomNavigationBar: _laporanController.showBarLaporan.value
               ? Container(
                   color: Colors.blue,
@@ -169,6 +178,7 @@ class ManagerToko extends GetView<ManagerController> {
     } else if (_productController.showCheckBoxRemove.value) {
       _productController.showCheckBoxRemove.value = false;
     } else {
+      _biometrikController.hasAuthenticated.value = false;
       Get.back();
     }
   }
