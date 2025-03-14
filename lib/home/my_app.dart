@@ -5,6 +5,7 @@ import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/home/appbar_my_app.dart';
+import 'package:myapp/manager/manager_toko.dart';
 
 import 'package:myapp/pengaturan/settings.dart';
 
@@ -24,51 +25,19 @@ class MyApp extends GetView<MainController> {
             isManager: false,
           ),
         ),
-        body: TabBarView(
-            physics: controller.tabIndex.value == 2
-                ? const NeverScrollableScrollPhysics()
-                : null,
-            controller: controller.tabController,
-            children: [
-              // AnimasiTransisiTab(
-              //   widgetChild: HomeToko(
-              //     isManager: false,
-              //   ),
-              //   skalaAnimation: controller.skalaAnimation,
-              // ),
-              HomeToko(
-                isManager: false,
-              ),
-              const Settings(),
-              // AnimasiTransisiTab(
-              //   widgetChild: const Settings(),
-              //   skalaAnimation: controller.skalaAnimation,
-              // )
-            ]),
-        // bottomNavigationBar: Container(
-        //   decoration: BoxDecoration(color: Colors.blue),
-        //   child: TabBar(
-        //       onTap: (_) async {
-        //         for (int i = 0; i < 60; i++) {
-        //           if (i < 30) {
-        //             controller.skalaAnimation.value -= 0.01;
-        //           } else {
-        //             controller.skalaAnimation.value += 0.01;
-        //           }
-        //           await Future.delayed(Duration(microseconds: 5000));
-        //         }
-        //       },
-        //       labelColor: Colors.white,
-        //       unselectedLabelColor: const Color.fromARGB(185, 255, 255, 255),
-        //       controller: controller.tabController,
-        //       tabs: [
-        //         const Tab(text: "PRODUK", icon: Icon(Icons.shop)),
-        //         Tab(
-        //           text: 'ADMIN',
-        //           icon: const Icon(Icons.admin_panel_settings),
-        //         )
-        //       ]),
-        // ),
+        body: GestureDetector(
+          onHorizontalDragStart: (details) {
+            // print(Get.width);
+            final lebar = Get.width / 1.5;
+            // print(details.globalPosition.dx);
+            if (details.globalPosition.dx > lebar) {
+              Get.to(() => ManagerToko());
+            }
+          },
+          child: HomeToko(
+            isManager: false,
+          ),
+        ),
       ),
     );
   }
@@ -77,7 +46,13 @@ class MyApp extends GetView<MainController> {
     Get.dialog(
       barrierDismissible: false,
       AlertDialog(
-        title: const Text("Keluar"),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.blue)),
+        title: const Text(
+          "Keluar",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         content: const Text("Keluar dari aplikasi?"),
         actions: [
           ElevatedButton(

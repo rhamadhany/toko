@@ -116,10 +116,10 @@ class BodyLihatProduk extends GetView<ProductController> {
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Stack(
-                          alignment: Alignment.topRight,
+                          alignment: Alignment.center,
                           children: [
                             Align(
-                              alignment: Alignment.topLeft,
+                              alignment: Alignment.centerLeft,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
