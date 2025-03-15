@@ -36,18 +36,20 @@ class PrintingQR {
     Get.dialog(Obx(() {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             side: BorderSide(
               color: Colors.blue,
-              width: 2,
+              // width: 2,
             )),
         title: Text(
           'Simpan QRCode',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        content: SingleChildScrollView(
+        content: IntrinsicHeight(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (!pressAction.value)
                 ...listTextField.value.map((t) => TextField(
@@ -65,14 +67,16 @@ class PrintingQR {
                   style: TextStyle(fontSize: 14),
                 ),
               if (isLoading.value)
-                LinearProgressIndicator(
-                  color: Colors.blue,
+                Center(
+                  child: LinearProgressIndicator(
+                    color: Colors.blue,
+                  ),
                 ),
-              if (isLoading.value)
+              if (progress.value != '')
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
-              if (isLoading.value)
+              if (progress.value != '' && !finish.value)
                 Text(
                   progress.value,
                   style: TextStyle(fontSize: 14),

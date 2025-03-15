@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/manager/manager_toko.dart';
 
-class MyApp extends GetView<MainController> {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override

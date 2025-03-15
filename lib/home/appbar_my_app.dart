@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
-import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
@@ -12,32 +10,21 @@ class AppBarMyApp extends StatelessWidget {
   AppBarMyApp({super.key, required this.isManager});
 
   final ProductController _productController = Get.find();
-  final LaporanController _laporanController = Get.find();
-  final MainController _mainController = Get.find();
   final bool isManager;
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            _mainController.tabIndex.value == 0 ? "PRODUK" : "ADMIN",
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-          ),
-          const Spacer(),
-          if (_mainController.tabIndex.value == 0)
-            dynamicIconAppBar(_productController, isManager),
-          if (_mainController.tabIndex.value == 2)
-            IconButton(
-                onPressed: () {
-                  _laporanController.showMenuLaporan();
-                },
-                icon: Icon(Icons.more_vert))
-        ],
-      );
-    });
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "PRODUK",
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+        ),
+        const Spacer(),
+        dynamicIconAppBar(_productController, isManager),
+      ],
+    );
   }
 
   pilihBulan() {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/lihat/future_logo_online.dart';
 import 'package:myapp/lihat/gambar_penuh.dart';
 import 'package:myapp/lihat/harga_produk.dart';
 import 'package:myapp/lihat/logo_produk.dart';
@@ -51,7 +52,9 @@ class BodyLihatProduk extends GetView<ProductController> {
                               },
                               child: picPath is String
                                   ? FutureLogoOnline(
+                                      size: 300,
                                       gambar: picPath,
+                                      childOnly: false,
                                     )
                                   : cardGambar64(10, 2.5,
                                       base64Decode(picPath['base64']), 300),
@@ -65,8 +68,11 @@ class BodyLihatProduk extends GetView<ProductController> {
                                       GambarPenuh(gambar: produk['gambar']));
                                 }
                               },
-                              child:
-                                  FutureLogoOnline(gambar: produk['gambar'])),
+                              child: FutureLogoOnline(
+                                gambar: produk['gambar'],
+                                size: 300,
+                                childOnly: false,
+                              )),
                       ],
                     ),
                   ),
@@ -207,33 +213,5 @@ class BodyLihatProduk extends GetView<ProductController> {
         color: Colors.white,
       ),
     );
-  }
-}
-
-class FutureLogoOnline extends StatelessWidget {
-  const FutureLogoOnline({
-    super.key,
-    required this.gambar,
-  });
-  final String gambar;
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: logoProdukOnline(gambar, 10, 300, 2.5),
-        builder: (context, snapshots) {
-          if (snapshots.hasData && snapshots.data != null) {
-            return snapshots.data!;
-          } else {
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                noLogoProduk(300, 10),
-                CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-              ],
-            );
-          }
-        });
   }
 }

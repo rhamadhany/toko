@@ -11,6 +11,9 @@ class DialogHapusKeranjang extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(color: Colors.blue)),
       title: const Text(
         "Hapus Produk",
         style: TextStyle(fontWeight: FontWeight.bold),

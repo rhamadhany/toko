@@ -9,11 +9,10 @@ import 'package:myapp/home/my_app.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
-import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/biometrik.dart';
 
 final domain = 'http://192.168.36.228:8080';
 
@@ -103,7 +102,6 @@ class SplashController extends GetxController {
     Get.put(LaporanController());
     Get.put(KeranjangController());
 
-    Get.put(MainController());
     Get.put(QRScannerController());
 
     Get.put(TransaksiController());

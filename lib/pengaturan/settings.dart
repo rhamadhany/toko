@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/splash_login.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/printing_qr.dart';
 
 class Settings extends StatelessWidget {

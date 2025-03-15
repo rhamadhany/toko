@@ -6,7 +6,7 @@ import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
 class DialogCheckoutKeranjang extends StatelessWidget {
@@ -21,9 +21,10 @@ class DialogCheckoutKeranjang extends StatelessWidget {
   final LaporanController _laporanController = Get.find();
   @override
   Widget build(BuildContext context) {
-    _biometrikController.hasAuthenticated.value = false;
-
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(color: Colors.blue)),
       title: const Text(
         'Konfirmasi',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -38,10 +39,11 @@ class DialogCheckoutKeranjang extends StatelessWidget {
         ElevatedButton(
             onPressed: () async {
               if (Settings.autentikasiAktif.value) {
-                final hasAuth = await _biometrikController.authReuired();
-                if (hasAuth) {
-                  _biometrikController.hasAuthenticated.value = true;
-                }
+                _biometrikController.hasAuthenticated.value =
+                    await _biometrikController.authReuired();
+                // if (hasAuth) {
+                //   _biometrikController.hasAuthenticated.value = true;
+                // }
 
                 if (_biometrikController.hasAuthenticated.value) {
                   Get.back(closeOverlays: false);

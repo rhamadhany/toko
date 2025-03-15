@@ -8,7 +8,7 @@ import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
 class DialogJual extends StatelessWidget {
@@ -23,8 +23,6 @@ class DialogJual extends StatelessWidget {
   final RxBool finishLongPress = false.obs;
   @override
   Widget build(BuildContext context) {
-    _biometrikController.hasAuthenticated.value = false;
-
     return Obx(() {
       return AlertDialog(
         shape: RoundedRectangleBorder(
@@ -98,7 +96,6 @@ class DialogJual extends StatelessWidget {
                     _keranjangController.addProduk(produk['kode_produk'],
                         produk['produk'], jumlah, gambar);
 
-                    // Get.back(closeOverlays: true);
                     Get.back(closeOverlays: true);
                     HomeToko.focusPencarian.unfocus();
                     Get.snackbar('Keranjang',
@@ -125,10 +122,9 @@ class DialogJual extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {
                 if (Settings.autentikasiAktif.value) {
-                  final hasAuth = await _biometrikController.authReuired();
-                  if (hasAuth) {
-                    _biometrikController.hasAuthenticated.value = true;
-                  }
+                  _biometrikController.hasAuthenticated.value =
+                      await _biometrikController.authReuired();
+
                   if (!_biometrikController.hasAuthenticated.value) {
                     Get.snackbar('Gagal', 'Autentikasi gagal',
                         snackPosition: SnackPosition.BOTTOM,
@@ -159,10 +155,10 @@ class DialogJual extends StatelessWidget {
 
                   produk['terjual'] = terjualSebelumnya + terjualBaru;
                   final key = produk['kode_produk'];
-                  // Get.back(closeOverlays: true);
+
                   Get.back(closeOverlays: true);
                   HomeToko.focusPencarian.unfocus();
-                  // await DBHelper.updateProduct(produk, false);
+
                   await DBHelper.updateTerjual(key, terjualBaru);
                   await _laporanController.tambahJual([
                     {'kode_produk': key, 'terjual': terjualBaru}

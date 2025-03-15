@@ -88,11 +88,11 @@ class LihatProduk extends GetView<ProductController> {
           currentIndex: controller.bottomIndex.value,
           onTap: (value) {
             controller.bottomIndex.value = value;
-            if (isManager) {
+            if (isManager && value == 0) {
               editProduk();
             } else if (!isManager && value == 0) {
               _keranjangController.langsungtambahkeKeranjang(sisa, produk);
-            } else if (!isManager && value == 1) {
+            } else if (value == 1) {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
                 controller.jualController.value.text = '0';

@@ -3,16 +3,14 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
-import 'package:myapp/controller/main_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/manager/app_bar_manager.dart';
 import 'package:myapp/manager/manager_controller.dart';
-import 'package:myapp/pengaturan/biometrik.dart';
+import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk%20baru/produk_baru.dart';
-import 'package:myapp/tes/generate.dart';
 
 class ManagerToko extends GetView<ManagerController> {
   ManagerToko({super.key});
@@ -21,12 +19,13 @@ class ManagerToko extends GetView<ManagerController> {
   final KeranjangController _keranjangController = Get.find();
   final BiometrikController _biometrikController = Get.find();
   final LaporanController _laporanController = Get.find();
-  final MainController _mainController = Get.find();
   @override
   Widget build(BuildContext context) {
     // _biometrikController.initBeometrik();
     if (!Settings.autentikasiAktif.value) {
       controller.requestPassword();
+    } else {
+      controller.inisiasiAuthController();
     }
     return Obx(() {
       // if (!Settings.autentikasiAktif.value){}
@@ -80,76 +79,73 @@ class ManagerToko extends GetView<ManagerController> {
                       controller: controller.tabController),
                 )
               : null,
-          floatingActionButton: _mainController.tabIndex.value == 3
-              ? GenerateItem.textGenerate()
-              : (!_biometrikController.hasAuthenticated.value &&
-                          Settings.autentikasiAktif.value) ||
-                      controller.tabIndex.value != 0
-                  ? null
-                  : FloatingActionButton(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      onPressed: () async {
-                        if (_productController.showCheckBoxRemove.value &&
-                            _productController.filterProduct.isNotEmpty) {
-                          final existSelect = _productController
-                              .mapCheckBoxRemove
-                              .any((any) => any['isSelected'] == 'true');
+          floatingActionButton: (!_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value) ||
+                  controller.tabIndex.value != 0
+              ? null
+              : FloatingActionButton(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  onPressed: () async {
+                    if (_productController.showCheckBoxRemove.value &&
+                        _productController.filterProduct.isNotEmpty) {
+                      final existSelect = _productController.mapCheckBoxRemove
+                          .any((any) => any['isSelected'] == 'true');
 
-                          if (!existSelect) {
-                            Get.snackbar("Error", "Pilih setidaknya 1 produk",
-                                snackPosition: SnackPosition.BOTTOM,
-                                colorText: Colors.white,
-                                backgroundColor: Colors.red);
-                            return;
-                          }
+                      if (!existSelect) {
+                        Get.snackbar("Error", "Pilih setidaknya 1 produk",
+                            snackPosition: SnackPosition.BOTTOM,
+                            colorText: Colors.white,
+                            backgroundColor: Colors.red);
+                        return;
+                      }
 
-                          bool? confirm = await controller.confirmationDelete();
-                          if (!confirm) {
-                            return;
-                          }
-                          List<String> listKey = [];
-                          for (int i = 0;
-                              i < _productController.filterProduct.length;
-                              i++) {
-                            if (_productController.mapCheckBoxRemove[i]
-                                        ['isSelected'] ==
-                                    'true' &&
-                                _productController.mapCheckBoxRemove[i]
-                                        ['kode_produk'] !=
-                                    "") {
-                              listKey.add(_productController
-                                  .mapCheckBoxRemove[i]['kode_produk']!);
-                            }
-                          }
-
-                          await _keranjangController.removeProduk(listKey);
-
-                          await DBHelper.deleteProduct(listKey);
-                          await _keranjangController.loadProduk();
-                          await _productController.generateMapCheckBox();
-                        } else {
-                          _productController.kategoriAdd.value = 'Semua';
-                          for (final controller
-                              in _productController.listTextField) {
-                            if (controller['label'] != 'Terjual') {
-                              controller['controller'].clear();
-                            } else {
-                              controller['controller'].text = "0";
-                            }
-                          }
-
-                          Get.to(() => NewProduct());
+                      bool? confirm = await controller.confirmationDelete();
+                      if (!confirm) {
+                        return;
+                      }
+                      List<String> listKey = [];
+                      for (int i = 0;
+                          i < _productController.filterProduct.length;
+                          i++) {
+                        if (_productController.mapCheckBoxRemove[i]
+                                    ['isSelected'] ==
+                                'true' &&
+                            _productController.mapCheckBoxRemove[i]
+                                    ['kode_produk'] !=
+                                "") {
+                          listKey.add(_productController.mapCheckBoxRemove[i]
+                              ['kode_produk']!);
                         }
-                      },
-                      child: Icon(
-                        _productController.showCheckBoxRemove.value &&
-                                _productController.filterProduct.isNotEmpty
-                            ? Icons.clear
-                            : Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
+                      }
+
+                      await _keranjangController.removeProduk(listKey);
+
+                      await DBHelper.deleteProduct(listKey);
+                      await _keranjangController.loadProduk();
+                      await _productController.generateMapCheckBox();
+                    } else {
+                      _productController.kategoriAdd.value = 'Semua';
+                      for (final controller
+                          in _productController.listTextField) {
+                        if (controller['label'] != 'Terjual') {
+                          controller['controller'].clear();
+                        } else {
+                          controller['controller'].text = "0";
+                        }
+                      }
+
+                      Get.to(() => NewProduct());
+                    }
+                  },
+                  child: Icon(
+                    _productController.showCheckBoxRemove.value &&
+                            _productController.filterProduct.isNotEmpty
+                        ? Icons.clear
+                        : Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       );
     });
