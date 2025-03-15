@@ -26,33 +26,10 @@ class KeranjangController extends GetxController {
   void onInit() {
     super.onInit();
     keranjangProdukListener();
-
-    // inisiasiDatabase();
   }
-
-//   Future<void> inisiasiDatabase() async {
-//     final rootPath = await getDatabasesPath();
-//     final dbPath = '$rootPath/keranjang.db';
-//     database = await openDatabase(
-//       dbPath,
-//       version: 1,
-//       onCreate: (db, version) async {
-//         await db.execute('''
-// CREATE TABLE keranjang (
-//   key TEXT,
-//   produk TEXT,
-//   jumlah INTEGER,
-//   gambar TEXT
-// )
-// ''');
-//       },
-//     );
-//     await loadProduk();
-//   }
 
   void keranjangProdukListener() {
     keranjangProduk.listen((_) async {
-      // await initValueBox();
       update();
     });
 
@@ -95,15 +72,6 @@ class KeranjangController extends GetxController {
     isLoading.value = false;
   }
 
-  // Future<void> loadProduk() async {
-  //   const query = 'SELECT * FROM keranjang';
-  //   await database!.rawQuery(query).then((result) {
-  //     keranjangProduk.value =
-  //         result.map((e) => e as Map<String, dynamic>).toList();
-  //   });
-  //   // update();
-  // }
-
   Future<void> loadProduk() async {
     try {
       final uri = Uri.parse('$domain/produk/load.php');
@@ -123,15 +91,13 @@ class KeranjangController extends GetxController {
   Future<void> addProduk(key, produk, jumlah, gambar) async {
     final indexKeys =
         keranjangProduk.indexWhere((pro) => pro['kode_produk'] == key);
-    // print("indexKeys: $indexKeys");
+
     if (indexKeys != -1) {
       final updateKey = keranjangProduk[indexKeys]['kode_produk'];
       final jumlahBaru = keranjangProduk[indexKeys]['jumlah'] + jumlah;
-      // print('jumlah baru: $jumlahBaru');
+
       await updateJumlah(updateKey, jumlahBaru);
     } else {
-      // const query =
-      // 'INSERT INTO keranjang (key, produk, jumlah, gambar) VALUES (?, ?, ?, ?)';
       final map = jsonEncode([
         {
           'tanggal': DateTime.now().toString(),
@@ -143,15 +109,12 @@ class KeranjangController extends GetxController {
       ]);
       final uri = Uri.parse('$domain/produk/tambah.php');
       await http.post(uri, body: {'tabel': 'keranjang', 'produk': map});
-      // await database!.rawInsert(query, [key, produk, jumlah, gambar]);
     }
-    // await loadProduk();
+
     await initValueBox();
   }
 
   Future<void> removeProduk(List<String> listKey) async {
-    // const query = 'DELETE FROM keranjang WHERE key = ?';
-
     try {
       final uri = Uri.parse('$domain/produk/delete.php');
       await http.post(uri,
@@ -163,7 +126,6 @@ class KeranjangController extends GetxController {
           backgroundColor: Colors.red,
           snackPosition: SnackPosition.BOTTOM);
     }
-    // await database!.rawDelete(query, [key]);
   }
 
   void refreshProduk() {
@@ -195,8 +157,6 @@ class KeranjangController extends GetxController {
         }
       }
 
-      // const query = 'UPDATE keranjang SET jumlah = ? WHERE key = ?';
-      // await database!.rawUpdate(query, [jumlahUpdate, key]);
       final url = Uri.parse('$domain/produk/update_keranjang.php');
       await http.post(url,
           body: {'kode_produk': key, 'jumlah': jumlahUpdate.toString()});

@@ -122,9 +122,11 @@ class TextFormPassword extends GetView<SplashController> {
         controller: controller.passwordController,
         style: TextStyle(color: Colors.black),
         onFieldSubmitted: (value) {
-          // if (onTap != null) {
-          onTap?.call(value);
-          // }
+          if (onTap != null) {
+            onTap?.call(value);
+          } else {
+            controller.loginUser();
+          }
         },
         decoration: InputDecoration(
             suffixIcon: Padding(

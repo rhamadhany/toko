@@ -42,7 +42,6 @@ class LaporanController extends GetxController {
     super.onInit();
     bulanTerpilih.value = namaBulan[bulan.value];
     loadProduk();
-    // inisiasiDatabase();
   }
 
   void bulanListener() {
@@ -51,75 +50,11 @@ class LaporanController extends GetxController {
     });
   }
 
-//   Future<void> inisiasiDatabase() async {
-//     final rootPath = await getDatabasesPath();
-//     final dbPath = '$rootPath/laporan.db';
-//     database = await openDatabase(
-//       dbPath,
-//       version: 1,
-//       onCreate: (db, version) async {
-//         await db.execute('''
-// CREATE TABLE perubahan (
-//             key TEXT,
-//             tanggal TEXT,
-//             produk_baru TEXT,
-//             produk_lama TEXT,
-//             harga_beli_baru TEXT,
-//             harga_beli_lama TEXT,
-//             harga_jual_baru TEXT,
-//             harga_jual_lama TEXT,
-//             terjual_baru INTEGER,
-//             terjual_lama INTEGER,
-//             stok_baru INTEGER,
-//             stok_lama INTEGER,
-//             gambar_baru TEXT,
-//             gambar_lama TEXT,
-//             kategori_baru TEXT,
-//             kategori_lama TEXT,
-//             deskripsi_baru TEXT,
-//             deskripsi_lama TEXT
-// )
-// ''');
-
-//         await db.execute('''
-// CREATE TABLE penjualan (
-//   key TEXT,
-//   tanggal TEXT,
-//   produk TEXT,
-//   kategori TEXT,
-//   jumlah INTEGER,
-//   harga_beli TEXT,
-//   harga_jual TEXT
-// )
-// ''');
-
-//         await db.execute('''
-// CREATE TABLE penambahan (
-//             kode_produk TEXT,
-//             tanggal TEXT,
-//             produk TEXT,
-//             harga_beli TEXT,
-//             harga_jual TEXT,
-//             terjual INTEGER,
-//             stok INTEGER,
-//             gambar TEXT,
-//             kategori TEXT,
-//             deskripsi TEXT
-// )
-// ''');
-//       },
-//     );
-//     await loadProduk();
-//   }
-
   Future<void> loadProduk() async {
     final list = ['perubahan', 'penjualan', 'penambahan'];
     final uri = Uri.parse('$domain/produk/load.php');
     for (final table in list) {
       try {
-        // final query = 'SELECT * FROM $table';
-        // final result = await database!.rawQuery(query);
-        // final data = result.map((e) => e as Map<String, dynamic>).toList();
         final response = await http.post(uri, body: {
           'tabel': table,
         });
@@ -146,7 +81,6 @@ class LaporanController extends GetxController {
   }
 
   Future<void> tambahJual(List<Map<String, dynamic>> list, String table) async {
-    // print('tabel $table');
     try {
       for (var produkAdd in list) {
         final indexKey = _productController.allProduct.indexWhere(

@@ -66,7 +66,7 @@ class ProductController extends GetxController {
   dynamic refreshProdukUpdate(String kodeProduk) {
     final produk =
         allProduct.where((p) => p['kode_produk'] == kodeProduk).first;
-    // print(produk['gambar']);
+
     return produk['gambar'];
   }
 
@@ -77,7 +77,6 @@ class ProductController extends GetxController {
         dateFormat.format(DateTime.now()).toString().split(' ')[0];
     loadDaftarKategori();
 
-    // initDatabase();
     allProduct.value = await DBHelper.loadProducts();
 
     filteringProduk();
@@ -187,32 +186,4 @@ class ProductController extends GetxController {
               });
     }
   }
-
-  // Future<void> initDatabase() async {
-  //   final pathDatabase = await getDatabasesPath();
-  //   final path = '$pathDatabase/product_database.db';
-  //   database.value = await openDatabase(
-  //     path,
-  //     version: 1,
-  //     onCreate: (db, version) async {
-  //       await db.execute('''CREATE TABLE products
-  //         (
-  //           key TEXT,
-  //           produk TEXT,
-  //           harga_beli TEXT,
-  //           harga_jual TEXT,
-  //           terjual INTEGER,
-  //           stok INTEGER,
-  //           gambar TEXT,
-  //           kategori TEXT,
-  //           deskripsi TEXT
-  //         )
-  //         ''');
-  //     },
-  //   );
-
-  //   allProduct.value = await DBHelper.loadProducts();
-
-  //   if (allProduct.isEmpty) {}
-  // }
 }

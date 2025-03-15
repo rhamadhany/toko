@@ -25,7 +25,6 @@ class DBHelper with SnackHelper {
           final newRow = Map<String, dynamic>.from(row);
           try {
             newRow['gambar'] = jsonDecode(row['gambar']);
-            // print(newRow['gambar']);
           } catch (e) {
             newRow['gambar'] = "";
           }
@@ -34,7 +33,6 @@ class DBHelper with SnackHelper {
         return processedResult;
       }
     } catch (e) {
-      // print('error $e');
       SnackHelper.snackError(content: 'Error load produk');
       return [];
     }
@@ -50,8 +48,6 @@ class DBHelper with SnackHelper {
       List<Map<String, dynamic>> listGambar,
       String kategori,
       String deskripsi) async {
-    // _productController.allProduct.value = await loadProducts();
-
     try {
       final random = Random();
 
@@ -88,8 +84,6 @@ class DBHelper with SnackHelper {
       await _laporanController.loadProduk();
       _productController.allProduct.value = await loadProducts();
     } catch (error) {
-      // print(error);
-
       await SnackHelper.snackError(content: 'Gagal menambahkan produk');
     }
   }
@@ -101,17 +95,12 @@ class DBHelper with SnackHelper {
     _productController.allProduct.value = await loadProducts();
   }
 
-// static Future<void> updateTerjual()async {
-
-// }
   static Future updateProduct(
       RxMap<String, dynamic> produk, bool isEditing) async {
-    // final gambarJson = jsonEncode(produk['gambar']);
-
     final tanggal = DateTime.now().toString();
 
     final mapProduk = {...produk, 'tanggal': tanggal};
-    // print(mapProduk);
+
     if (isEditing) {
       final url = Uri.parse('$domain/produk/update_perubahan.php');
       final newMap = jsonEncode({
@@ -132,8 +121,6 @@ class DBHelper with SnackHelper {
 
       await _laporanController.loadProduk();
     }
-
-    // print(mapProduk);
 
     final encodeMap = jsonEncode(mapProduk);
     final url = Uri.parse('$domain/produk/update_produk.php');

@@ -1,4 +1,3 @@
-// import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -34,7 +33,6 @@ class BiometrikController extends GetxController {
           localizedReason: 'Autentikasi diperlukan untuk menampilkan menu ini!',
           options: const AuthenticationOptions(useErrorDialogs: false));
     } catch (e) {
-      // Get.snackbar("Error", "$e", snackPosition: SnackPosition.BOTTOM, colorText: Colors.white, backgroundColor: Colors.red);
       if (!e.toString().toLowerCase().contains('progress')) {
         Settings.autentikasiAktif.value = false;
         Settings.saveSettingsPrefs();

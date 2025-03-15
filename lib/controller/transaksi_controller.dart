@@ -10,44 +10,15 @@ import 'package:http/http.dart' as http;
 class TransaksiController extends GetxController {
   final transaksiMap = [{}].obs;
   Database? dbT;
-  // final tanggalTransaksi = DateTime.now().toString().split('.')[0].obs;
+
   final keyTransaksi = ''.obs;
   @override
   void onInit() {
     super.onInit();
     loadDatabase();
-    // inisiasiDatabase();
   }
 
-//   Future<void> inisiasiDatabase() async {
-//     final rootPath = await getDatabasesPath();
-//     final dbPath = '$rootPath/transaksi.db';
-
-//     dbT = await openDatabase(
-//       dbPath,
-//       version: 1,
-//       onCreate: (db, version) async {
-//         await db.execute('''
-// CREATE TABLE transaksi (
-// tanggal TEXT,
-// key TEXT,
-// keyProduk TEXT,
-// jumlah INTEGER,
-// modal INTEGER,
-// omset INTEGER,
-// laba INTEGER
-// )
-// ''');
-//       },
-//     );
-//     await loadDatabase();
-//   }
-
   Future<void> loadDatabase() async {
-    // final queryDB = 'SELECT * FROM transaksi';
-    // await dbT?.rawQuery(queryDB).then((result) {
-    //   transaksiMap.value = result;
-    // });
     try {
       final uri = Uri.parse('$domain/produk/load.php');
       final response = await http.post(uri, body: {'tabel': 'transaksi'});
@@ -89,20 +60,8 @@ class TransaksiController extends GetxController {
       ]);
 
       final uri = Uri.parse('$domain/produk/tambah.php');
-      // final response =
-      await http.post(uri, body: {'tabel': 'transaksi', 'produk': map});
-      // if (response.statusCode == 200) {
 
-      // }
-      // await dbT?.insert('transaksi', {
-      //   'tanggal': tanggal,
-      //   'kode_produk: encode,
-      //   'keyProduk': jsonEncode(keyProduk),
-      //   'jumlah': jumlah,
-      //   'modal': modal,
-      //   'omset': omset,
-      //   'laba': laba
-      // });
+      await http.post(uri, body: {'tabel': 'transaksi', 'produk': map});
     } catch (e) {
       Get.snackbar('Error', 'Failed add transaksi $e',
           colorText: Colors.white,

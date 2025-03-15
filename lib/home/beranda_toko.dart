@@ -178,16 +178,6 @@ class HomeToko extends GetView<ProductController> {
                                                       })
                                                   : noLogoProduk(170, sisa)
                                                       .child!,
-                                              // Stack(
-                                              //   children: [
-                                              //     if (listProduk['gambar']
-                                              //         .isNotEmpty)
-
-                                              //     if (listProduk['gambar']
-                                              //         .isEmpty)
-                                              //       noLogoProduk(170, sisa),
-                                              //   ],
-                                              // ),
                                             ),
                                             Padding(
                                               padding:

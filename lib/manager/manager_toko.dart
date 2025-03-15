@@ -33,9 +33,9 @@ class ManagerToko extends GetView<ManagerController> {
         canPop: false,
         onPopInvokedWithResult: invokePopScope,
         child: Scaffold(
-          drawer: Settings(),
+          // drawer: Settings(),
           appBar: AppBar(
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               title: AppBarManager()),
