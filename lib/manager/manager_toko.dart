@@ -25,8 +25,11 @@ class ManagerToko extends GetView<ManagerController> {
   @override
   Widget build(BuildContext context) {
     // _biometrikController.initBeometrik();
-    controller.inisiasiAuthController();
+    if (!Settings.autentikasiAktif.value) {
+      controller.requestPassword();
+    }
     return Obx(() {
+      // if (!Settings.autentikasiAktif.value){}
       return PopScope(
         canPop: false,
         onPopInvokedWithResult: invokePopScope,
@@ -37,8 +40,10 @@ class ManagerToko extends GetView<ManagerController> {
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               title: AppBarManager()),
-          body: !_biometrikController.hasAuthenticated.value &&
-                  Settings.autentikasiAktif.value
+          body: (!_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value) ||
+                  (!Settings.autentikasiAktif.value &&
+                      !controller.hasAuthenticated.value)
               ? Center(
                   child: CircularProgressIndicator(
                     color: Colors.blue,

@@ -135,7 +135,7 @@ class HomeToko extends GetView<ProductController> {
                                     Card(
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
-                                              width: 2,
+                                              width: 1.5,
                                               color: sisa <= 0
                                                   ? Colors.red
                                                   : Colors.transparent),
@@ -165,7 +165,7 @@ class HomeToko extends GetView<ProductController> {
                                                             snapshots.data !=
                                                                 null) {
                                                           return snapshots
-                                                              .data!;
+                                                              .data!.child!;
                                                         } else {
                                                           return Center(
                                                             child:
@@ -176,7 +176,8 @@ class HomeToko extends GetView<ProductController> {
                                                           );
                                                         }
                                                       })
-                                                  : noLogoProduk(170, sisa),
+                                                  : noLogoProduk(170, sisa)
+                                                      .child!,
                                               // Stack(
                                               //   children: [
                                               //     if (listProduk['gambar']

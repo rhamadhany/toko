@@ -77,37 +77,7 @@ class SplashLogin extends GetView<SplashController> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12),
                           child: SizedBox(
-                            height: 50,
-                            child: TextFormField(
-                              obscureText: controller.passwordTersembunyi.value,
-                              keyboardType: TextInputType.visiblePassword,
-                              controller: controller.passwordController,
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: IconButton(
-                                        color: Colors.black,
-                                        onPressed: () {
-                                          controller.passwordTersembunyi.value =
-                                              !controller
-                                                  .passwordTersembunyi.value;
-                                        },
-                                        icon: Icon(
-                                            controller.passwordTersembunyi.value
-                                                ? Icons.visibility
-                                                : Icons.visibility_off)),
-                                  ),
-                                  hintText: 'Password',
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide:
-                                          BorderSide(color: Colors.white))),
-                            ),
-                          ),
+                              height: 50, child: TextFormPassword(null)),
                         ),
                         SizedBox(
                           height: 10,
@@ -134,6 +104,49 @@ class SplashLogin extends GetView<SplashController> {
                     ),
                   ),
           ));
+    });
+  }
+}
+
+class TextFormPassword extends GetView<SplashController> {
+  const TextFormPassword(this.onTap, {super.key});
+
+  final Function(String)? onTap;
+  @override
+  Widget build(BuildContext context) {
+    controller.passwordController.text = '';
+    return Obx(() {
+      return TextFormField(
+        obscureText: controller.passwordTersembunyi.value,
+        keyboardType: TextInputType.visiblePassword,
+        controller: controller.passwordController,
+        style: TextStyle(color: Colors.black),
+        onFieldSubmitted: (value) {
+          // if (onTap != null) {
+          onTap?.call(value);
+          // }
+        },
+        decoration: InputDecoration(
+            suffixIcon: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                  color: Colors.black,
+                  onPressed: () {
+                    controller.passwordTersembunyi.value =
+                        !controller.passwordTersembunyi.value;
+                  },
+                  icon: Icon(controller.passwordTersembunyi.value
+                      ? Icons.visibility
+                      : Icons.visibility_off)),
+            ),
+            hintText: 'Password',
+            hintStyle: TextStyle(color: Colors.black54),
+            fillColor: Colors.white,
+            filled: true,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.white))),
+      );
     });
   }
 }

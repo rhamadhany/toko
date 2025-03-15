@@ -50,57 +50,23 @@ class BodyLihatProduk extends GetView<ProductController> {
                                         : picPath['base64']));
                               },
                               child: picPath is String
-                                  ? FutureBuilder(
-                                      future: logoProdukOnline(
-                                          picPath, 10, 300, 2.5),
-                                      builder: (context, snapshots) {
-                                        if (snapshots.hasData &&
-                                            snapshots.data != null) {
-                                          return snapshots.data!;
-                                        } else {
-                                          return Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              noLogoProduk(300, 10),
-                                              CircularProgressIndicator(
-                                                color: Colors.blue,
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                      })
+                                  ? FutureLogoOnline(
+                                      gambar: picPath,
+                                    )
                                   : cardGambar64(10, 2.5,
                                       base64Decode(picPath['base64']), 300),
                             );
                           }),
                         if (produk['gambar'] is String)
                           InkWell(
-                            onTap: () {
-                              if (produk['gambar'] != '') {
-                                Get.to(() =>
-                                    GambarPenuh(gambar: produk['gambar']));
-                              }
-                            },
-                            child: FutureBuilder(
-                                future: logoProdukOnline(
-                                    produk['gambar'], 10, 300, 2.5),
-                                builder: (context, snapshots) {
-                                  if (snapshots.hasData &&
-                                      snapshots.data != null) {
-                                    return snapshots.data!;
-                                  } else {
-                                    return Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        noLogoProduk(300, 10),
-                                        CircularProgressIndicator(
-                                          color: Colors.blue,
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                }),
-                          ),
+                              onTap: () {
+                                if (produk['gambar'] != '') {
+                                  Get.to(() =>
+                                      GambarPenuh(gambar: produk['gambar']));
+                                }
+                              },
+                              child:
+                                  FutureLogoOnline(gambar: produk['gambar'])),
                       ],
                     ),
                   ),
@@ -241,5 +207,33 @@ class BodyLihatProduk extends GetView<ProductController> {
         color: Colors.white,
       ),
     );
+  }
+}
+
+class FutureLogoOnline extends StatelessWidget {
+  const FutureLogoOnline({
+    super.key,
+    required this.gambar,
+  });
+  final String gambar;
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: logoProdukOnline(gambar, 10, 300, 2.5),
+        builder: (context, snapshots) {
+          if (snapshots.hasData && snapshots.data != null) {
+            return snapshots.data!;
+          } else {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                noLogoProduk(300, 10),
+                CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+              ],
+            );
+          }
+        });
   }
 }

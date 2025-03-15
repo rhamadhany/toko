@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/controller/splash_controller.dart';
+import 'package:myapp/home/splash_login.dart';
 import 'package:myapp/pengaturan/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
+import 'package:http/http.dart' as http;
 
 class ManagerController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -11,8 +18,11 @@ class ManagerController extends GetxController
   // bool canPop = true;
   final skalaAnimation = 1.0.obs;
 
+  final box = GetStorage();
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
+  final hasAuthenticated = false.obs;
+  final userName = ''.obs;
   @override
   void onInit() {
     super.onInit();
@@ -75,5 +85,60 @@ class ManagerController extends GetxController
       ],
     ));
     return confirm ?? false;
+  }
+
+  Future<void> requestPassword() async {
+    hasAuthenticated.value = false;
+    userName.value = box.read('username');
+    await Future.delayed(Duration(seconds: 1));
+    Get.dialog(
+        barrierDismissible: false,
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(color: Colors.blue)),
+          content: IntrinsicHeight(
+            child: Column(
+              children: [
+                RichText(
+                    text: TextSpan(
+                        style: TextStyle(
+                            color: Get.isDarkMode ? Colors.white : Colors.black,
+                            fontSize: 16),
+                        children: [
+                      TextSpan(text: 'Harap masukkan password untuk pengguna '),
+                      TextSpan(
+                          text: userName.value,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ])),
+                // Text('Harap masukkan password untuk pengguna $username'),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormPassword(verifikasiPassword)
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Future<void> verifikasiPassword(String value) async {
+    // print(value);
+
+    final url = Uri.parse('$domain/login.php');
+    final response = await http
+        .post(url, body: {'username': userName.value, 'password': value});
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);
+      if (data['status'] == 'sukses') {
+        // Get.snackbar('Login', 'berhasil');
+        Get.back();
+        hasAuthenticated.value = true;
+        box.write('token', data['token']);
+      } else {
+        SnackHelper.snackError(content: data['message']);
+      }
+    }
   }
 }

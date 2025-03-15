@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_view.dart';
-import 'package:myapp/controller/main_controller.dart';
 
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/lihat/body_lihat_produk.dart';
