@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/keranjang/body_keranjang.dart';
@@ -71,7 +72,8 @@ mixin class KeranjangHelper {
     final hargaFinal = _productController.regexNominal(harga.toString());
     return Text(
       "Rp $hargaFinal",
-      style: const TextStyle(color: Colors.deepOrangeAccent, fontSize: 12),
+      style: const TextStyle(
+          color: Colors.deepOrangeAccent, fontSize: kIsWeb ? 24 : 12),
     );
   }
 

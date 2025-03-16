@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
+import 'package:android_id/android_id.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'http://localhost:8080';
+final domain = 'http://localhost:80';
 
 class SplashController extends GetxController {
   final box = GetStorage();
@@ -38,13 +41,17 @@ class SplashController extends GetxController {
     try {
       token.value = box.read('token') ?? '';
       username.value = box.read('username') ?? '';
+      final deviceId = box.read('deviceId') ?? '';
       final url = Uri.parse('$domain/token.php');
-      if (token.value == '' || username.value == '') {
+      if (token.value == '' || username.value == '' || deviceId == '') {
         isLoading.value = false;
         return;
       }
-      final response = await http
-          .post(url, body: {'username': username.value, 'token': token.value});
+      final response = await http.post(url, body: {
+        'username': username.value,
+        'token': token.value,
+        'device_id': deviceId
+      });
       final data = jsonDecode(response.body);
       if (data['status'] == 'sukses') {
         initAllController();
@@ -56,23 +63,29 @@ class SplashController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
+      debugPrint('error token login $e');
       isLoading.value = false;
     }
   }
 
   Future<void> loginUser() async {
+    isLoading.value = true;
+
     try {
       final url = Uri.parse('$domain/login.php');
+      final deviceId = await generateDeviceId();
       final response = await http.post(url, body: {
         'username': usernameController.text,
         'password': passwordController.text,
+        'device_id': deviceId,
       });
       final data = jsonDecode(response.body);
 
       if (data['status'] == 'sukses') {
         box.write('username', usernameController.text);
-
         box.write('token', data['token']);
+        box.write('deviceId', data['device_id']);
+
         username.value = box.read('username');
         Get.snackbar('Berhasil', data['message'],
             colorText: Colors.white,
@@ -92,6 +105,7 @@ class SplashController extends GetxController {
           backgroundColor: Colors.red,
           snackPosition: SnackPosition.BOTTOM);
     }
+    isLoading.value = false;
   }
 
   void initAllController() {
@@ -107,5 +121,24 @@ class SplashController extends GetxController {
     Get.put(TransaksiController());
 
     Get.put(ManagerController());
+  }
+
+  Future<String> generateDeviceId() async {
+    if (kIsWeb) {
+      return generateRandom();
+    } else {
+      final android = AndroidId();
+      final id = await android.getId();
+      return id ?? generateRandom();
+    }
+  }
+
+  String generateRandom() {
+    final random = Random();
+    final chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final ran = String.fromCharCodes(Iterable.generate(
+        8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+    final date = DateTime.now().millisecondsSinceEpoch.toString();
+    return ran + date;
   }
 }

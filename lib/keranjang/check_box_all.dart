@@ -18,22 +18,25 @@ class CheckBoxAll extends StatelessWidget {
                 !_keranjangController.boxAll.value;
             CheckBoxAll.selectall();
           },
-          child: Row(
-            children: [
-              Checkbox(
-                  activeColor: Colors.blue,
-                  value: _keranjangController.boxAll.value,
-                  onChanged: (value) {
-                    _keranjangController.boxAll.value = value ?? false;
-                    selectall();
-                  }),
-              const Spacer(),
-              const Text(
-                "Pilih Semua",
-                style: TextStyle(fontSize: 18),
-              ),
-              const Spacer(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Checkbox(
+                    activeColor: Colors.blue,
+                    value: _keranjangController.boxAll.value,
+                    onChanged: (value) {
+                      _keranjangController.boxAll.value = value ?? false;
+                      selectall();
+                    }),
+                const Spacer(),
+                const Text(
+                  "Pilih Semua",
+                  style: TextStyle(fontSize: 18),
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       );

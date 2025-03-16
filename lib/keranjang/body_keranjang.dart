@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
@@ -97,75 +98,44 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                                           'gambar']
                                                                       as List<
                                                                           dynamic>)
-                                                                  .map((gambar) => InkWell(
-                                                                      onTap: () {
-                                                                        Get.to(() =>
-                                                                            GambarPenuh(gambar: gambar));
-                                                                      },
-                                                                      child:
-
-                                                                          //  FutureBuilder(
-                                                                          //     future: logoProdukOnline(gambar, 10, Get.height * 0.5, 1),
-                                                                          //     builder: (context, snapshots) {
-                                                                          //       if (snapshots.hasData && snapshots.data != null) {
-                                                                          //         return snapshots.data!;
-                                                                          //       } else {
-                                                                          //         return Center(
-                                                                          //           child: CircularProgressIndicator(
-                                                                          //             color: Colors.blue,
-                                                                          //           ),
-                                                                          //         );
-                                                                          //       }
-                                                                          //     }),
-                                                                          FutureLogoOnline(
-                                                                        gambar:
-                                                                            gambar,
-                                                                        size: Get.height *
-                                                                            0.5,
-                                                                        childOnly:
-                                                                            true,
-                                                                      )))
+                                                                  .map((gambar) =>
+                                                                      InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            Get.to(() =>
+                                                                                GambarPenuh(gambar: gambar));
+                                                                          },
+                                                                          child:
+                                                                              FutureLogoOnline(
+                                                                            gambar:
+                                                                                gambar,
+                                                                            size:
+                                                                                Get.height * 0.5,
+                                                                            childOnly:
+                                                                                true,
+                                                                          )))
                                                                   .toList(),
                                                             ),
                                                           ),
                                                         ));
                                                       }
                                                     },
-                                                    child:
-
-                                                        // FutureBuilder(
-                                                        //     future: logoProdukOnline(
-                                                        //         gambarThumb!,
-                                                        //         10,
-                                                        //         Get.height * 0.1,
-                                                        //         2.5),
-                                                        //     builder:
-                                                        //         (context, snapshots) {
-                                                        //       if (snapshots.hasData &&
-                                                        //           snapshots.data !=
-                                                        //               null) {
-                                                        //         return snapshots
-                                                        //             .data!;
-                                                        //       } else {
-                                                        //         return Center(
-                                                        //           child:
-                                                        //               CircularProgressIndicator(
-                                                        //             color:
-                                                        //                 Colors.blue,
-                                                        //           ),
-                                                        //         );
-                                                        //       }
-                                                        //     }),
-                                                        FutureLogoOnline(
+                                                    child: FutureLogoOnline(
                                                       gambar: gambarThumb!,
-                                                      size: Get.height * 0.1,
+                                                      size: kIsWeb
+                                                          ? Get.height * 0.2
+                                                          : Get.height * 0.1,
                                                       childOnly: true,
                                                     ))
                                                 : noLogoProduk(
-                                                        Get.height * 0.1, 10)
+                                                        kIsWeb
+                                                            ? Get.height * 0.2
+                                                            : Get.height * 0.1,
+                                                        10)
                                                     .child,
                                           ),
                                         ),
+                                        if (kIsWeb) Spacer(),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(left: 8.0),
@@ -182,7 +152,8 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                   produkKeranjang['produk'],
                                                   maxLines: 1,
                                                   style: const TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize:
+                                                          kIsWeb ? 30 : 16,
                                                       overflow: TextOverflow
                                                           .ellipsis),
                                                 ),
@@ -206,7 +177,9 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                       Text(
                                                         'Sisa: ${sisa(produkKeranjang['kode_produk'])}',
                                                         style: TextStyle(
-                                                            fontSize: 12),
+                                                            fontSize: kIsWeb
+                                                                ? 18
+                                                                : 12),
                                                       ),
                                                       hargaBarang(
                                                           produkKeranjang[
