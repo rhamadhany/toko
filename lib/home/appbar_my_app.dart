@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/splash_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
+import 'package:myapp/manager/manager_toko.dart';
 
 class AppBarMyApp extends StatelessWidget {
   AppBarMyApp({super.key, required this.isManager});
@@ -13,14 +15,25 @@ class AppBarMyApp extends StatelessWidget {
   final bool isManager;
   @override
   Widget build(BuildContext context) {
+    final name = Get.find<SplashController>().username.value.toUpperCase();
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          "PRODUK",
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-        ),
+        // final name = Get.find<SplashController>().username.value;
+        TextButton(
+            onPressed: () {
+              Get.to(() => ManagerToko());
+            },
+            child: Text(
+              name,
+              style: TextStyle(color: Colors.white),
+            )),
+        // Text(
+        //   "PRODUK",
+        //   style: const TextStyle(
+        //       fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+        // ),
         const Spacer(),
         dynamicIconAppBar(_productController, isManager),
       ],

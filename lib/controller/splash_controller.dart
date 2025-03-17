@@ -17,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'http://localhost:80';
+final domain = 'https://sktytila-mritoxji.srv.webrelay.dev';
 
 class SplashController extends GetxController {
   final box = GetStorage();
