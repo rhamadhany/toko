@@ -26,7 +26,7 @@ class ManagerController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabListener();
   }
 
@@ -125,12 +125,17 @@ class ManagerController extends GetxController
   Future<void> verifikasiPassword(String value) async {
     // print(value);
 
+    final deviceId = Get.find<SplashController>().deviceId.value == ''
+        ? await Get.find<SplashController>().generateDeviceId()
+        : Get.find<SplashController>().deviceId.value;
     final url = Uri.parse('$domain/login.php');
-    final response = await http
-        .post(url, body: {'username': userName.value, 'password': value});
+    final response = await http.post(url, body: {
+      'username': userName.value,
+      'password': value,
+      'device_id': deviceId
+    });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       if (data['status'] == 'sukses') {
         // Get.snackbar('Login', 'berhasil');
         Get.back();

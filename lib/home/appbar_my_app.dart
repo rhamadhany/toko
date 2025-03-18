@@ -21,14 +21,27 @@ class AppBarMyApp extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // final name = Get.find<SplashController>().username.value;
-        TextButton(
-            onPressed: () {
-              Get.to(() => ManagerToko());
-            },
-            child: Text(
-              name,
-              style: TextStyle(color: Colors.white),
-            )),
+        // TextButton(
+        //     onPressed: () {
+        //       Get.to(() => ManagerToko());
+        //     },
+        //     child: Text(
+        //       name,
+        //       style: TextStyle(color: Colors.white),
+        //     )),
+        TextButton.icon(
+          onPressed: () {
+            Get.to(() => ManagerToko());
+          },
+          icon: Icon(
+            Icons.admin_panel_settings,
+            color: Colors.white,
+          ),
+          label: Text(
+            Get.find<SplashController>().username.value.toUpperCase(),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
         // Text(
         //   "PRODUK",
         //   style: const TextStyle(

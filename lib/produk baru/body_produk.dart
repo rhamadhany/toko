@@ -171,8 +171,12 @@ class BodyProduk extends StatelessWidget {
 
   Future<void> pickImages() async {
     Get.dialog(AlertDialog(
+        alignment: Alignment.bottomCenter,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.blue)),
         content: TambahGambar(
-      listPictures: listPictures,
-    )));
+          listPictures: listPictures,
+        )));
   }
 }

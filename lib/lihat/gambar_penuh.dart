@@ -30,34 +30,52 @@ class GambarPenuh extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: fetchGambar(),
-          builder: (context, status) {
-            if (status.hasData && status.data != null) {
-              return InteractiveViewer(
-                clipBehavior: Clip.none,
-                minScale: 1,
-                maxScale: 5,
-                child: SizedBox(
-                  height: Get.height,
-                  width: Get.width,
-                  child: Center(
-                    child: Image.memory(status.data!, fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                      return const Center(
-                          child: Text('Gambar tidak ditemukan'));
-                    }),
-                  ),
-                ),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-              );
-            }
+        body:
+
+            // FutureBuilder(
+            //     future: fetchGambar(),
+            //     builder: (context, status) {
+            //       if (status.hasData && status.data != null) {
+            //         return InteractiveViewer(
+            //           clipBehavior: Clip.none,
+            //           minScale: 1,
+            //           maxScale: 5,
+            //           child: SizedBox(
+            //             height: Get.height,
+            //             width: Get.width,
+            //             child: Center(
+            //               child:
+            //                   Image.memory(base64Decode(gambar), fit: BoxFit.contain,
+            //                       errorBuilder: (context, error, stackTrace) {
+            //                 return const Center(
+            //                     child: Text('Gambar tidak ditemukan'));
+            //               }),
+            //             ),
+            //           ),
+            //         );
+            //       } else {
+            //         return Center(
+            //           child: CircularProgressIndicator(
+            //             color: Colors.blue,
+            //           ),
+            //         );
+            //       }
+            //     }),
+
+            InteractiveViewer(
+      clipBehavior: Clip.none,
+      minScale: 1,
+      maxScale: 5,
+      child: SizedBox(
+        height: Get.height,
+        width: Get.width,
+        child: Center(
+          child: Image.memory(base64Decode(gambar), fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('Gambar tidak ditemukan'));
           }),
-    );
+        ),
+      ),
+    ));
   }
 }

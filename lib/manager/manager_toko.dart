@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/manager/app_bar_manager.dart';
@@ -33,7 +35,7 @@ class ManagerToko extends GetView<ManagerController> {
         canPop: false,
         onPopInvokedWithResult: invokePopScope,
         child: Scaffold(
-          // drawer: Settings(),
+          drawer: DrawerAdmin(),
           appBar: AppBar(
               automaticallyImplyLeading: true,
               backgroundColor: Colors.blue,
@@ -53,7 +55,6 @@ class ManagerToko extends GetView<ManagerController> {
                     isManager: true,
                   ),
                   LaporanPenjualan(),
-                  Settings()
                 ]),
           bottomNavigationBar: _laporanController.showBarLaporan.value
               ? Container(
@@ -71,10 +72,10 @@ class ManagerToko extends GetView<ManagerController> {
                           icon: Icon(Icons.bar_chart),
                           text: "Laporan",
                         ),
-                        Tab(
-                          icon: Icon(Icons.admin_panel_settings),
-                          text: "Pengaturan",
-                        )
+                        // Tab(
+                        //   icon: Icon(Icons.admin_panel_settings),
+                        //   text: "Pengaturan",
+                        // )
                       ],
                       controller: controller.tabController),
                 )
@@ -182,5 +183,51 @@ class ManagerToko extends GetView<ManagerController> {
       _biometrikController.hasAuthenticated.value = false;
       Get.back();
     }
+  }
+}
+
+class DrawerAdmin extends StatelessWidget {
+  const DrawerAdmin({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Get.width * 0.75,
+      decoration: BoxDecoration(color: Colors.blue),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+              decoration:
+                  BoxDecoration(color: Colors.purple, shape: BoxShape.circle),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.person,
+                  size: Get.width * 0.15,
+                ),
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            Get.find<SplashController>().username.value.toUpperCase(),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: Get.width * 0.03,
+                color: Colors.white),
+          ),
+          Settings()
+        ],
+      ),
+    );
+  }
+
+  Future<void> profilePicker() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
   }
 }

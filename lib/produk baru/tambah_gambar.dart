@@ -13,9 +13,7 @@ class TambahGambar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: Get.width * 0.5,
-      height: Get.height * 0.25,
+    return IntrinsicHeight(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

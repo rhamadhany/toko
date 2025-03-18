@@ -22,6 +22,7 @@ class DBHelper with SnackHelper {
         final result = List<Map<String, dynamic>>.from(data);
 
         final processedResult = result.map((row) {
+          // print(row);
           final newRow = Map<String, dynamic>.from(row);
           try {
             newRow['gambar'] = jsonDecode(row['gambar']);
@@ -100,7 +101,7 @@ class DBHelper with SnackHelper {
     final tanggal = DateTime.now().toString();
 
     final mapProduk = {...produk, 'tanggal': tanggal};
-
+    print(mapProduk['gambar']);
     if (isEditing) {
       final url = Uri.parse('$domain/produk/update_perubahan.php');
       final newMap = jsonEncode({

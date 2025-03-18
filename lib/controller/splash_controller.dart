@@ -17,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'https://sktytila-mritoxji.srv.webrelay.dev';
+final domain = 'http://localhost:8000';
 
 class SplashController extends GetxController {
   final box = GetStorage();
@@ -27,6 +27,7 @@ class SplashController extends GetxController {
 
   final token = ''.obs;
   final username = ''.obs;
+  final deviceId = ''.obs;
 
   final isConnected = false.obs;
   final isLoading = true.obs;
@@ -41,16 +42,16 @@ class SplashController extends GetxController {
     try {
       token.value = box.read('token') ?? '';
       username.value = box.read('username') ?? '';
-      final deviceId = box.read('deviceId') ?? '';
+      deviceId.value = box.read('deviceId') ?? '';
       final url = Uri.parse('$domain/token.php');
-      if (token.value == '' || username.value == '' || deviceId == '') {
+      if (token.value == '' || username.value == '' || deviceId.value == '') {
         isLoading.value = false;
         return;
       }
       final response = await http.post(url, body: {
         'username': username.value,
         'token': token.value,
-        'device_id': deviceId
+        'device_id': deviceId.value
       });
       final data = jsonDecode(response.body);
       if (data['status'] == 'sukses') {
