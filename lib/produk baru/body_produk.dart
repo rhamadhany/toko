@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,13 +10,19 @@ import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/produk%20baru/edit_deskripsi.dart';
 import 'package:myapp/produk%20baru/kategori_produk.dart';
 import 'package:myapp/produk%20baru/tambah_gambar.dart';
+import 'package:http/http.dart' as http;
 
 class BodyProduk extends StatelessWidget {
-  BodyProduk({required this.produkEdit, required this.listPictures, super.key});
+  BodyProduk({
+    required this.produkEdit,
+    required this.listPictures,
+    super.key,
+  });
 
   final ProductController _productController = Get.find();
   final RxMap<String, dynamic> produkEdit;
   final RxList listPictures;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -29,14 +38,14 @@ class BodyProduk extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ...listPictures.map((imageFile) {
+                  ...listPictures.map((gambar) {
                     return Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Stack(
                         children: [
-                          // produkEdit.isNotEmpty ?
                           FutureBuilder(
-                              future: logoProdukOnline(imageFile, 10, 120, 2),
+                              future: logoProdukOnline(
+                                  gambar['base64'], 10, 120, 2),
                               builder: (context, snapshots) {
                                 if (snapshots.hasData &&
                                     snapshots.data != null) {
@@ -53,7 +62,6 @@ class BodyProduk extends StatelessWidget {
                                   );
                                 }
                               }),
-                          // logoProduk(imageFile, 10, 120, 2),
                           Positioned(
                               right: -22,
                               top: -10,
@@ -64,7 +72,7 @@ class BodyProduk extends StatelessWidget {
                                     minimumSize: const Size(20, 20),
                                   ),
                                   onPressed: () {
-                                    listPictures.remove(imageFile);
+                                    listPictures.remove(gambar);
                                   },
                                   child: const Icon(
                                     Icons.clear,
@@ -170,13 +178,35 @@ class BodyProduk extends StatelessWidget {
   }
 
   Future<void> pickImages() async {
+    Future<void> resultTap(String image) async {
+      try {
+        if (image.startsWith('blob:')) {
+          final response = await http.get(Uri.parse(image));
+          if (response.statusCode == 200) {
+            final bytes = response.bodyBytes;
+
+            final base64 = base64Encode(bytes);
+            listPictures.add({"base64": base64, 'name': image});
+          }
+        } else {
+          final bytes = await File(image).readAsBytes();
+
+          final base64 = base64Encode(bytes);
+          listPictures.add({'base64': base64, 'name': image});
+        }
+      } catch (e, stackTrace) {
+        debugPrint('error $e, $stackTrace');
+      }
+    }
+
     Get.dialog(AlertDialog(
         alignment: Alignment.bottomCenter,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
             side: BorderSide(color: Colors.blue)),
         content: TambahGambar(
-          listPictures: listPictures,
+          singleImage: false,
+          resultTap: resultTap,
         )));
   }
 }

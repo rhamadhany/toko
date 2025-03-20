@@ -6,15 +6,18 @@ import 'package:myapp/produk%20baru/save_produk.dart';
 
 class NewProduct extends StatelessWidget {
   final ProductController _productController = Get.find();
-  NewProduct(
-      {super.key,
-      RxList<dynamic>? listPictures,
-      RxMap<String, dynamic>? produkEdit,
-      this.refreshGambar})
-      : listPictures = listPictures ?? <dynamic>[].obs,
+  NewProduct({
+    super.key,
+    RxList<dynamic>? listPictures,
+    RxMap<String, dynamic>? produkEdit,
+    this.refreshGambar,
+    // RxList<dynamic>? listPathPictures
+  })  : listPictures = listPictures ?? <dynamic>[].obs,
+        // listPathPictures = listPathPictures ?? <dynamic>[].obs,
         produkEdit = produkEdit ?? <String, dynamic>{}.obs;
 
   final RxList<dynamic> listPictures;
+  // final RxList<dynamic> listPathPictures;
   final RxMap<String, dynamic> produkEdit;
   final Function? refreshGambar;
 
@@ -41,7 +44,11 @@ class NewProduct extends StatelessWidget {
             ],
           ),
         ),
-        body: BodyProduk(produkEdit: produkEdit, listPictures: listPictures),
+        body: BodyProduk(
+          produkEdit: produkEdit,
+          listPictures: listPictures,
+          // listPathPictures: listPathPictures,
+        ),
       );
     });
   }

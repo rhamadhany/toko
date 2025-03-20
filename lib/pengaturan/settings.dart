@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:myapp/controller/splash_controller.dart';
-import 'package:myapp/home/splash_login.dart';
 import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/printing_qr.dart';
 
@@ -11,7 +9,6 @@ class Settings extends StatelessWidget {
   const Settings({super.key});
   static final autentikasiAktif = false.obs;
   static final BiometrikController _biometrikController = Get.find();
-  static final SplashController _splashController = Get.find();
   static final storage = GetStorage();
   @override
   Widget build(BuildContext context) {
@@ -29,25 +26,6 @@ class Settings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // containerChild(
-                //   ListTile(
-                //     onTap: () {
-                //       Get.to(() => ManagerToko(),
-                //           transition: Transition.zoom,
-                //           duration: Duration(milliseconds: 500));
-                //     },
-                //     leading: Icon(
-                //       Icons.warehouse,
-                //       color: Colors.black,
-                //     ),
-                //     title: Text(
-                //       'Manager',
-                //       style: TextStyle(
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 containerChild(
                   ListTile(
                     onTap: () async {
@@ -75,8 +53,9 @@ class Settings extends StatelessWidget {
                           },
                         )),
                     title: Text(
-                      'Autentikasi',
+                      'Biometrik',
                       style: TextStyle(
+                        fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
@@ -91,61 +70,13 @@ class Settings extends StatelessWidget {
                     color: Colors.black,
                   ),
                   title: Text(
-                    'Simpan QRCode',
+                    'QRCode',
                     style: TextStyle(
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
                   ),
                 )),
-                containerChild(
-                  InkWell(
-                    onTap: () {
-                      Get.dialog(
-                        AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.blue)),
-                          title: Text(
-                            'Konfirmasi',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          alignment: Alignment.center,
-                          content: Text(
-                              'Keluar dari akun ${_splashController.username.value}?'),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  Get.back();
-                                },
-                                child: Text('Batal')),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Get.back();
-                                  _splashController.box.remove('token');
-                                  _splashController.box.remove('username');
-                                  Get.offAll(SplashLogin());
-                                },
-                                child: Text('Keluar')),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: Get.width * 0.3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Keluar",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: const Color.fromARGB(255, 255, 29, 13)),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           ),

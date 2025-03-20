@@ -141,24 +141,27 @@ class LihatProduk extends GetView<ProductController> {
         controller.isNeedRefreshProduk.value = false;
       }
     }
-    // print(produk['gambar']);
+    // final gambar = produk['gambar'] is List<dynamic>
+    //     ? (produk['gambar'] as List<dynamic>)
+    //         .cast<String>()
+    //         .map((e) => e.trim())
+    //         .toList()
+    //         .obs
+    //     : produk['gambar'] == ''
+    //         ? [].obs
+    //         : [produk['gambar']].obs;
 
-    // print(produk['gambar']);
-
-    final gambar = produk['gambar'] is List<dynamic>
-        ? (produk['gambar'] as List<dynamic>)
-            .cast<String>()
-            .map((e) => e.trim())
-            .toList()
-            .obs
-        : produk['gambar'] == ''
-            ? [].obs
-            : [produk['gambar']].obs;
-
+    // final gambar = List.from(produk['gambar']).obs;
+    // final gambarPath = List.from(produk['gambarPath']).obs;
     controller.kategoriAdd.value = produk['kategori'];
+    final listPictures =
+        produk.isNotEmpty ? List.from(produk['gambar'] ?? []).obs : [].obs;
+    // final listPathPictures =
+    //     produk.isNotEmpty ? List.from(produk['gambarPath'] ?? []).obs : [].obs;
 
     Get.to(() => NewProduct(
-          listPictures: gambar,
+          listPictures: listPictures,
+          // listPathPictures: listPathPictures,
           produkEdit: produk,
           refreshGambar: refreshgambar,
         ));

@@ -14,15 +14,11 @@ class HalamanKeranjang extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _keranjangController.initValueBox();
-    // initValueBox();
-    // return Obx(() {
+
     return PopScope(
       onPopInvokedWithResult: (_, __) {
         _keranjangController.valueBox.value = List.generate(
             _keranjangController.valueBox.length, (index) => false);
-
-        // _keranjangController.jumlahControllers.clear();
-        // _keranjangController.hargaJual.clear();
       },
       child: Scaffold(
           appBar: AppBar(
@@ -34,7 +30,6 @@ class HalamanKeranjang extends StatelessWidget {
           body: BodyKeranjang(),
           bottomNavigationBar: const BottomBar()),
     );
-    // });
   }
 
   static bool haveValueBox() {
@@ -53,11 +48,8 @@ mixin class KeranjangHelper {
 
     if (indexKey != -1) {
       final gambar = _productController.allProduct[indexKey]['gambar'];
-      if (gambar is List && gambar.isNotEmpty) {
-        return gambar[0];
-      } else {
-        return '';
-      }
+
+      return gambar[0]['base64'];
     } else {
       return '';
     }

@@ -45,68 +45,109 @@ class IconSave extends StatelessWidget {
           final kategori = _productController.kategoriAdd.value;
           final deskripsi =
               _productController.listTextField[5]['controller'].text;
-          List<Map<String, dynamic>> listGambar = [];
+          final listGambar = [];
+
+          final listOld = produkEdit.isNotEmpty
+              ? List.from(produkEdit['gambar'] ?? [])
+              : [];
+          await deleteOldImageServer(listPictures, listOld);
           if (listPictures.isNotEmpty) {
-            for (var (gambar as String) in listPictures) {
-              Uint8List? bytes;
-              String ext = '.jpeg';
+            for (var item in listPictures) {
+              final gambar = item['name'];
+              final ada = listOld.any((a) {
+                return a['name'] == gambar;
+              });
+              // final listdelete = listOld.where((a) => a['name'] != gambar);
 
-              if (gambar.startsWith('/data')) {
-                bytes = await File(gambar).readAsBytes();
-                ext = gambar.split('.').last;
-              } else if (gambar.startsWith('blob')) {
-                final response = await http.get(Uri.parse(gambar));
-                bytes = response.bodyBytes;
-
-                final String mimeType =
-                    lookupMimeType('blob', headerBytes: bytes) ?? 'image/jpeg';
-
-                ext = mimeType.split('/').last;
-              } else {
-                final url = Uri.parse('$domain/produk/load_gambar.php');
-                final response =
-                    (await http.post(url, body: {'gambar': gambar}));
-                if (response.statusCode == 200) {
-                  final base64 = jsonDecode(response.body);
-                  bytes = base64Decode(base64);
+              // for (var d in listdelete) {
+              //   print(d['name']);
+              // }
+              if (!ada) {
+                Uint8List? bytes;
+                String? extGambar;
+                if (gambar.startsWith('blob:')) {
+                  final response = await http.get(Uri.parse(gambar));
+                  if (response.statusCode == 200) {
+                    bytes = response.bodyBytes;
+                    extGambar = (lookupMimeType('blob', headerBytes: bytes) ??
+                            'image/jpeg')
+                        .split('/')
+                        .last;
+                  }
+                } else {
+                  bytes = await File(gambar).readAsBytes();
+                  extGambar = gambar.split('.').last;
                 }
-                ext = gambar.split('.').last;
+                final random =
+                    '${DateTime.now().millisecondsSinceEpoch}_${Uuid().v4()}';
+                final nama = '$random.${extGambar ?? 'jpeg'}';
+
+                final url = Uri.parse('$domain/produk/upload_gambar.php');
+                final response = await http.post(url, body: {
+                  'gambar': base64Encode(bytes!),
+                  'nama': nama,
+                });
+                if (response.statusCode == 200) {
+                  final encode = jsonDecode(response.body);
+                  if (encode['status'] == 'sukses') {
+                    listGambar.add(encode['gambar']);
+                  }
+                }
+              } else {
+                listGambar.add(gambar);
               }
-              final base64 = base64Encode(bytes!);
-              final random =
-                  '${DateTime.now().millisecondsSinceEpoch}_${Uuid().v4()}';
-              final name = '$random.$ext';
-              // print('name $name');
-              listGambar.add({'nama': name, 'base64': base64});
             }
           }
 
-          // print(listGambar);
-          if (produkEdit.isNotEmpty) {
-            produkEdit['gambar'] = listGambar;
-            produkEdit['produk'] = product;
-            produkEdit['harga_beli'] = hargaBeli;
-            produkEdit['harga_jual'] = hargaJual;
-            produkEdit['terjual'] = terjual;
-            produkEdit['stok'] = stock;
-            produkEdit['kategori'] = kategori;
-            produkEdit['deskripsi'] = deskripsi;
+          final encodeListGambar = jsonEncode(listGambar);
 
-            await DBHelper.updateProduct(produkEdit, true);
+          if (produkEdit.isNotEmpty) {
+            final newProduk = produkEdit;
+
+            newProduk['gambar'] = encodeListGambar;
+
+            newProduk['produk'] = product;
+            newProduk['harga_beli'] = hargaBeli;
+            newProduk['harga_jual'] = hargaJual;
+            newProduk['terjual'] = terjual;
+            newProduk['stok'] = stock;
+            newProduk['kategori'] = kategori;
+            newProduk['deskripsi'] = deskripsi;
+
+            await DBHelper.updateProduct(newProduk, true);
           } else {
             await DBHelper.addProduct(product, hargaBeli, hargaJual, terjual,
-                stock, listGambar, kategori, deskripsi);
+                stock, encodeListGambar, kategori, deskripsi);
           }
           _productController.isNeedRefreshProduk.value = true;
           if (refreshGambar != null) {
             refreshGambar!();
           }
           Get.back();
-        } catch (e) {
+        } catch (e, straceStack) {
+          debugPrint('error $e $straceStack');
           SnackHelper.snackError(content: 'Error inisiasi produk');
         }
       },
       icon: const Icon(Icons.check),
     );
+  }
+
+  Future<void> deleteOldImageServer(List listPictures, List listOld) async {
+    try {
+      if (listOld.isNotEmpty) {
+        final delete = listOld
+            .where((a) {
+              return !listPictures.any((b) => b['name'] == a['name']);
+            })
+            .map((c) => c['name'])
+            .toList();
+        final encodeDelete = jsonEncode(delete);
+        await http.post(Uri.parse('$domain/produk/hapus_gambar.php'),
+            body: {'gambar': encodeDelete});
+      }
+    } catch (e) {
+      debugPrint('Error delete image in server $e');
+    }
   }
 }

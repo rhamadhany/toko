@@ -46,7 +46,7 @@ class DBHelper with SnackHelper {
       String hargaJual,
       int terjual,
       int stock,
-      List<Map<String, dynamic>> listGambar,
+      String listGambar,
       String kategori,
       String deskripsi) async {
     try {
@@ -76,6 +76,7 @@ class DBHelper with SnackHelper {
         'deskripsi': deskripsi,
       };
 
+      // print(mapProduk);
       final uri = Uri.parse('$domain/produk/tambah.php');
 
       final decodeMap = jsonEncode([mapProduk]);
@@ -101,7 +102,7 @@ class DBHelper with SnackHelper {
     final tanggal = DateTime.now().toString();
 
     final mapProduk = {...produk, 'tanggal': tanggal};
-    print(mapProduk['gambar']);
+    // print(mapProduk['gambar']);
     if (isEditing) {
       final url = Uri.parse('$domain/produk/update_perubahan.php');
       final newMap = jsonEncode({

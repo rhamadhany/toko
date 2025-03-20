@@ -20,7 +20,8 @@ class BodyLihatProduk extends GetView<ProductController> {
   final bool isManager;
   @override
   Widget build(BuildContext context) {
-    // return Container();
+    // print(produk);
+
     return SizedBox(
       height: Get.height,
       child: Stack(
@@ -41,38 +42,22 @@ class BodyLihatProduk extends GetView<ProductController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (produk['gambar'] is List<dynamic>)
-                          ...(produk['gambar'] as List<dynamic>).map((picPath) {
-                            return InkWell(
-                              onTap: () {
-                                Get.to(() => GambarPenuh(
-                                    gambar: picPath is String
-                                        ? picPath
-                                        : picPath['base64']));
-                              },
-                              child: picPath is String
-                                  ? FutureLogoOnline(
-                                      size: 300,
-                                      gambar: picPath,
-                                      childOnly: false,
-                                    )
-                                  : cardGambar64(10, 2.5,
-                                      base64Decode(picPath['base64']), 300),
-                            );
-                          }),
-                        if (produk['gambar'] is String)
-                          InkWell(
-                              onTap: () {
-                                if (produk['gambar'] != '') {
-                                  Get.to(() =>
-                                      GambarPenuh(gambar: produk['gambar']));
-                                }
-                              },
-                              child: FutureLogoOnline(
-                                gambar: produk['gambar'],
-                                size: 300,
-                                childOnly: false,
-                              )),
+                        ...produk['gambar'].map((picPath) {
+                          return InkWell(
+                            onTap: () {
+                              Get.to(
+                                  () => GambarPenuh(gambar: picPath['base64']));
+                            },
+                            child: picPath is String
+                                ? FutureLogoOnline(
+                                    size: 300,
+                                    gambar: picPath,
+                                    childOnly: false,
+                                  )
+                                : cardGambar64(10, 2.5,
+                                    base64Decode(picPath['base64']), 300),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -113,7 +98,6 @@ class BodyLihatProduk extends GetView<ProductController> {
                     ),
                   ),
                   if (produk['deskripsi'] != null && produk['deskripsi'] != '')
-                    // deskripsiView(),
                     ViewDeskripsi(
                       produk: produk,
                     )

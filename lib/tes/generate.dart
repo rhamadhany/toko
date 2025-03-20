@@ -67,7 +67,7 @@ class GenerateItem extends StatelessWidget {
           0,
           stokRandom,
           // RxList<dynamic>.empty(),
-          [],
+          '',
           'Semua',
           '');
       // await Future.delayed(Duration(seconds: 1));

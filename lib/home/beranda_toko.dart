@@ -94,7 +94,7 @@ class HomeToko extends GetView<ProductController> {
                             itemBuilder: (context, indexProduct) {
                               final listProduk =
                                   controller.filterProduct[indexProduct].obs;
-
+                              final gambar = listProduk['gambar'][0]['base64'];
                               final terjual = listProduk['terjual'];
                               final stok = listProduk['stok'];
                               final sisa = stok - terjual;
@@ -150,12 +150,10 @@ class HomeToko extends GetView<ProductController> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: listProduk['gambar']
-                                                      .isNotEmpty
+                                              child: gambar.isNotEmpty
                                                   ? FutureBuilder(
                                                       future: logoProdukOnline(
-                                                          listProduk['gambar']
-                                                              [0],
+                                                          gambar,
                                                           sisa,
                                                           200,
                                                           2.5),

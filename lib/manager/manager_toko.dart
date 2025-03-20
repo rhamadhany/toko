@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/manager/app_bar_manager.dart';
+import 'package:myapp/manager/drawer_admin.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
@@ -35,12 +34,18 @@ class ManagerToko extends GetView<ManagerController> {
         canPop: false,
         onPopInvokedWithResult: invokePopScope,
         child: Scaffold(
-          drawer: DrawerAdmin(),
-          appBar: AppBar(
-              automaticallyImplyLeading: true,
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              title: AppBarManager()),
+          drawer: controller.tabIndex.value == 0 ? DrawerAdmin() : null,
+          appBar: (!_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value) ||
+                  (!Settings.autentikasiAktif.value &&
+                      !controller.hasAuthenticated.value)
+              ? null
+              : AppBar(
+                  automaticallyImplyLeading:
+                      controller.tabIndex.value == 0 ? true : false,
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  title: AppBarManager()),
           body: (!_biometrikController.hasAuthenticated.value &&
                       Settings.autentikasiAktif.value) ||
                   (!Settings.autentikasiAktif.value &&
@@ -56,8 +61,12 @@ class ManagerToko extends GetView<ManagerController> {
                   ),
                   LaporanPenjualan(),
                 ]),
-          bottomNavigationBar: _laporanController.showBarLaporan.value
-              ? Container(
+          bottomNavigationBar: (!_biometrikController.hasAuthenticated.value &&
+                      Settings.autentikasiAktif.value) ||
+                  (!Settings.autentikasiAktif.value &&
+                      !controller.hasAuthenticated.value)
+              ? null
+              : Container(
                   color: Colors.blue,
                   child: TabBar(
                       labelColor: Colors.white,
@@ -78,8 +87,7 @@ class ManagerToko extends GetView<ManagerController> {
                         // )
                       ],
                       controller: controller.tabController),
-                )
-              : null,
+                ),
           floatingActionButton: (!_biometrikController.hasAuthenticated.value &&
                       Settings.autentikasiAktif.value) ||
                   controller.tabIndex.value != 0
@@ -183,51 +191,5 @@ class ManagerToko extends GetView<ManagerController> {
       _biometrikController.hasAuthenticated.value = false;
       Get.back();
     }
-  }
-}
-
-class DrawerAdmin extends StatelessWidget {
-  const DrawerAdmin({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Get.width * 0.75,
-      decoration: BoxDecoration(color: Colors.blue),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-              decoration:
-                  BoxDecoration(color: Colors.purple, shape: BoxShape.circle),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.person,
-                  size: Get.width * 0.15,
-                ),
-              )),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            Get.find<SplashController>().username.value.toUpperCase(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: Get.width * 0.03,
-                color: Colors.white),
-          ),
-          Settings()
-        ],
-      ),
-    );
-  }
-
-  Future<void> profilePicker() async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
   }
 }

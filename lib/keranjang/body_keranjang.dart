@@ -79,6 +79,14 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                                   'kode_produk']);
                                                       if (indexGambar != -1) {
                                                         Get.dialog(AlertDialog(
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              side: BorderSide(
+                                                                  color: Colors
+                                                                      .blue)),
                                                           title: Text(
                                                             produkKeranjang[
                                                                 'produk'],
@@ -108,9 +116,9 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                                           child:
                                                                               FutureLogoOnline(
                                                                             gambar:
-                                                                                gambar,
+                                                                                gambar['base64'],
                                                                             size:
-                                                                                Get.height * 0.5,
+                                                                                Get.height * 0.25,
                                                                             childOnly:
                                                                                 true,
                                                                           )))

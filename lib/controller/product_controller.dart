@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/db_helper.dart';
-
+import 'package:myapp/controller/splash_controller.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:http/http.dart' as http;
 
 class ProductController extends GetxController {
   Rx<Database?> database = Rx<Database?>(null);
@@ -125,16 +128,69 @@ class ProductController extends GetxController {
     update();
   }
 
-  void saveDaftarKategori() async {
-    storage.write('kategori', daftarKategori);
+  // void saveDaftarKategori() async {
+  //   storage.write('kategori', daftarKategori);
+  // }
+
+  Future<void> saveKategori(String value, Function clearController) async {
+    if (daftarKategori.any((kategori) => kategori['kategori'] == value)) {
+      Get.snackbar('Error', 'Kategori sudah ada',
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      // daftarKategori.add({
+      //   'kategori': value,
+      //   'icon': iconsTerpilih.value,
+      // });
+      // print(iconsTerpilih.value);
+      final url = Uri.parse('$domain/kategori/add.php');
+      final response = await http.post(url, body: {
+        'kategori': value,
+        'icon': iconsTerpilih.value.toString(),
+      });
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+        final decode = jsonDecode(data);
+        if (decode['status'] == 'sukses') {
+          Get.snackbar('Berhasil', decode['message'],
+              colorText: Colors.white,
+              backgroundColor: Colors.green,
+              snackPosition: SnackPosition.BOTTOM);
+        }
+      }
+
+      clearController.call();
+      loadDaftarKategori();
+    }
   }
 
-  void loadDaftarKategori() {
-    daftarKategori.value =
-        List<Map<String, dynamic>>.from(storage.read('kategori') ??
-            [
-              {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint}
-            ]);
+  Future<void> deleteKategori(String kategori) async {
+    final url = Uri.parse('$domain/kategori/delete.php');
+    await http.post(url, body: {
+      'kategori': kategori,
+    });
+    loadDaftarKategori();
+    // if ()
+  }
+
+  Future<void> loadDaftarKategori() async {
+    final url = Uri.parse('$domain/kategori/load.php');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      // print(decode);
+      daftarKategori.value = List<Map<String, dynamic>>.from([
+        {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint},
+        ...decode
+      ]);
+    }
+    // daftarKategori.value =
+    //     List<Map<String, dynamic>>.from(storage.read('kategori') ??
+    //         [
+    //           {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint}
+    //         ]);
   }
 
   void filteringProduk() {
