@@ -28,7 +28,7 @@ class HalamanKeranjang extends StatelessWidget {
                 isManager: isManager,
               )),
           body: BodyKeranjang(),
-          bottomNavigationBar: const BottomBar()),
+          bottomNavigationBar: BottomBar()),
     );
   }
 

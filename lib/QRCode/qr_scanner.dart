@@ -173,14 +173,15 @@ class QRScanner extends StatelessWidget {
         final produk = _productController.allProduct[indexKey];
         final sisa = produk['stok'] - produk['terjual'];
         if (dariKeranjang) {
+          final gDiskon = _keranjangController.getDiskon(produk['kode_produk']);
           await _keranjangController.langsungtambahkeKeranjang(
-              sisa, produk.obs);
+              sisa, produk.obs, gDiskon['diskon'], gDiskon['min_produk']);
         } else {
           Get.back(closeOverlays: true);
 
           Get.to(() => LihatProduk(
                 isManager: isManager,
-                produk: produk.obs,
+                loadProduk: produk.obs,
               ));
         }
       } else {

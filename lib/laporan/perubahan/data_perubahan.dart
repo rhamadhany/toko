@@ -89,7 +89,7 @@ class DataPerubahan extends StatelessWidget {
                                         p['kode_produk'] == data.value['ID'])
                                     .first;
                                 Get.to(() => LihatProduk(
-                                      produk: produk.obs,
+                                      loadProduk: produk.obs,
                                       isManager: true,
                                     ));
                               } else {

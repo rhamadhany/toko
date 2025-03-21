@@ -113,7 +113,7 @@ class PenjualanData extends StatelessWidget {
                                           p['kode_produk'] == data.value['ID'])
                                       .first;
                                   Get.to(() => LihatProduk(
-                                        produk: produk.obs,
+                                        loadProduk: produk.obs,
                                         isManager: true,
                                       ));
                                 }
@@ -179,10 +179,12 @@ class PenjualanData extends StatelessWidget {
 
       final formatTanggal = '$bulan $splitTahun';
       final jumlah = item['terjual'];
-      final hargaBeli = int.tryParse(item['harga_beli']);
-      final hargaJual = int.tryParse(item['harga_jual']);
-      final modal = jumlah * hargaBeli;
-      final omset = jumlah * hargaJual;
+      // final hargaBeli = int.tryParse(item['harga_beli']);
+      // final hargaJual = int.tryParse(item['harga_jual']);
+      // final modal = jumlah * hargaBeli;
+      int modal = item['harga_beli'];
+      int omset = item['harga_jual'];
+      // final omset = jumlah * hargaJual;
       final laba = omset - modal;
 
       final data = dataPenjualan[formatTanggal]!;
@@ -228,10 +230,12 @@ class PenjualanData extends StatelessWidget {
       }
       // print(item);
       int jumlah = item['terjual'];
-      int hargaBeli = int.tryParse(item['harga_beli'])!;
-      int hargaJual = int.tryParse(item['harga_jual'])!;
-      int modal = jumlah * hargaBeli;
-      int omset = jumlah * hargaJual;
+      // int hargaBeli = int.tryParse(item['harga_beli'])!;
+      // int hargaJual = int.tryParse(item['harga_jual'])!;
+      // int modal = jumlah * hargaBeli;
+      int modal = item['harga_beli'];
+      int omset = item['harga_jual'];
+      // int omset = jumlah * hargaJual;
       int laba = omset - modal;
       final data = dataPenjualan[formatTanggal]!;
       data['TERJUAL'] += jumlah;
@@ -265,10 +269,12 @@ class PenjualanData extends StatelessWidget {
 
       for (var data in tahun) {
         final jumlah = data['terjual'];
-        final hargaBeli = int.tryParse(data['harga_beli']);
-        final hargaJual = int.tryParse(data['harga_jual']);
-        final modal = jumlah * hargaBeli;
-        final omset = jumlah * hargaJual;
+        // final hargaBeli = int.tryParse(data['harga_beli']);
+        // final hargaJual = int.tryParse(data['harga_jual']);
+        // final modal = jumlah * hargaBeli;
+        int modal = data['harga_beli'];
+        int omset = data['harga_jual'];
+        // final omset = jumlah * hargaJual;
         final laba = omset - modal;
         final update = dataPenjualan[item]!;
         update['TERJUAL'] += jumlah;
@@ -305,10 +311,12 @@ class PenjualanData extends StatelessWidget {
       for (var item in daftarProduk) {
         final keyProduk = item['kode_produk'];
         final jumlah = item['terjual'];
-        final hargaBeli = int.tryParse(item['harga_beli'])!;
-        final hargaJual = int.tryParse(item['harga_jual'])!;
-        int modal = jumlah * hargaBeli;
-        int omset = jumlah * hargaJual;
+        // final hargaBeli = int.tryParse(item['harga_beli'])!;
+        // final hargaJual = int.tryParse(item['harga_jual'])!;
+        // int modal = jumlah * hargaBeli;
+        int modal = item['harga_beli'];
+        int omset = item['harga_jual'];
+        // int omset = jumlah * hargaJual;
         int laba = omset - modal;
         dataRincian[keyProduk] = {
           'TANGGAL': tanggal,

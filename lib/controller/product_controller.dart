@@ -17,7 +17,6 @@ class ProductController extends GetxController {
   final RxList<Map<dynamic, String>> mapCheckBoxRemove =
       <Map<dynamic, String>>[].obs;
   final RxInt bottomIndex = 0.obs;
-  final jualController = TextEditingController(text: '0').obs;
   final pencarianController = TextEditingController();
 
   final searchText = "".obs;

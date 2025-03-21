@@ -9,7 +9,7 @@ import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
-class DialogCheckoutKeranjang extends StatelessWidget {
+class DialogCheckoutKeranjang extends StatelessWidget with DialogPenjualan {
   DialogCheckoutKeranjang({
     super.key,
   });
@@ -41,9 +41,6 @@ class DialogCheckoutKeranjang extends StatelessWidget {
               if (Settings.autentikasiAktif.value) {
                 _biometrikController.hasAuthenticated.value =
                     await _biometrikController.authReuired();
-                // if (hasAuth) {
-                //   _biometrikController.hasAuthenticated.value = true;
-                // }
 
                 if (_biometrikController.hasAuthenticated.value) {
                   Get.back(closeOverlays: false);
@@ -65,6 +62,13 @@ class DialogCheckoutKeranjang extends StatelessWidget {
       ],
     );
   }
+}
+
+mixin DialogPenjualan {
+  final KeranjangController _keranjangController = Get.find();
+  final TransaksiController _transaksiController = Get.find();
+  final ProductController _productController = Get.find();
+  final LaporanController _laporanController = Get.find();
 
   Future<void> confirmJual() async {
     if (HalamanKeranjang.haveValueBox()) {
@@ -83,13 +87,23 @@ class DialogCheckoutKeranjang extends StatelessWidget {
           final jumlahItem =
               int.tryParse(_keranjangController.jumlahControllers[i].text) ?? 1;
           final modal = int.tryParse(item['harga_beli'])!;
-          final omset = int.tryParse(item['harga_jual'])!;
+          // final omset = int.tryParse(item['harga_jual'])!;
+          print(i);
+          print(_keranjangController.hargaJualItem);
+          final omset = _keranjangController.hargaJualItem[i];
+          // produk[i]['harga_beli'] = modal * jumlahItem;
+          // produk[i]['harga_jual'] = omset * jumlahItem;
 
           totaljumlah += jumlahItem;
           totalModal += modal * jumlahItem;
-          totalOmset += omset * jumlahItem;
+          totalOmset += omset;
 
-          produk.add({'kode_produk': key, 'terjual': jumlahItem});
+          produk.add({
+            'kode_produk': key,
+            'terjual': jumlahItem,
+            'harga_beli': modal * jumlahItem,
+            'harga_jual': omset
+          });
           await DBHelper.updateTerjual(key, jumlahItem);
         }
       }
@@ -114,4 +128,17 @@ class DialogCheckoutKeranjang extends StatelessWidget {
           backgroundColor: Colors.red);
     }
   }
+
+  // void hitungSatuanItem(
+  //     int minProduk, int diskon, int hargaNormal, int jumlah) {
+  //   int hargaItem = hargaNormal;
+  //   if (minProduk > 0 && diskon > 0) {
+  //     int harga = minProduk * hargaNormal;
+  //     int hargaDiskon = harga - diskon;
+  //     hargaItem = hargaDiskon;
+  //   }
+  //   // _keranjangController.hargaJualItem.add(hargaItem);
+
+  //   print(hargaItem);
+  // }
 }

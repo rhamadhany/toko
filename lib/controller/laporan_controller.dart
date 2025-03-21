@@ -97,8 +97,12 @@ class LaporanController extends GetxController {
             'produk': _productController.allProduct[indexKey]['produk'],
             'kategori': _productController.allProduct[indexKey]['kategori'],
             'terjual': produkAdd['terjual'],
-            'harga_beli': _productController.allProduct[indexKey]['harga_beli'],
-            'harga_jual': _productController.allProduct[indexKey]['harga_jual'],
+            'harga_beli': table == 'penjualan'
+                ? produkAdd['harga_beli']
+                : _productController.allProduct[indexKey]['harga_beli'],
+            'harga_jual': table == 'penjualan'
+                ? produkAdd['harga_jual']
+                : _productController.allProduct[indexKey]['harga_jual'],
           });
         }
 

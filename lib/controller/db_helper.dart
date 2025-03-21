@@ -50,19 +50,7 @@ class DBHelper with SnackHelper {
       String kategori,
       String deskripsi) async {
     try {
-      final random = Random();
-
-      final date = DateTime.now();
-      final format = DateFormat('HHmmss');
-      final formattedDate = format.format(date);
-      const chars =
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-      final rString = String.fromCharCodes(Iterable.generate(
-          8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
-      final keyString = formattedDate + rString;
-      final key = base64Encode(utf8.encode(keyString));
-
+      final key = generateKode();
       final mapProduk = {
         'kode_produk': key,
         'tanggal': DateTime.now().toString(),
@@ -172,4 +160,20 @@ mixin class SnackHelper {
     await Future.delayed(const Duration(seconds: 3));
     hasShow.value = false;
   }
+}
+
+String generateKode() {
+  final random = Random();
+
+  final date = DateTime.now();
+  final format = DateFormat('HHmmss');
+  final formattedDate = format.format(date);
+  const chars =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  final rString = String.fromCharCodes(Iterable.generate(
+      8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+  final keyString = formattedDate + rString;
+  final key = base64Encode(utf8.encode(keyString));
+  return key;
 }

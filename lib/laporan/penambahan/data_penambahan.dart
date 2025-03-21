@@ -94,7 +94,7 @@ class PenambahanData extends StatelessWidget {
 
                                   // print(produk);
                                   Get.to(() => LihatProduk(
-                                        produk: produk.obs,
+                                        loadProduk: produk.obs,
                                         isManager: true,
                                       ));
                                 } else {

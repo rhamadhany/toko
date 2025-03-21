@@ -12,6 +12,7 @@ void main() async {
 
   runApp(
     GetMaterialApp(
+      locale: Locale('en', 'US'),
       home: SplashLogin(),
       theme: ThemeData(),
       darkTheme: ThemeData.dark(),

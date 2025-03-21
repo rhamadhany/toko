@@ -51,7 +51,12 @@ class JumlahKeranjang extends StatelessWidget {
                       final newJumlah = int.tryParse(value) ??
                           _keranjangController.keranjangProduk[indexKeranjang]
                               ['jumlah'];
-                      _keranjangController.updateJumlah(keyUpdate, newJumlah);
+                      final diskon = _keranjangController
+                          .keranjangProduk[indexKeranjang]['diskon'];
+                      final minProduk = _keranjangController
+                          .keranjangProduk[indexKeranjang]['min_produk'];
+                      _keranjangController.updateJumlah(
+                          keyUpdate, newJumlah, diskon, minProduk);
 
                       final sisa =
                           _keranjangController.sisaPadaAllProduk(keyUpdate);
@@ -94,7 +99,12 @@ class JumlahKeranjang extends StatelessWidget {
 
     final keyUpdate =
         _keranjangController.keranjangProduk[indexKeranjang]['kode_produk'];
-    await _keranjangController.updateJumlah(keyUpdate, newJumlah);
+    final diskon =
+        _keranjangController.keranjangProduk[indexKeranjang]['diskon'];
+    final minProduk =
+        _keranjangController.keranjangProduk[indexKeranjang]['min_produk'];
+    await _keranjangController.updateJumlah(
+        keyUpdate, newJumlah, diskon, minProduk);
     _keranjangController.jumlahControllers[indexKeranjang].text =
         _keranjangController.keranjangProduk[indexKeranjang]['jumlah']
             .toString();

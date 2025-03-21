@@ -6,19 +6,25 @@ import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/lihat/body_lihat_produk.dart';
 import 'package:myapp/lihat/dialog_jual.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
+import 'package:myapp/lihat/dialog_jual_helper.dart';
+import 'package:myapp/lihat/grosir_helper.dart';
 
 import 'package:myapp/produk%20baru/produk_baru.dart';
 import 'package:myapp/controller/product_controller.dart';
 
-class LihatProduk extends GetView<ProductController> {
-  LihatProduk({super.key, required this.produk, required this.isManager});
+class LihatProduk extends GetView<ProductController>
+    with DialogJualHelper, GrosirHelper {
+  LihatProduk({super.key, required this.loadProduk, required this.isManager});
   final bool isManager;
-  final RxMap<String, dynamic> produk;
+  final RxMap<String, dynamic> loadProduk;
 
   final KeranjangController _keranjangController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    produk.value = loadProduk;
+    // updateDiskon();
+    loadListGrosir();
     final sisa = produk['stok'] - produk['terjual'];
     return Obx(() {
       return Scaffold(
@@ -91,12 +97,15 @@ class LihatProduk extends GetView<ProductController> {
             if (isManager && value == 0) {
               editProduk();
             } else if (!isManager && value == 0) {
-              _keranjangController.langsungtambahkeKeranjang(sisa, produk);
+              final gDiskon =
+                  _keranjangController.getDiskon(produk['kode_produk']);
+
+              _keranjangController.langsungtambahkeKeranjang(
+                  sisa, produk, gDiskon['diskon'], gDiskon['min_produk']);
             } else if (value == 1) {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
-                controller.jualController.value.text = '0';
-                Get.dialog(DialogJual(produk: produk));
+                Get.dialog(DialogJual(loadProduk: produk));
               } else {
                 Get.snackbar(
                   "Stok",
@@ -141,27 +150,13 @@ class LihatProduk extends GetView<ProductController> {
         controller.isNeedRefreshProduk.value = false;
       }
     }
-    // final gambar = produk['gambar'] is List<dynamic>
-    //     ? (produk['gambar'] as List<dynamic>)
-    //         .cast<String>()
-    //         .map((e) => e.trim())
-    //         .toList()
-    //         .obs
-    //     : produk['gambar'] == ''
-    //         ? [].obs
-    //         : [produk['gambar']].obs;
 
-    // final gambar = List.from(produk['gambar']).obs;
-    // final gambarPath = List.from(produk['gambarPath']).obs;
     controller.kategoriAdd.value = produk['kategori'];
     final listPictures =
         produk.isNotEmpty ? List.from(produk['gambar'] ?? []).obs : [].obs;
-    // final listPathPictures =
-    //     produk.isNotEmpty ? List.from(produk['gambarPath'] ?? []).obs : [].obs;
 
     Get.to(() => NewProduct(
           listPictures: listPictures,
-          // listPathPictures: listPathPictures,
           produkEdit: produk,
           refreshGambar: refreshgambar,
         ));

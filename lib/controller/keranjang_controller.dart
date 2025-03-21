@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/product_controller.dart';
+import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,8 @@ class KeranjangController extends GetxController {
   final boxAll = false.obs;
   final hargaJual = [];
   final isLoading = true.obs;
+  final hargaJualItem = <int>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -39,6 +42,7 @@ class KeranjangController extends GetxController {
       } else if (valueBox.every((box) => box == true)) {
         boxAll.value = true;
       }
+      hargaJualItem.clear();
     });
   }
 
@@ -88,7 +92,8 @@ class KeranjangController extends GetxController {
     }
   }
 
-  Future<void> addProduk(key, produk, jumlah, gambar) async {
+  Future<void> addProduk(
+      key, produk, jumlah, gambar, int diskon, int minProduk) async {
     final indexKeys =
         keranjangProduk.indexWhere((pro) => pro['kode_produk'] == key);
 
@@ -96,7 +101,7 @@ class KeranjangController extends GetxController {
       final updateKey = keranjangProduk[indexKeys]['kode_produk'];
       final jumlahBaru = keranjangProduk[indexKeys]['jumlah'] + jumlah;
 
-      await updateJumlah(updateKey, jumlahBaru);
+      await updateJumlah(updateKey, jumlahBaru, diskon, minProduk);
     } else {
       final map = jsonEncode([
         {
@@ -105,6 +110,8 @@ class KeranjangController extends GetxController {
           'produk': produk,
           'jumlah': jumlah,
           'gambar': gambar,
+          'diskon': diskon.toString(),
+          'min_produk': minProduk.toString()
         }
       ]);
       final uri = Uri.parse('$domain/produk/tambah.php');
@@ -132,7 +139,8 @@ class KeranjangController extends GetxController {
     loadProduk();
   }
 
-  Future<void> updateJumlah(String key, int jumlahUpdate) async {
+  Future<void> updateJumlah(
+      String key, int jumlahUpdate, int diskon, int minProduk) async {
     final index = indexKey(key);
 
     if (index != -1) {
@@ -158,8 +166,12 @@ class KeranjangController extends GetxController {
       }
 
       final url = Uri.parse('$domain/produk/update_keranjang.php');
-      await http.post(url,
-          body: {'kode_produk': key, 'jumlah': jumlahUpdate.toString()});
+      await http.post(url, body: {
+        'kode_produk': key,
+        'jumlah': jumlahUpdate.toString(),
+        'diskon': diskon.toString(),
+        'min_produk': minProduk.toString()
+      });
       await loadProduk();
     }
   }
@@ -181,13 +193,13 @@ class KeranjangController extends GetxController {
     return sisa;
   }
 
-  Future<void> langsungtambahkeKeranjang(
-      int sisa, RxMap<String, dynamic> produkBaru) async {
+  Future<void> langsungtambahkeKeranjang(int sisa,
+      RxMap<String, dynamic> produkBaru, int diskon, int minProduk) async {
     if (sisa > 0) {
       final gambar =
           produkBaru['gambar'].isEmpty ? "" : produkBaru['gambar'][0];
-      await addProduk(
-          produkBaru['kode_produk'], produkBaru['produk'], 1, gambar);
+      await addProduk(produkBaru['kode_produk'], produkBaru['produk'], 1,
+          gambar, diskon, minProduk);
 
       Get.back(closeOverlays: true);
 
@@ -206,5 +218,23 @@ class KeranjangController extends GetxController {
           colorText: Colors.white,
           duration: const Duration(seconds: 1));
     }
+  }
+
+  Map<String, dynamic> getDiskon(String key) {
+    final index = keranjangProduk.indexWhere((p) => p['kode_produk'] == key);
+    if (index != -1) {
+      final diskon = keranjangProduk[index]['diskon'];
+      final minProduk = keranjangProduk[index]['min_produk'];
+      final map = {
+        'diskon': diskon,
+        'min_produk': minProduk,
+      };
+      return map;
+    }
+    final map = {
+      'diskon': 0,
+      'min_produk': 0,
+    };
+    return map;
   }
 }

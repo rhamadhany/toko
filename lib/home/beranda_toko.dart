@@ -116,7 +116,7 @@ class HomeToko extends GetView<ProductController> {
                                     controller.mapCheckBoxRemove.refresh();
                                   } else {
                                     Get.to(() => LihatProduk(
-                                          produk: listProduk,
+                                          loadProduk: listProduk,
                                           isManager: isManager,
                                         ));
                                   }
