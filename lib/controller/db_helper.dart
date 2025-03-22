@@ -78,9 +78,10 @@ class DBHelper with SnackHelper {
     }
   }
 
-  static Future updateTerjual(String key, int terjual) async {
+  static Future updateTerjual(String key, int terjual, int diskon) async {
     final url = Uri.parse('$domain/produk/update_produk_terjual.php');
-    final encode = jsonEncode({'kode_produk': key, 'terjual': terjual});
+    final encode =
+        jsonEncode({'kode_produk': key, 'terjual': terjual, 'diskon': diskon});
     await http.post(url, body: {'encode': encode});
     _productController.allProduct.value = await loadProducts();
   }

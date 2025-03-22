@@ -44,8 +44,10 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                               final gambarThumb = gambarIndex(produkKeranjang);
                               return InkWell(
                                 onTap: () {
-                                  controller.valueBox[indexKeranjang] =
-                                      !controller.valueBox[indexKeranjang];
+                                  controller.valueBox[indexKeranjang]['value'] =
+                                      !controller.valueBox[indexKeranjang]
+                                          ['value'];
+                                  controller.valueBox.refresh();
                                 },
                                 child: Card(
                                     shape: RoundedRectangleBorder(
@@ -57,11 +59,14 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                           return Checkbox(
                                               activeColor: Colors.blue,
                                               value: controller
-                                                  .valueBox[indexKeranjang],
+                                                      .valueBox[indexKeranjang]
+                                                  ['value'],
                                               onChanged: (value) {
                                                 controller.valueBox[
-                                                        indexKeranjang] =
-                                                    value ?? false;
+                                                        indexKeranjang]
+                                                    ['value'] = value ?? false;
+                                                controller.valueBox.refresh();
+                                                // print(controller.valueBox);
                                               });
                                         }),
                                         Expanded(

@@ -17,8 +17,13 @@ class HalamanKeranjang extends StatelessWidget {
 
     return PopScope(
       onPopInvokedWithResult: (_, __) {
-        _keranjangController.valueBox.value = List.generate(
-            _keranjangController.valueBox.length, (index) => false);
+        // _keranjangController.valueBox.value = List.generate(
+        //     _keranjangController.valueBox.length, (index) => {
+        //       'value': false, 'controller': TextEditingController(text: _keranjangController)
+        //     });
+        for (var item in _keranjangController.valueBox) {
+          item['value'] = false;
+        }
       },
       child: Scaffold(
           appBar: AppBar(
@@ -33,7 +38,7 @@ class HalamanKeranjang extends StatelessWidget {
   }
 
   static bool haveValueBox() {
-    return _keranjangController.valueBox.any((any) => any == true);
+    return _keranjangController.valueBox.any((any) => any['value'] == true);
   }
 }
 

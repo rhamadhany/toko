@@ -47,12 +47,13 @@ class CheckBoxAll extends StatelessWidget {
     final value = _keranjangController.boxAll.value;
     if (value == true) {
       for (int i = 0; i < _keranjangController.valueBox.length; i++) {
-        _keranjangController.valueBox[i] = true;
+        _keranjangController.valueBox[i]['value'] = true;
       }
     } else {
       for (int i = 0; i < _keranjangController.valueBox.length; i++) {
-        _keranjangController.valueBox[i] = false;
+        _keranjangController.valueBox[i]['value'] = false;
       }
     }
+    _keranjangController.valueBox.refresh();
   }
 }

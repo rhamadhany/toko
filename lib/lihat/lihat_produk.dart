@@ -100,8 +100,8 @@ class LihatProduk extends GetView<ProductController>
               final gDiskon =
                   _keranjangController.getDiskon(produk['kode_produk']);
 
-              _keranjangController.langsungtambahkeKeranjang(
-                  sisa, produk, gDiskon['diskon'], gDiskon['min_produk']);
+              _keranjangController.langsungtambahkeKeranjang(sisa, produk,
+                  gDiskon['diskon'], gDiskon['min_produk'], gDiskon['grosir']);
             } else if (value == 1) {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/lihat/button_dialog_jual_helper.dart';
 import 'package:myapp/lihat/dialog_jual_helper.dart';
 import 'package:myapp/lihat/dialog_list_grosir.dart';
-import 'package:myapp/lihat/grosir_helper.dart';
 
 class DialogJual extends StatelessWidget
     with DialogJualHelper, ButtonDialogJualHelper {
@@ -135,7 +135,7 @@ class DialogJual extends StatelessWidget
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  'Rp ${totalHargaSetelahDiskon().value}',
+                  'Rp ${totalHargaSetelahDiskon().value.regexNominal()}',
                   style: TextStyle(fontSize: 18),
                 ),
               )

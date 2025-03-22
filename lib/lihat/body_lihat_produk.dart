@@ -136,8 +136,10 @@ class BodyLihatProduk extends GetView<ProductController> {
   }
 
   Text omsetJual() {
-    final omsetNormal = nilaiOmset().toString();
-    final omsetFinal = controller.regexNominal(omsetNormal);
+    final omsetNormal = nilaiOmset();
+    final diskon = produk['diskon'];
+    final hasil = omsetNormal - diskon;
+    final omsetFinal = controller.regexNominal(hasil.toString());
     return Text("OMSET: Rp $omsetFinal",
         style: TextStyle(
           fontSize: 18,

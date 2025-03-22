@@ -37,7 +37,7 @@ class DialogHapusKeranjang extends StatelessWidget {
               //     .toList();
               // print(listKey);
               for (int i = 0; i < _keranjangController.valueBox.length; i++) {
-                if (_keranjangController.valueBox[i] == true) {
+                if (_keranjangController.valueBox[i]['value'] == true) {
                   final key =
                       _keranjangController.keranjangProduk[i]['kode_produk'];
                   // _keranjangController.removeProduk(key);

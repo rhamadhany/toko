@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/product_controller.dart';
-import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
+// import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -17,13 +17,14 @@ class KeranjangController extends GetxController {
   final hasSnackbar = false.obs;
 
   final ProductController _productController = Get.find();
-  final RxList<TextEditingController> jumlahControllers =
-      RxList<TextEditingController>();
-  final RxList<bool> valueBox = RxList<bool>();
+  // final RxList<TextEditingController> jumlahControllers =
+  //     RxList<TextEditingController>();
+  final valueBox = <Map<String, dynamic>>[].obs;
   final boxAll = false.obs;
-  final hargaJual = [];
+  // final hargaJual = [];
   final isLoading = true.obs;
   final hargaJualItem = <int>[].obs;
+  final hargaPotonganDiskon = <int>[].obs;
 
   @override
   void onInit() {
@@ -37,41 +38,54 @@ class KeranjangController extends GetxController {
     });
 
     valueBox.listen((_) {
-      if (valueBox.any((box) => box == false)) {
+      if (valueBox.any((box) => box['value'] == false)) {
         boxAll.value = false;
-      } else if (valueBox.every((box) => box == true)) {
+      } else if (valueBox.every((box) => box['value'] == true)) {
         boxAll.value = true;
       }
       hargaJualItem.clear();
+      hargaPotonganDiskon.clear();
     });
   }
 
   Future<void> initValueBox() async {
     isLoading.value = true;
-    hargaJual.clear();
+    // hargaJual.clear();
 
     await loadProduk();
 
     final keranjangLength = keranjangProduk.length;
 
     valueBox.clear();
-    jumlahControllers.clear();
-    valueBox.addAll(List.generate(keranjangLength, (_) => false));
-
-    jumlahControllers.clear();
-    jumlahControllers.addAll(List.generate(keranjangLength, (index) {
-      return TextEditingController(
-          text: keranjangProduk[index]['jumlah'].toString());
+    // jumlahControllers.clear();
+    // hargaJual.addAll(List.generate(keranjangLength, (index) {
+    //   final product = _productController.allProduct.firstWhere(
+    //       (produk) =>
+    //           produk['kode_produk'] == keranjangProduk[index]['kode_produk'],
+    //       orElse: () => {});
+    //   return product['harga_jual'] ?? 0;
+    // }));
+    valueBox.addAll(List.generate(keranjangLength, (index) {
+      final hargaJual = _productController.allProduct.firstWhere((p) =>
+              p['kode_produk'] ==
+              keranjangProduk[index]['kode_produk'])['harga_jual'] ??
+          0;
+      // final harga =
+      return {
+        'value': false,
+        'controller': TextEditingController(
+            text: keranjangProduk[index]['jumlah'].toString()),
+        'hargaJual': hargaJual,
+      };
     }));
 
-    hargaJual.clear();
-    hargaJual.addAll(List.generate(keranjangLength, (index) {
-      final product = _productController.allProduct.firstWhere(
-          (produk) =>
-              produk['kode_produk'] == keranjangProduk[index]['kode_produk'],
-          orElse: () => {});
-      return product['harga_jual'] ?? 0;
-    }));
+    // jumlahControllers.clear();
+    // jumlahControllers.addAll(List.generate(keranjangLength, (index) {
+    //   return TextEditingController(
+    //       text: keranjangProduk[index]['jumlah'].toString());
+    // }));
+
+    // hargaJual.clear();
 
     isLoading.value = false;
   }
@@ -92,8 +106,8 @@ class KeranjangController extends GetxController {
     }
   }
 
-  Future<void> addProduk(
-      key, produk, jumlah, gambar, int diskon, int minProduk) async {
+  Future<void> addProduk(key, produk, jumlah, gambar, int diskon, int minProduk,
+      String grosir) async {
     final indexKeys =
         keranjangProduk.indexWhere((pro) => pro['kode_produk'] == key);
 
@@ -111,7 +125,8 @@ class KeranjangController extends GetxController {
           'jumlah': jumlah,
           'gambar': gambar,
           'diskon': diskon.toString(),
-          'min_produk': minProduk.toString()
+          'min_produk': minProduk.toString(),
+          'grosir': grosir
         }
       ]);
       final uri = Uri.parse('$domain/produk/tambah.php');
@@ -193,13 +208,17 @@ class KeranjangController extends GetxController {
     return sisa;
   }
 
-  Future<void> langsungtambahkeKeranjang(int sisa,
-      RxMap<String, dynamic> produkBaru, int diskon, int minProduk) async {
+  Future<void> langsungtambahkeKeranjang(
+      int sisa,
+      RxMap<String, dynamic> produkBaru,
+      int diskon,
+      int minProduk,
+      String grosir) async {
     if (sisa > 0) {
       final gambar =
           produkBaru['gambar'].isEmpty ? "" : produkBaru['gambar'][0];
       await addProduk(produkBaru['kode_produk'], produkBaru['produk'], 1,
-          gambar, diskon, minProduk);
+          gambar, diskon, minProduk, grosir);
 
       Get.back(closeOverlays: true);
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
+import 'package:myapp/keranjang/dialog_penjualan.dart';
 import 'package:myapp/keranjang/halaman_keranjang.dart';
 
 class BottomBar extends StatelessWidget with DialogPenjualan {
@@ -25,7 +26,10 @@ class BottomBar extends StatelessWidget with DialogPenjualan {
                     children: [
                       const Spacer(),
                       Column(
-                        children: [totalHargaJual(), textPotonganDiskon()],
+                        children: [
+                          totalHargaJual(),
+                          if (potonganDiskon.value > 0) textPotonganDiskon()
+                        ],
                       ),
                       const Spacer(),
                       IconButton(
@@ -62,16 +66,17 @@ class BottomBar extends StatelessWidget with DialogPenjualan {
   Text totalHargaJual() {
     int totalHarga = 0;
     int totalDiskon = 0;
-    if (_keranjangController.valueBox.length !=
-        _keranjangController.jumlahControllers.length) {
-      return Text('');
-    }
+    // if (_keranjangController.valueBox.length !=
+    //     _keranjangController.jumlahControllers.length) {
+    //   return Text('');
+    // }
     for (int i = 0; i < _keranjangController.valueBox.length; i++) {
-      if (_keranjangController.valueBox[i] == true) {
-        final hargaController = _keranjangController.hargaJual[i] ?? 0;
-        final harga = int.tryParse(hargaController) ?? 0;
+      if (_keranjangController.valueBox[i]['value'] == true) {
+        int harga = int.parse(_keranjangController.valueBox[i]['hargaJual']);
+        // final harga = hargaController;
         final jumlah =
-            int.tryParse(_keranjangController.jumlahControllers[i].text) ?? 1;
+            int.tryParse(_keranjangController.valueBox[i]['controller'].text) ??
+                1;
         // print('harga $harga');
         final hargaJumlah = harga * jumlah;
         totalHarga += hargaJumlah;
@@ -85,10 +90,13 @@ class BottomBar extends StatelessWidget with DialogPenjualan {
           // print(hitungDiskon);
           totalDiskon += hitungDiskon;
           int totalHargaDiskon = hargaJumlah - hitungDiskon;
+          // print(hitungDiskon);
           // print(totalHargaiskon);
+          _keranjangController.hargaPotonganDiskon.add(hitungDiskon);
           _keranjangController.hargaJualItem.add(totalHargaDiskon);
         } else {
           _keranjangController.hargaJualItem.add(hargaJumlah);
+          _keranjangController.hargaPotonganDiskon.add(0);
         }
         // print(hitungDiskon);
 
@@ -96,6 +104,7 @@ class BottomBar extends StatelessWidget with DialogPenjualan {
         // totalHarga = totalHargaNormal - totalDiskon;
       } else {
         _keranjangController.hargaJualItem.add(0);
+        _keranjangController.hargaPotonganDiskon.add(0);
       }
     }
 

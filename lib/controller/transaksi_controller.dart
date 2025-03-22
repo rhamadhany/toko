@@ -35,7 +35,7 @@ class TransaksiController extends GetxController {
   }
 
   Future<void> addTransaksi(int jumlah, List<String> keyProduk, int modal,
-      int omset, int laba) async {
+      int omset, int laba, int diskon) async {
     try {
       final tanggal = DateTime.now().toString();
       final second = DateTime.now().second;
@@ -55,7 +55,8 @@ class TransaksiController extends GetxController {
           'jumlah': jumlah,
           'modal': modal,
           'omset': omset,
-          'laba': laba
+          'laba': laba,
+          'diskon': diskon
         }
       ]);
 

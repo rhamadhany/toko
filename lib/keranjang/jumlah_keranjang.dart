@@ -37,8 +37,8 @@ class JumlahKeranjang extends StatelessWidget {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   keyboardType: TextInputType.number,
-                  controller:
-                      _keranjangController.jumlahControllers[indexKeranjang],
+                  controller: _keranjangController.valueBox[indexKeranjang]
+                      ['controller'],
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.all(5),
@@ -62,11 +62,11 @@ class JumlahKeranjang extends StatelessWidget {
                           _keranjangController.sisaPadaAllProduk(keyUpdate);
                       if (newJumlah > sisa) {
                         _keranjangController
-                                .jumlahControllers[indexKeranjang].text =
+                                .valueBox[indexKeranjang]['controller'].text =
                             _keranjangController.keranjangProduk[indexKeranjang]
                                     ['jumlah']
                                 .toString();
-                        _keranjangController.jumlahControllers.refresh();
+                        _keranjangController.valueBox.refresh();
                       }
                     }
                   },
@@ -88,7 +88,7 @@ class JumlahKeranjang extends StatelessWidget {
 
   Future<void> jumlahCount(int indexKeranjang, bool tambah) async {
     int jumlah = int.tryParse(
-            _keranjangController.jumlahControllers[indexKeranjang].text) ??
+            _keranjangController.valueBox[indexKeranjang]['controller'].text) ??
         1;
     int newJumlah = 0;
     if (tambah) {
@@ -105,7 +105,7 @@ class JumlahKeranjang extends StatelessWidget {
         _keranjangController.keranjangProduk[indexKeranjang]['min_produk'];
     await _keranjangController.updateJumlah(
         keyUpdate, newJumlah, diskon, minProduk);
-    _keranjangController.jumlahControllers[indexKeranjang].text =
+    _keranjangController.valueBox[indexKeranjang]['controller'].text =
         _keranjangController.keranjangProduk[indexKeranjang]['jumlah']
             .toString();
   }

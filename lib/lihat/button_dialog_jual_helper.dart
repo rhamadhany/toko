@@ -29,8 +29,9 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
       final gambar = produk['gambar'].isEmpty ? "" : produk['gambar'][0];
       final minProduk = DialogJualHelper.selectedGrosir['min_produk'];
       final diskon = DialogJualHelper.selectedGrosir['diskon'];
+      final grosir = DialogJualHelper.selectedGrosir['nama'];
       _keranjangController.addProduk(produk['kode_produk'], produk['produk'],
-          jumlah, gambar, diskon, minProduk);
+          jumlah, gambar, diskon, minProduk, grosir);
 
       Get.back(closeOverlays: true);
       HomeToko.focusPencarian.unfocus();
@@ -87,23 +88,25 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
 
       Get.back(closeOverlays: true);
       HomeToko.focusPencarian.unfocus();
+      final diskon = int.parse(totalHargaPotongan().value);
 
-      await DBHelper.updateTerjual(key, terjualBaru);
+      await DBHelper.updateTerjual(key, terjualBaru, diskon);
       final item = _productController.allProduct
           .where((im) => im['kode_produk'] == key)
           .first;
       final hBeli = int.tryParse(item['harga_beli'])!;
-      // final hJual = int.tryParse(item['harga_jual'])!;
-
+      final hJual = int.tryParse(item['harga_jual'])!;
       final modal = hBeli * terjualBaru;
       final omset = int.parse(totalHargaSetelahDiskon().value);
+      // final diskon = (hJual * terjualBaru) - omset;
       // print(totalHargaSetelahDiskon().value);
       await _laporanController.tambahJual([
         {
           'kode_produk': key,
           'terjual': terjualBaru,
           'harga_beli': modal,
-          'harga_jual': omset
+          'harga_jual': omset,
+          'diskon': diskon
         }
       ], 'penjualan');
 
@@ -111,7 +114,7 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
       final List<String> listKey = [];
       listKey.add(key);
       await _transaksiController.addTransaksi(
-          terjualBaru, listKey, modal, omset, laba);
+          terjualBaru, listKey, modal, omset, laba, diskon);
       Get.snackbar('Terjual', '$terjualBaru ${produk['produk']} telah dijual',
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,

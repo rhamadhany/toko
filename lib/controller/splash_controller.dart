@@ -17,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'http://192.168.27.228:8080';
+final domain = 'http://192.168.189.228:8080';
 
 class SplashController extends GetxController {
   final box = GetStorage();
@@ -130,6 +130,7 @@ class SplashController extends GetxController {
     } else {
       final android = AndroidId();
       final id = await android.getId();
+      print('id $id');
       return id ?? generateRandom();
     }
   }

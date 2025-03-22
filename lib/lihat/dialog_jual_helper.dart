@@ -55,7 +55,8 @@ mixin DialogJualHelper {
     if (jualController.value.text == '0' ||
         jualController.value.text.isEmpty ||
         produk['harga_jual'] == null ||
-        selectedGrosir.isEmpty) {
+        selectedGrosir.isEmpty ||
+        selectedGrosir['min_produk'] == 0) {
       final jumlah = int.tryParse(jualController.value.text) ?? 0;
       final harga = int.tryParse(produk['harga_jual']) ?? 0;
       return (harga * jumlah).toString().obs;

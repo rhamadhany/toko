@@ -21,7 +21,15 @@ class PenjualanData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final headList = _laporanController.viewMode.value == 'Transaksi'
-          ? ['TANGGAL', 'TRANSAKSI', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+          ? [
+              'TANGGAL',
+              'TRANSAKSI',
+              'TERJUAL',
+              'MODAL',
+              'OMSET',
+              'DISKON',
+              'LABA'
+            ]
           : _laporanController.viewMode.value == 'Rincian'
               ? [
                   'TANGGAL',
@@ -31,13 +39,22 @@ class PenjualanData extends StatelessWidget {
                   'TERJUAL',
                   'MODAL',
                   'OMSET',
+                  'GROSIR',
+                  'DISKON',
                   'LABA'
                 ]
               : _laporanController.viewMode.value == 'Hari'
-                  ? ['TANGGAL', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
+                  ? ['TANGGAL', 'TERJUAL', 'MODAL', 'OMSET', 'DISKON', 'LABA']
                   : _laporanController.viewMode.value == 'Bulan'
-                      ? ['BULAN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA']
-                      : ['TAHUN', 'TERJUAL', 'MODAL', 'OMSET', 'LABA'];
+                      ? ['BULAN', 'TERJUAL', 'MODAL', 'OMSET', 'DISKON', 'LABA']
+                      : [
+                          'TAHUN',
+                          'TERJUAL',
+                          'MODAL',
+                          'OMSET',
+                          'DISKON',
+                          'LABA'
+                        ];
 
       final dataPenjualan = _laporanController.viewMode.value == 'Transaksi'
           ? initDataTransaksi()
@@ -131,7 +148,8 @@ class PenjualanData extends StatelessWidget {
                                               head == "ID" ||
                                               head == 'PRODUK' ||
                                               head == 'TRANSAKSI' ||
-                                              head == 'KATEGORI'
+                                              head == 'KATEGORI' ||
+                                              head == 'GROSIR'
                                           ? data.value[head].toString()
                                           : data.value[head] == 0
                                               ? '-'
@@ -169,6 +187,7 @@ class PenjualanData extends StatelessWidget {
         'MODAL': 0,
         'OMSET': 0,
         'LABA': 0,
+        'DISKON': 0,
       };
     }
     for (var item in daftarTahun) {
@@ -184,6 +203,7 @@ class PenjualanData extends StatelessWidget {
       // final modal = jumlah * hargaBeli;
       int modal = item['harga_beli'];
       int omset = item['harga_jual'];
+      int diskon = item['diskon'];
       // final omset = jumlah * hargaJual;
       final laba = omset - modal;
 
@@ -192,6 +212,7 @@ class PenjualanData extends StatelessWidget {
       data['MODAL'] += modal;
       data['OMSET'] += omset;
       data['LABA'] += laba;
+      data['DISKON'] += diskon;
     }
 
     return dataPenjualan;
@@ -215,6 +236,8 @@ class PenjualanData extends StatelessWidget {
         'MODAL': 0,
         'OMSET': 0,
         'LABA': 0,
+        'GROSIR': '-',
+        'DISKON': 0,
       };
     }
     for (var item in penjualan) {
@@ -235,6 +258,9 @@ class PenjualanData extends StatelessWidget {
       // int modal = jumlah * hargaBeli;
       int modal = item['harga_beli'];
       int omset = item['harga_jual'];
+      // print(item);
+      String grosir = item['grosir'] ?? '-';
+      int diskon = item['diskon'] ?? 0;
       // int omset = jumlah * hargaJual;
       int laba = omset - modal;
       final data = dataPenjualan[formatTanggal]!;
@@ -242,6 +268,8 @@ class PenjualanData extends StatelessWidget {
       data['MODAL'] += modal;
       data['OMSET'] += omset;
       data['LABA'] += laba;
+      data['GROSIR'] = grosir;
+      data['DISKON'] += diskon;
     }
 
     return dataPenjualan;
@@ -265,6 +293,8 @@ class PenjualanData extends StatelessWidget {
         'MODAL': 0,
         'OMSET': 0,
         'LABA': 0,
+        'GROSIR': '-',
+        'DISKON': 0
       };
 
       for (var data in tahun) {
@@ -274,6 +304,8 @@ class PenjualanData extends StatelessWidget {
         // final modal = jumlah * hargaBeli;
         int modal = data['harga_beli'];
         int omset = data['harga_jual'];
+        String grosir = data['grosir'] ?? '-';
+        int diskon = data['diskon'] ?? 0;
         // final omset = jumlah * hargaJual;
         final laba = omset - modal;
         final update = dataPenjualan[item]!;
@@ -281,6 +313,8 @@ class PenjualanData extends StatelessWidget {
         update['MODAL'] += modal;
         update['OMSET'] += omset;
         update['LABA'] += laba;
+        update['DISKON'] += diskon;
+        update['GROSIR'] += grosir;
       }
     }
 
@@ -316,6 +350,8 @@ class PenjualanData extends StatelessWidget {
         // int modal = jumlah * hargaBeli;
         int modal = item['harga_beli'];
         int omset = item['harga_jual'];
+        String grosir = item['grosir'] ?? "-";
+        int diskon = item['diskon'] ?? 0;
         // int omset = jumlah * hargaJual;
         int laba = omset - modal;
         dataRincian[keyProduk] = {
@@ -326,6 +362,8 @@ class PenjualanData extends StatelessWidget {
           'TERJUAL': jumlah.toString(),
           'MODAL': modal,
           'OMSET': omset,
+          'GROSIR': grosir,
+          'DISKON': diskon,
           'LABA': laba
         };
       }
@@ -358,7 +396,8 @@ class PenjualanData extends StatelessWidget {
         'TERJUAL': item['jumlah'].toString(),
         'MODAL': item['modal'].toString(),
         'OMSET': item['omset'].toString(),
-        'LABA': item['laba'].toString()
+        'LABA': item['laba'].toString(),
+        'DISKON': item['diskon']
       };
     }
     return dataTr;
