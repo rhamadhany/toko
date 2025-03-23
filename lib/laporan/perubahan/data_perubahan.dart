@@ -172,10 +172,10 @@ class DataPerubahan extends StatelessWidget {
     for (var item in daftarProduk) {
       final stokBaru = item['stok_baru'];
       final terjualBaru = item['terjual_baru'];
-      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']);
-      final hargaJualBaru = int.tryParse(item['harga_jual_baru']);
-      final modalBaru = stokBaru * hargaBeliBaru!;
-      final omsetBaru = stokBaru * hargaJualBaru!;
+      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']) ?? 0;
+      final hargaJualBaru = int.tryParse(item['harga_jual_baru']) ?? 0;
+      final modalBaru = stokBaru * hargaBeliBaru;
+      final omsetBaru = stokBaru * hargaJualBaru;
       final labaBaru = omsetBaru - modalBaru;
 
       final tanggalItem = item['tanggal'].split(' ')[0];
@@ -199,10 +199,10 @@ class DataPerubahan extends StatelessWidget {
 
       final stokLama = item['stok_lama'];
       final terjualLama = item['terjual_lama'];
-      final hargaBeliLama = int.tryParse(item['harga_beli_lama']);
-      final hargaJualLama = int.tryParse(item['harga_jual_lama']);
-      final modalLama = stokLama * hargaBeliLama!;
-      final omsetLama = stokLama * hargaJualLama!;
+      final hargaBeliLama = int.tryParse(item['harga_beli_lama']) ?? 0;
+      final hargaJualLama = int.tryParse(item['harga_jual_lama']) ?? 0;
+      final modalLama = stokLama * hargaBeliLama;
+      final omsetLama = stokLama * hargaJualLama;
       final labaLama = omsetLama - modalLama;
 
       final dataLama = dataPerubahanLama[formatTanggalItem]!;
@@ -291,9 +291,9 @@ class DataPerubahan extends StatelessWidget {
       final formatBulan = '$namaBulan $parseTahun';
       final stokBaru = item['stok_baru'];
       final terjualBaru = item['terjual_baru'];
-      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']);
-      final hargaJualBaru = int.tryParse(item['harga_jual_baru']);
-      final modalBaru = stokBaru * hargaBeliBaru!;
+      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']) ?? 0;
+      final hargaJualBaru = int.tryParse(item['harga_jual_baru']) ?? 0;
+      final modalBaru = stokBaru * hargaBeliBaru;
       final omsetBaru = stokBaru * hargaJualBaru!;
       final labaBaru = omsetBaru - modalBaru;
 
@@ -308,8 +308,8 @@ class DataPerubahan extends StatelessWidget {
 
       final stokLama = item['stok_lama'];
       final terjualLama = item['terjual_lama'];
-      final hargaBeliLama = int.tryParse(item['harga_beli_lama']);
-      final hargaJualLama = int.tryParse(item['harga_jual_lama']);
+      final hargaBeliLama = int.tryParse(item['harga_beli_lama']) ?? 0;
+      final hargaJualLama = int.tryParse(item['harga_jual_lama']) ?? 0;
       final modalLama = stokLama * hargaBeliLama!;
       final omsetLama = stokLama * hargaJualLama!;
       final labaLama = omsetLama - modalLama;
@@ -384,10 +384,10 @@ class DataPerubahan extends StatelessWidget {
       final stokBaru = item['stok_baru'];
       final terjualLama = item['terjual_lama'];
       final terjualBaru = item['terjual_baru'];
-      final hargaBeliBaru = int.tryParse(item['harga_beli_baru'])!;
-      final hargaJualBaru = int.tryParse(item['harga_jual_baru'])!;
-      final hargaBeliLama = int.tryParse(item['harga_beli_lama'])!;
-      final hargaJualLama = int.tryParse(item['harga_jual_lama'])!;
+      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']) ?? 0;
+      final hargaJualBaru = int.tryParse(item['harga_jual_baru']) ?? 0;
+      final hargaBeliLama = int.tryParse(item['harga_beli_lama']) ?? 0;
+      final hargaJualLama = int.tryParse(item['harga_jual_lama']) ?? 0;
       final modalLama = stokLama * hargaBeliLama;
       final modalBaru = stokBaru * hargaBeliBaru;
       final omsetLama = stokLama * hargaJualLama;
@@ -455,10 +455,10 @@ class DataPerubahan extends StatelessWidget {
       final stokBaru = item['stok_baru'];
       final terjualLama = item['terjual_lama'];
       final terjualBaru = item['terjual_baru'];
-      final hargaBeliLama = int.tryParse(item['harga_beli_lama'])!;
-      final hargaBeliBaru = int.tryParse(item['harga_beli_baru'])!;
-      final hargaJualLama = int.tryParse(item['harga_jual_lama'])!;
-      final hargaJualBaru = int.tryParse(item['harga_jual_baru'])!;
+      final hargaBeliLama = int.tryParse(item['harga_beli_lama']) ?? 0;
+      final hargaBeliBaru = int.tryParse(item['harga_beli_baru']) ?? 0;
+      final hargaJualLama = int.tryParse(item['harga_jual_lama']) ?? 0;
+      final hargaJualBaru = int.tryParse(item['harga_jual_baru']) ?? 0;
       final modalLama = stokLama * hargaBeliLama;
       final modalBaru = stokBaru * hargaBeliBaru;
       final omsetLama = stokLama * hargaJualLama;

@@ -18,7 +18,7 @@ class AppBarMyApp extends StatelessWidget {
     final name = Get.find<SplashController>().username.value.toUpperCase();
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: [
         // final name = Get.find<SplashController>().username.value;
         // TextButton(
@@ -31,7 +31,7 @@ class AppBarMyApp extends StatelessWidget {
         //     )),
         TextButton.icon(
           onPressed: () {
-            Get.to(() => ManagerToko());
+            Get.to(() => MenuManager());
           },
           icon: Icon(
             Icons.admin_panel_settings,

@@ -7,7 +7,8 @@ import 'package:myapp/controller/splash_controller.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 
-class LaporanController extends GetxController {
+class LaporanController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   Database? database;
   final RxList<Map<String, dynamic>> penjualan = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> perubahan = <Map<String, dynamic>>[].obs;
@@ -21,7 +22,7 @@ class LaporanController extends GetxController {
   final oldScaleTransformTable = 1.0.obs;
   final showSliderScaler = false.obs;
   final showBarLaporan = true.obs;
-
+  TabController? tabController;
   List<String> namaBulan = [
     'Januari',
     'Februari',
@@ -40,6 +41,7 @@ class LaporanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    tabController = TabController(length: 3, vsync: this);
     bulanTerpilih.value = namaBulan[bulan.value];
     loadProduk();
   }

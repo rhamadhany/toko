@@ -10,6 +10,7 @@ import 'package:myapp/manager/app_bar_manager.dart';
 import 'package:myapp/manager/drawer_admin.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
+import 'package:myapp/pengaturan/dialog_keluar_akun.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk%20baru/produk_baru.dart';
 
@@ -191,5 +192,33 @@ class ManagerToko extends GetView<ManagerController> {
       _biometrikController.hasAuthenticated.value = false;
       Get.back();
     }
+  }
+}
+
+class MenuManager extends GetView<ManagerController> {
+  const MenuManager({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+          title: Row(
+            children: [
+              Text(
+                'ADMIN',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              IconButton(
+                  onPressed: () {
+                    Get.dialog(DialogKeluarAkun());
+                  },
+                  icon: Icon(Icons.exit_to_app))
+            ],
+          ),
+        ),
+        body: DrawerAdmin());
   }
 }

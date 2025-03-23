@@ -14,72 +14,62 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: IntrinsicHeight(
-        child: Container(
-          width: Get.width * 0.8,
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                containerChild(
-                  ListTile(
-                    onTap: () async {
-                      final hasAuth = await _biometrikController.authReuired();
-                      if (hasAuth) {
-                        autentikasiAktif.value = !autentikasiAktif.value;
-                        saveSettingsPrefs();
-                      }
-                    },
-                    leading: Icon(
-                      Icons.lock,
-                      color: Colors.black,
-                    ),
-                    trailing: Obx(() => Checkbox(
-                          activeColor: Colors.black,
-                          checkColor: Colors.white,
-                          value: autentikasiAktif.value,
-                          onChanged: (value) async {
-                            final hasAuth =
-                                await _biometrikController.authReuired();
-                            if (hasAuth) {
-                              autentikasiAktif.value = value ?? false;
-                              saveSettingsPrefs();
-                            }
-                          },
-                        )),
-                    title: Text(
-                      'Biometrik',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            containerChild(
+              ListTile(
+                onTap: () async {
+                  final hasAuth = await _biometrikController.authReuired();
+                  if (hasAuth) {
+                    autentikasiAktif.value = !autentikasiAktif.value;
+                    saveSettingsPrefs();
+                  }
+                },
+                leading: Icon(
+                  Icons.lock,
+                  color: Colors.black,
                 ),
-                containerChild(ListTile(
-                  onTap: () {
-                    PrintingQR(dariBox: false.obs).dialogQR();
-                  },
-                  leading: Icon(
-                    Icons.picture_as_pdf,
+                trailing: Obx(() => Checkbox(
+                      activeColor: Colors.black,
+                      checkColor: Colors.white,
+                      value: autentikasiAktif.value,
+                      onChanged: (value) async {
+                        final hasAuth =
+                            await _biometrikController.authReuired();
+                        if (hasAuth) {
+                          autentikasiAktif.value = value ?? false;
+                          saveSettingsPrefs();
+                        }
+                      },
+                    )),
+                title: Text(
+                  'Biometrik',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
-                  title: Text(
-                    'QRCode',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                )),
-              ],
+                ),
+              ),
             ),
-          ),
+            containerChild(ListTile(
+              onTap: () {
+                PrintingQR(dariBox: false.obs).dialogQR();
+              },
+              leading: Icon(
+                Icons.picture_as_pdf,
+                color: Colors.black,
+              ),
+              title: Text(
+                'QRCode',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            )),
+          ],
         ),
       ),
     );

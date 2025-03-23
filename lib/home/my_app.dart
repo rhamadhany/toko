@@ -23,18 +23,8 @@ class MyApp extends StatelessWidget {
             isManager: false,
           ),
         ),
-        body: GestureDetector(
-          onHorizontalDragStart: (details) {
-            // print(Get.width);
-            final lebar = Get.width / 1.5;
-            // print(details.globalPosition.dx);
-            if (details.globalPosition.dx > lebar) {
-              Get.to(() => ManagerToko());
-            }
-          },
-          child: HomeToko(
-            isManager: false,
-          ),
+        body: HomeToko(
+          isManager: false,
         ),
       ),
     );

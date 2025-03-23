@@ -211,8 +211,8 @@ class PenambahanData extends StatelessWidget {
         continue;
       }
       int jumlah = item['stok'];
-      int hargaBeli = int.tryParse(item['harga_beli'])!;
-      int hargaJual = int.tryParse(item['harga_jual'])!;
+      int hargaBeli = int.tryParse(item['harga_beli']) ?? 0;
+      int hargaJual = int.tryParse(item['harga_jual']) ?? 0;
       int modal = jumlah * hargaBeli;
       int omset = jumlah * hargaJual;
       int laba = omset - modal;
