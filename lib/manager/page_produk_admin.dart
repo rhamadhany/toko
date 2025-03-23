@@ -69,9 +69,12 @@ class PageProdukAdmin extends GetView<ManagerController> {
               ],
             ),
           ),
-          body: !_biometrikController.hasAuthenticated.value &&
-                  Settings.autentikasiAktif.value
-              ? null
+          body: !_biometrikController.hasAuthenticated.value
+              ? Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  )
               : HomeToko(isManager: true),
           floatingActionButton: !_biometrikController.hasAuthenticated.value &&
                   Settings.autentikasiAktif.value

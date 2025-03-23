@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 
 class ManagerController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  TabController? tabController;
+  // TabController? tabController;
   final tabIndex = 0.obs;
   // bool canPop = true;
   final skalaAnimation = 1.0.obs;
@@ -21,13 +21,13 @@ class ManagerController extends GetxController
   final box = GetStorage();
   final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
-  final hasAuthenticated = false.obs;
+  // final hasAuthenticated = false.obs;
   final userName = ''.obs;
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 2, vsync: this);
-    tabListener();
+    // tabController = TabController(length: 2, vsync: this);
+    // tabListener();
   }
 
   Future<void> inisiasiAuthController() async {
@@ -39,33 +39,33 @@ class ManagerController extends GetxController
     }
   }
 
-  void tabListener() {
-    tabController?.addListener(() async {
-      tabIndex.value = tabController!.index;
-      await inisiasiAuthController();
-      if (_productController.showCheckBoxRemove.value &&
-          tabController?.index != 0) {
-        _productController.showCheckBoxRemove.value = false;
-      }
-      if (tabController!.indexIsChanging) {
-        for (int i = 0; i < 60; i++) {
-          if (i < 30) {
-            skalaAnimation.value -= 0.01;
-          } else {
-            skalaAnimation.value += 0.01;
-          }
-          await Future.delayed(Duration(milliseconds: 10));
-        }
-      }
-    });
-  }
+  // void tabListener() {
+  //   tabController?.addListener(() async {
+  //     tabIndex.value = tabController!.index;
+  //     await inisiasiAuthController();
+  //     if (_productController.showCheckBoxRemove.value &&
+  //         tabController?.index != 0) {
+  //       _productController.showCheckBoxRemove.value = false;
+  //     }
+  //     if (tabController!.indexIsChanging) {
+  //       for (int i = 0; i < 60; i++) {
+  //         if (i < 30) {
+  //           skalaAnimation.value -= 0.01;
+  //         } else {
+  //           skalaAnimation.value += 0.01;
+  //         }
+  //         await Future.delayed(Duration(milliseconds: 10));
+  //       }
+  //     }
+  //   });
+  // }
 
-  @override
-  void onClose() {
-    super.onClose();
-    tabController?.removeListener(() {});
-    tabController?.dispose();
-  }
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  //   tabController?.removeListener(() {});
+  //   tabController?.dispose();
+  // }
 
   Future<bool> confirmationDelete() async {
     final bool? confirm = await Get.dialog<bool?>(AlertDialog(
@@ -88,7 +88,7 @@ class ManagerController extends GetxController
   }
 
   Future<void> requestPassword() async {
-    hasAuthenticated.value = false;
+    _biometrikController.hasAuthenticated.value = false;
     userName.value = box.read('username');
     await Future.delayed(Duration(seconds: 1));
     Get.dialog(
@@ -139,7 +139,7 @@ class ManagerController extends GetxController
       if (data['status'] == 'sukses') {
         // Get.snackbar('Login', 'berhasil');
         Get.back();
-        hasAuthenticated.value = true;
+        _biometrikController.hasAuthenticated.value = true;
         box.write('token', data['token']);
       } else {
         SnackHelper.snackError(content: data['message']);

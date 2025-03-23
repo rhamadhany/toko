@@ -1,0 +1,2 @@
+/home/user/toko/android/app/.cxx/Debug/5x503821/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/user/toko/android/app/.cxx/Debug/5x503821/armeabi-v7a/CMakeFiles/rebuild_cache.dir

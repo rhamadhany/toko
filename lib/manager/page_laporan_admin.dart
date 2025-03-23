@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/IconPicker/icons.dart';
+import 'package:flutter_side_menu/flutter_side_menu.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/controller/laporan_controller.dart';
@@ -15,11 +18,11 @@ class PageLaporanAdmin extends GetView<LaporanController> {
   final _managerController = Get.find<ManagerController>();
   @override
   Widget build(BuildContext context) {
-    if (!Settings.autentikasiAktif.value) {
-      _managerController.requestPassword();
-    } else {
-      _managerController.inisiasiAuthController();
-    }
+    // if (!Settings.autentikasiAktif.value) {
+    //   _managerController.requestPassword();
+    // } else {
+    //   _managerController.inisiasiAuthController();
+    // }
     return Obx(() {
       return PopScope(
         canPop: !controller.showSliderScaler.value,
@@ -59,10 +62,13 @@ class PageLaporanAdmin extends GetView<LaporanController> {
                 ],
               ),
             ),
-            body: !_biometrikController.hasAuthenticated.value &&
-                    Settings.autentikasiAktif.value
-                ? null
-                : LaporanPenjualan(),
+            body: !_biometrikController.hasAuthenticated.value
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  )
+                : SideMenuLaporan(),
             bottomNavigationBar: BottomAppBar(
               color: Colors.blue,
               child: TabBar(
@@ -131,5 +137,44 @@ class PageLaporanAdmin extends GetView<LaporanController> {
     } else {
       _biometrikController.hasAuthenticated.value = false;
     }
+  }
+}
+
+class SideMenuLaporan extends StatelessWidget {
+  const SideMenuLaporan({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SideMenu(builder: (data) {
+          return SideMenuData(
+              //     header: Column(
+              //   children: [],
+              // ));
+              customChild: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ListTile(
+                title: Text('Tahun'),
+                leading: Icon(Icons.calendar_view_month_rounded),
+              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: FaIcon(FontAwesomeIcons.calendarDays)),
+              IconButton(
+                  onPressed: () {},
+                  icon: FaIcon(FontAwesomeIcons.calendarWeek)),
+              IconButton(
+                  onPressed: () {}, icon: FaIcon(FontAwesomeIcons.calendar)),
+              IconButton(
+                  onPressed: () {}, icon: FaIcon(FontAwesomeIcons.moneyBill)),
+            ],
+          ));
+        }),
+        Expanded(child: LaporanPenjualan())
+      ],
+    );
   }
 }

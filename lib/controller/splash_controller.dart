@@ -17,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'http://192.168.189.228:8080';
+final domain = 'http://10.88.0.3:8080';
 
 class SplashController extends GetxController {
   final box = GetStorage();
@@ -83,6 +83,7 @@ class SplashController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (data['status'] == 'sukses') {
+        print(data);
         box.write('username', usernameController.text);
         box.write('token', data['token']);
         box.write('deviceId', data['device_id']);
@@ -95,12 +96,14 @@ class SplashController extends GetxController {
         initAllController();
         Get.offAll(() => MyApp());
       } else {
+        print(data);
         Get.snackbar('Error', '${data['message']}',
             colorText: Colors.white,
             backgroundColor: Colors.red,
             snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
+      print('error $e');
       Get.snackbar('Error', '$e',
           colorText: Colors.white,
           backgroundColor: Colors.red,

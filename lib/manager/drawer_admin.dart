@@ -29,32 +29,34 @@ class DrawerAdmin extends GetView<ManagerController> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Spacer(),
-          InkWell(
-              onTap: () {
-                Get.dialog(AlertDialog(
-                    alignment: Alignment.bottomCenter,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: Colors.blue)),
-                    content: TambahGambar(
-                      singleImage: true,
-                      resultTap: resultTap,
-                    )));
-              },
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration:
-                    BoxDecoration(color: Colors.purple, shape: BoxShape.circle),
-                child: Obx(() => Padding(
-                    padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
-                    child: image.value == null
-                        ? Icon(
-                            color: Colors.white,
-                            Icons.person,
-                            size: (Get.width + Get.height) * 0.1,
-                          )
-                        : Image.memory(image.value!))),
-              )),
+          Expanded(
+            child: InkWell(
+                onTap: () {
+                  Get.dialog(AlertDialog(
+                      alignment: Alignment.bottomCenter,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: Colors.blue)),
+                      content: TambahGambar(
+                        singleImage: true,
+                        resultTap: resultTap,
+                      )));
+                },
+                child: Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                      color: Colors.purple, shape: BoxShape.circle),
+                  child: Obx(() => Padding(
+                      padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
+                      child: image.value == null
+                          ? Icon(
+                              color: Colors.white,
+                              Icons.person,
+                              size: (Get.width + Get.height) * 0.1,
+                            )
+                          : Image.memory(image.value!))),
+                )),
+          ),
           // SizedBox(
           //   height: 10,
           // ),
