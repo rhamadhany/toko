@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_iconpicker/IconPicker/icons.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/manager/app_bar_kalender_lapoaran.dart';
-import 'package:myapp/manager/manager_controller.dart';
+import 'package:myapp/manager/pop_menu_laporan.dart';
 import 'package:myapp/manager/view_mode_laporan.dart';
-import 'package:myapp/pengaturan/settings.dart';
 
 class PageLaporanAdmin extends GetView<LaporanController> {
   PageLaporanAdmin({super.key});
   final BiometrikController _biometrikController = Get.find();
   final LaporanController _laporanController = Get.find();
-  final _managerController = Get.find<ManagerController>();
   @override
   Widget build(BuildContext context) {
-    // if (!Settings.autentikasiAktif.value) {
-    //   _managerController.requestPassword();
-    // } else {
-    //   _managerController.inisiasiAuthController();
-    // }
     return Obx(() {
       return PopScope(
         canPop: !controller.showSliderScaler.value,
@@ -45,20 +35,7 @@ class PageLaporanAdmin extends GetView<LaporanController> {
                       (_laporanController.viewMode.value != 'Rincian' &&
                           LaporanPenjualan.indexLaporan.value == 1))
                     AppBarKalenderLapoaran(),
-                  IconButton(
-                      onPressed: () {
-                        dialogSwitchOpsi();
-                      },
-                      icon: const Icon(Icons.calendar_month,
-                          color: Colors.white)),
-                  IconButton(
-                      onPressed: () {
-                        _laporanController.oldScaleTransformTable.value =
-                            _laporanController.scaleTransformTable.value;
-                        _laporanController.showSliderScaler.value =
-                            !_laporanController.showSliderScaler.value;
-                      },
-                      icon: Icon(Icons.zoom_in))
+                  PopMenuLaporan()
                 ],
               ),
             ),
@@ -68,7 +45,7 @@ class PageLaporanAdmin extends GetView<LaporanController> {
                       color: Colors.blue,
                     ),
                   )
-                : SideMenuLaporan(),
+                : LaporanPenjualan(),
             bottomNavigationBar: BottomAppBar(
               color: Colors.blue,
               child: TabBar(
@@ -137,44 +114,5 @@ class PageLaporanAdmin extends GetView<LaporanController> {
     } else {
       _biometrikController.hasAuthenticated.value = false;
     }
-  }
-}
-
-class SideMenuLaporan extends StatelessWidget {
-  const SideMenuLaporan({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SideMenu(builder: (data) {
-          return SideMenuData(
-              //     header: Column(
-              //   children: [],
-              // ));
-              customChild: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ListTile(
-                title: Text('Tahun'),
-                leading: Icon(Icons.calendar_view_month_rounded),
-              ),
-              IconButton(
-                  onPressed: () {},
-                  icon: FaIcon(FontAwesomeIcons.calendarDays)),
-              IconButton(
-                  onPressed: () {},
-                  icon: FaIcon(FontAwesomeIcons.calendarWeek)),
-              IconButton(
-                  onPressed: () {}, icon: FaIcon(FontAwesomeIcons.calendar)),
-              IconButton(
-                  onPressed: () {}, icon: FaIcon(FontAwesomeIcons.moneyBill)),
-            ],
-          ));
-        }),
-        Expanded(child: LaporanPenjualan())
-      ],
-    );
   }
 }

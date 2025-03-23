@@ -23,6 +23,7 @@ class LaporanController extends GetxController
   final showSliderScaler = false.obs;
   final showBarLaporan = true.obs;
   TabController? tabController;
+  final tabIndex = 0.obs;
   List<String> namaBulan = [
     'Januari',
     'Februari',
@@ -42,8 +43,15 @@ class LaporanController extends GetxController
   void onInit() {
     super.onInit();
     tabController = TabController(length: 3, vsync: this);
+    tabListener();
     bulanTerpilih.value = namaBulan[bulan.value];
     loadProduk();
+  }
+
+  void tabListener() {
+    tabController?.addListener(() {
+      tabIndex.value = tabController!.index;
+    });
   }
 
   void bulanListener() {
