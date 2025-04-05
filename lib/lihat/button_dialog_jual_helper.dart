@@ -9,6 +9,7 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/lihat/dialog_jual_helper.dart';
+import 'package:myapp/lihat/lihat_produk.dart';
 import 'package:myapp/pengaturan/settings.dart';
 
 mixin ButtonDialogJualHelper on DialogJualHelper {
@@ -20,29 +21,38 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
 
   void pressKeranjang() {
     int jumlah = int.tryParse(jualController.value.text) ?? 1;
-    final sisa = produk['stok'] - produk['terjual'];
+    final sisa = LihatProduk.produk['stok'] - LihatProduk.produk['terjual'];
 
     if (jumlah <= sisa) {
       if (jumlah == 0) {
         jumlah = 1;
       }
-      final gambar = produk['gambar'].isEmpty ? "" : produk['gambar'][0];
+      final gambar = LihatProduk.produk['gambar'].isEmpty
+          ? ""
+          : LihatProduk.produk['gambar'][0];
       final minProduk = DialogJualHelper.selectedGrosir['min_produk'];
       final diskon = DialogJualHelper.selectedGrosir['diskon'];
       final grosir = DialogJualHelper.selectedGrosir['nama'];
-      _keranjangController.addProduk(produk['kode_produk'], produk['produk'],
-          jumlah, gambar, diskon, minProduk, grosir);
+      _keranjangController.addProduk(
+          LihatProduk.produk['kode_produk'],
+          LihatProduk.produk['produk'],
+          jumlah,
+          gambar,
+          diskon,
+          minProduk,
+          grosir);
 
       Get.back(closeOverlays: true);
       HomeToko.focusPencarian.unfocus();
-      Get.snackbar(
-          'Keranjang', '$jumlah ${produk['produk']} ditambahkan ke keranjang',
+      Get.snackbar('Keranjang',
+          '$jumlah ${LihatProduk.produk['produk']} ditambahkan ke keranjang',
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.purple,
           duration: const Duration(seconds: 1));
     } else {
-      Get.snackbar("Tidak Cukup", "${produk['produk']} hanya tersisa $sisa",
+      Get.snackbar(
+          "Tidak Cukup", "${LihatProduk.produk['produk']} hanya tersisa $sisa",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.red,
@@ -68,10 +78,11 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
     final count = jualController.value.text;
     int countInt = int.parse(count);
 
-    final sisa = produk['stok'] - (produk['terjual'] + countInt);
+    final sisa =
+        LihatProduk.produk['stok'] - (LihatProduk.produk['terjual'] + countInt);
 
     if (sisa > -1) {
-      final terjualSebelumnya = produk['terjual'];
+      final terjualSebelumnya = LihatProduk.produk['terjual'];
 
       final terjualBaru = int.parse(jualController.value.text);
       if (terjualBaru <= 0) {
@@ -83,8 +94,8 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
         return;
       }
 
-      produk['terjual'] = terjualSebelumnya + terjualBaru;
-      final key = produk['kode_produk'];
+      LihatProduk.produk['terjual'] = terjualSebelumnya + terjualBaru;
+      final key = LihatProduk.produk['kode_produk'];
 
       Get.back(closeOverlays: true);
       HomeToko.focusPencarian.unfocus();
@@ -115,7 +126,8 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
       listKey.add(key);
       await _transaksiController.addTransaksi(
           terjualBaru, listKey, modal, omset, laba, diskon);
-      Get.snackbar('Terjual', '$terjualBaru ${produk['produk']} telah dijual',
+      Get.snackbar('Terjual',
+          '$terjualBaru ${LihatProduk.produk['produk']} telah dijual',
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.purple,

@@ -116,7 +116,7 @@ class BodyKeranjang extends GetView<KeranjangController> with KeranjangHelper {
                                                                           onTap:
                                                                               () {
                                                                             Get.to(() =>
-                                                                                GambarPenuh(gambar: gambar));
+                                                                                GambarPenuh(gambar: gambar['base64']));
                                                                           },
                                                                           child:
                                                                               FutureLogoOnline(

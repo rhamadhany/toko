@@ -15,7 +15,7 @@ class DBHelper with SnackHelper {
 
   static Future<List<Map<String, dynamic>>> loadProducts() async {
     try {
-      final uri = Uri.parse('$domain/produk/load.php');
+      final uri = Uri.parse('$domain/load');
       final response = await http.post(uri, body: {'tabel': 'produk'});
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -65,7 +65,7 @@ class DBHelper with SnackHelper {
       };
 
       // print(mapProduk);
-      final uri = Uri.parse('$domain/produk/tambah.php');
+      final uri = Uri.parse('$domain/tambah');
 
       final decodeMap = jsonEncode([mapProduk]);
       await http.post(uri, body: {'produk': decodeMap, 'tabel': 'produk'});
@@ -79,7 +79,7 @@ class DBHelper with SnackHelper {
   }
 
   static Future updateTerjual(String key, int terjual, int diskon) async {
-    final url = Uri.parse('$domain/produk/update_produk_terjual.php');
+    final url = Uri.parse('$domain/update_produk_terjual');
     final encode =
         jsonEncode({'kode_produk': key, 'terjual': terjual, 'diskon': diskon});
     await http.post(url, body: {'encode': encode});
@@ -91,9 +91,9 @@ class DBHelper with SnackHelper {
     final tanggal = DateTime.now().toString();
 
     final mapProduk = {...produk, 'tanggal': tanggal};
-    // print(mapProduk['gambar']);
+
     if (isEditing) {
-      final url = Uri.parse('$domain/produk/update_perubahan.php');
+      final url = Uri.parse('$domain/update_perubahan');
       final newMap = jsonEncode({
         'tanggal': mapProduk['tanggal'],
         'kode_produk': mapProduk['kode_produk'],
@@ -114,7 +114,7 @@ class DBHelper with SnackHelper {
     }
 
     final encodeMap = jsonEncode(mapProduk);
-    final url = Uri.parse('$domain/produk/update_produk.php');
+    final url = Uri.parse('$domain/update_produk');
     await http.post(url, body: {
       'produk': encodeMap,
     });
@@ -123,9 +123,9 @@ class DBHelper with SnackHelper {
   }
 
   static Future<void> deleteProduct(List<String> key) async {
-    final uri = Uri.parse('$domain/produk/delete.php');
+    final uri = Uri.parse('$domain/delete');
     final encode = jsonEncode(key);
-    http.post(uri, body: {'tabel': 'produk', 'list_kode': encode});
+    await http.post(uri, body: {'tabel': 'produk', 'list_kode': encode});
     _productController.allProduct.value = await loadProducts();
   }
 }

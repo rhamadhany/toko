@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/controller/product_controller.dart';
-// import 'package:myapp/keranjang/dialog_checkout_keranjang.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -17,11 +16,10 @@ class KeranjangController extends GetxController {
   final hasSnackbar = false.obs;
 
   final ProductController _productController = Get.find();
-  // final RxList<TextEditingController> jumlahControllers =
-  //     RxList<TextEditingController>();
+
   final valueBox = <Map<String, dynamic>>[].obs;
   final boxAll = false.obs;
-  // final hargaJual = [];
+
   final isLoading = true.obs;
   final hargaJualItem = <int>[].obs;
   final hargaPotonganDiskon = <int>[].obs;
@@ -50,49 +48,36 @@ class KeranjangController extends GetxController {
 
   Future<void> initValueBox() async {
     isLoading.value = true;
-    // hargaJual.clear();
 
     await loadProduk();
 
     final keranjangLength = keranjangProduk.length;
 
     valueBox.clear();
-    // jumlahControllers.clear();
-    // hargaJual.addAll(List.generate(keranjangLength, (index) {
-    //   final product = _productController.allProduct.firstWhere(
-    //       (produk) =>
-    //           produk['kode_produk'] == keranjangProduk[index]['kode_produk'],
-    //       orElse: () => {});
-    //   return product['harga_jual'] ?? 0;
-    // }));
-    valueBox.addAll(List.generate(keranjangLength, (index) {
-      final hargaJual = _productController.allProduct.firstWhere((p) =>
-              p['kode_produk'] ==
-              keranjangProduk[index]['kode_produk'])['harga_jual'] ??
-          0;
-      // final harga =
-      return {
-        'value': false,
-        'controller': TextEditingController(
-            text: keranjangProduk[index]['jumlah'].toString()),
-        'hargaJual': hargaJual,
-      };
-    }));
 
-    // jumlahControllers.clear();
-    // jumlahControllers.addAll(List.generate(keranjangLength, (index) {
-    //   return TextEditingController(
-    //       text: keranjangProduk[index]['jumlah'].toString());
-    // }));
+    try {
+      valueBox.addAll(List.generate(keranjangLength, (index) {
+        final hargaJual = _productController.allProduct.firstWhere((p) =>
+                p['kode_produk'] ==
+                keranjangProduk[index]['kode_produk'])['harga_jual'] ??
+            0;
 
-    // hargaJual.clear();
-
+        return {
+          'value': false,
+          'controller': TextEditingController(
+              text: keranjangProduk[index]['jumlah'].toString()),
+          'hargaJual': hargaJual,
+        };
+      }));
+    } catch (err) {
+      debugPrint('error meload produk keranjang $err');
+    }
     isLoading.value = false;
   }
 
   Future<void> loadProduk() async {
     try {
-      final uri = Uri.parse('$domain/produk/load.php');
+      final uri = Uri.parse('$domain/load');
       final response = await http.post(uri, body: {'tabel': 'keranjang'});
       if (response.statusCode == 200) {
         final decode = jsonDecode(response.body);
@@ -129,7 +114,7 @@ class KeranjangController extends GetxController {
           'grosir': grosir
         }
       ]);
-      final uri = Uri.parse('$domain/produk/tambah.php');
+      final uri = Uri.parse('$domain/tambah');
       await http.post(uri, body: {'tabel': 'keranjang', 'produk': map});
     }
 
@@ -138,7 +123,7 @@ class KeranjangController extends GetxController {
 
   Future<void> removeProduk(List<String> listKey) async {
     try {
-      final uri = Uri.parse('$domain/produk/delete.php');
+      final uri = Uri.parse('$domain/delete');
       await http.post(uri,
           body: {'tabel': 'keranjang', 'list_kode': jsonEncode(listKey)});
       await loadProduk();
@@ -180,7 +165,7 @@ class KeranjangController extends GetxController {
         }
       }
 
-      final url = Uri.parse('$domain/produk/update_keranjang.php');
+      final url = Uri.parse('$domain/update_keranjang');
       await http.post(url, body: {
         'kode_produk': key,
         'jumlah': jumlahUpdate.toString(),

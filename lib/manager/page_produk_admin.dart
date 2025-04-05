@@ -7,6 +7,7 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/home/appbar_my_app.dart';
 import 'package:myapp/home/beranda_toko.dart';
 import 'package:myapp/manager/manager_controller.dart';
+import 'package:myapp/pengaturan/printing_qr.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:myapp/produk%20baru/produk_baru.dart';
 
@@ -44,11 +45,17 @@ class PageProdukAdmin extends GetView<ManagerController> {
                 ),
                 Text(
                   'PRODUK',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 Spacer(),
                 if (!_productController.showCheckBoxRemove.value)
                   dynamicIconAppBar(_productController, true),
+                if (_productController.showCheckBoxRemove.value)
+                  IconButton(
+                      onPressed: () {
+                        PrintingQR(dariBox: true.obs).dialogQR();
+                      },
+                      icon: Icon(Icons.print)),
                 if (_productController.showCheckBoxRemove.value)
                   IconButton(
                       onPressed: () {
@@ -70,11 +77,7 @@ class PageProdukAdmin extends GetView<ManagerController> {
             ),
           ),
           body: !_biometrikController.hasAuthenticated.value
-              ? Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
-                  )
+              ? null
               : HomeToko(isManager: true),
           floatingActionButton: !_biometrikController.hasAuthenticated.value &&
                   Settings.autentikasiAktif.value

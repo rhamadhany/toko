@@ -39,7 +39,8 @@ class AppBarMyApp extends StatelessWidget {
           ),
           label: Text(
             Get.find<SplashController>().username.value.toUpperCase(),
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
         // Text(

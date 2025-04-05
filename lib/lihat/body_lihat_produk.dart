@@ -42,22 +42,23 @@ class BodyLihatProduk extends GetView<ProductController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ...produk['gambar'].map((picPath) {
-                          return InkWell(
-                            onTap: () {
-                              Get.to(
-                                  () => GambarPenuh(gambar: picPath['base64']));
-                            },
-                            child: picPath is String
-                                ? FutureLogoOnline(
-                                    size: 300,
-                                    gambar: picPath,
-                                    childOnly: false,
-                                  )
-                                : cardGambar64(10, 2.5,
-                                    base64Decode(picPath['base64']), 300),
-                          );
-                        }),
+                        if (produk['gambar'] is List)
+                          ...produk['gambar'].map((picPath) {
+                            return InkWell(
+                              onTap: () {
+                                Get.to(() =>
+                                    GambarPenuh(gambar: picPath['base64']));
+                              },
+                              child: picPath is String
+                                  ? FutureLogoOnline(
+                                      size: 300,
+                                      gambar: picPath,
+                                      childOnly: false,
+                                    )
+                                  : cardGambar64(10, 2.5,
+                                      base64Decode(picPath['base64']), 300),
+                            );
+                          }),
                       ],
                     ),
                   ),

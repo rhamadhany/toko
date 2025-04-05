@@ -47,10 +47,12 @@ class IconSave extends StatelessWidget {
               _productController.listTextField[5]['controller'].text;
           final listGambar = [];
 
-          final listOld = produkEdit.isNotEmpty
+          final listOld = produkEdit.isNotEmpty && produkEdit['gambar'] is List
               ? List.from(produkEdit['gambar'] ?? [])
               : [];
-          await deleteOldImageServer(listPictures, listOld);
+          if (listOld.isNotEmpty) {
+            await deleteOldImageServer(listPictures, listOld);
+          }
           if (listPictures.isNotEmpty) {
             for (var item in listPictures) {
               final gambar = item['name'];
@@ -82,13 +84,15 @@ class IconSave extends StatelessWidget {
                     '${DateTime.now().millisecondsSinceEpoch}_${Uuid().v4()}';
                 final nama = '$random.${extGambar ?? 'jpeg'}';
 
-                final url = Uri.parse('$domain/produk/upload_gambar.php');
+                final url = Uri.parse('$domain/upload_gambar');
                 final response = await http.post(url, body: {
                   'gambar': base64Encode(bytes!),
                   'nama': nama,
                 });
                 if (response.statusCode == 200) {
+                  // print(response.body);
                   final encode = jsonDecode(response.body);
+                  // print(encode);
                   if (encode['status'] == 'sukses') {
                     listGambar.add(encode['gambar']);
                   }
@@ -100,7 +104,7 @@ class IconSave extends StatelessWidget {
           }
 
           final encodeListGambar = jsonEncode(listGambar);
-
+          // print(encodeListGambar);
           if (produkEdit.isNotEmpty) {
             final newProduk = produkEdit;
 
@@ -143,7 +147,7 @@ class IconSave extends StatelessWidget {
             .map((c) => c['name'])
             .toList();
         final encodeDelete = jsonEncode(delete);
-        await http.post(Uri.parse('$domain/produk/hapus_gambar.php'),
+        await http.post(Uri.parse('$domain/hapus_gambar'),
             body: {'gambar': encodeDelete});
       }
     } catch (e) {

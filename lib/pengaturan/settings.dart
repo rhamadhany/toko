@@ -45,7 +45,7 @@ class Settings extends StatelessWidget {
                       },
                     )),
                 title: Text(
-                  'Biometrik',
+                  'BIOMETRIK',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -62,7 +62,7 @@ class Settings extends StatelessWidget {
                 color: Colors.black,
               ),
               title: Text(
-                'QRCode',
+                'QRCODE',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,

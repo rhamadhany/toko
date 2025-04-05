@@ -201,15 +201,21 @@ class MenuManager extends GetView<ManagerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,
           title: Row(
             children: [
-              Text(
-                'ADMIN',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              // Icon(Icons.admin_panel_settings),
+              // SizedBox(
+              //   width: 10,
+              // ),
+              // Text(
+              //   'ADMIN',
+              //   style: TextStyle(fontWeight: FontWeight.bold),
+              // ),
               Spacer(),
               IconButton(
                   onPressed: () {

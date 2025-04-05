@@ -6,7 +6,7 @@ class PopMenuLaporan extends GetView<LaporanController> {
   const PopMenuLaporan({super.key});
 
   TextStyle textStyle() {
-    return TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
+    return TextStyle(fontWeight: FontWeight.bold);
   }
 
   PopupMenuItem pop(Widget widget) {
@@ -120,6 +120,7 @@ class PopMenuLaporan extends GetView<LaporanController> {
                 })),
                 pop(ListTile(
                   onTap: () {
+                    Get.back();
                     controller.oldScaleTransformTable.value =
                         controller.scaleTransformTable.value;
                     controller.showSliderScaler.value =

@@ -28,40 +28,46 @@ class DrawerAdmin extends GetView<ManagerController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Spacer(),
-          Expanded(
-            child: InkWell(
-                onTap: () {
-                  Get.dialog(AlertDialog(
-                      alignment: Alignment.bottomCenter,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(color: Colors.blue)),
-                      content: TambahGambar(
-                        singleImage: true,
-                        resultTap: resultTap,
-                      )));
-                },
-                child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                      color: Colors.purple, shape: BoxShape.circle),
-                  child: Obx(() => Padding(
-                      padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
+          InkWell(
+              onTap: () {
+                Get.dialog(AlertDialog(
+                    alignment: Alignment.bottomCenter,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(color: Colors.blue)),
+                    content: TambahGambar(
+                      singleImage: true,
+                      resultTap: resultTap,
+                      hapusGambar: hapusGambar,
+                    )));
+              },
+              child: Container(
+                height: (Get.width + Get.height) * 0.175,
+                clipBehavior: Clip.hardEdge,
+                decoration:
+                    BoxDecoration(color: Colors.purple, shape: BoxShape.circle),
+                child: Obx(() => Padding(
+                    padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
+                    child: Center(
                       child: image.value == null
                           ? Icon(
                               color: Colors.white,
                               Icons.person,
-                              size: (Get.width + Get.height) * 0.1,
+                              size: (Get.width + Get.height) * 0.15,
                             )
-                          : Image.memory(image.value!))),
-                )),
+                          : Transform.scale(
+                              scale: 1.8,
+                              child: Image.memory(
+                                image.value!,
+                                height: (Get.width + Get.height) * 0.15,
+                                width: (Get.width + Get.height) * 0.15,
+                              ),
+                            ),
+                    ))),
+              )),
+          SizedBox(
+            height: 50,
           ),
-          // SizedBox(
-          //   height: 10,
-          // ),
-          // Spacer(),
-
           IntrinsicHeight(
             child: Container(
               decoration: BoxDecoration(
@@ -73,14 +79,27 @@ class DrawerAdmin extends GetView<ManagerController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Text(
-                    //   Get.find<SplashController>().username.value.toUpperCase(),
-                    //   style: TextStyle(
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: (Get.width + Get.height) * 0.015,
-                    //       color: Colors.white),
-                    // ),
-
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            Get.find<SplashController>()
+                                .username
+                                .value
+                                .toUpperCase(),
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
                     Settings(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +118,7 @@ class DrawerAdmin extends GetView<ManagerController> {
                               Get.to(() => PageProdukAdmin());
                             },
                             label: Text(
-                              'Produk',
+                              'PRODUK',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -117,7 +136,7 @@ class DrawerAdmin extends GetView<ManagerController> {
                               Get.to(() => PageLaporanAdmin());
                             },
                             label: Text(
-                              'Laporan',
+                              'LAPORAN',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -129,41 +148,53 @@ class DrawerAdmin extends GetView<ManagerController> {
               ),
             ),
           ),
-          // Spacer(),
-          // KeluarAkun(),
         ],
       ),
     );
   }
 
   Future<void> loadFotoProfil() async {
-    final url = Uri.parse('$domain/user/load_foto_profil.php');
-    final response = await http.get(url);
+    final username = Get.find<SplashController>().username.value;
+
+    final url = Uri.parse('$domain/load_foto_profil');
+
+    final response = await http.post(url, body: {"username": username});
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final decode = base64Decode(data['base64']);
+      if (data['status'] == 'sukses') {
+        final decode = base64Decode(data['base64']);
 
-      image.value = decode;
-      oldImage.value = data['nama'];
+        image.value = decode;
+        oldImage.value = data['nama'];
+      }
     }
   }
 
-  void resultTap(String image) {
-    cropImage(image);
+  void resultTap(String imagePath) {
+    cropImage(imagePath);
   }
 
   Future<void> cropImage(String newImage) async {
     final bytes = await File(newImage).readAsBytes();
     Get.back();
-    // await Future.delayed(const Duration(seconds: 1));
+
     Get.dialog(Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(color: Colors.white)),
       child: ImageCropperUI(
         image: bytes,
-        // reloadProfile: loadFotoProfil,
       ),
     ));
+  }
+
+  Future<void> hapusGambar() async {
+    Get.back();
+    final username = Get.find<SplashController>().username.value;
+    final urlDelete = Uri.parse('$domain/hapus_foto_profil');
+    await http.post(urlDelete, body: {
+      'username': username,
+    });
+    image.value = null;
   }
 }

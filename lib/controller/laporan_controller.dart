@@ -62,7 +62,7 @@ class LaporanController extends GetxController
 
   Future<void> loadProduk() async {
     final list = ['perubahan', 'penjualan', 'penambahan'];
-    final uri = Uri.parse('$domain/produk/load.php');
+    final uri = Uri.parse('$domain/load');
     for (final table in list) {
       try {
         final response = await http.post(uri, body: {
@@ -119,7 +119,7 @@ class LaporanController extends GetxController
         }
 
         final encodeValues = jsonEncode(listProduk);
-        final uri = Uri.parse('$domain/produk/tambah.php');
+        final uri = Uri.parse('$domain/tambah');
         await http.post(uri, body: {'tabel': table, 'produk': encodeValues});
         await loadProduk();
       }

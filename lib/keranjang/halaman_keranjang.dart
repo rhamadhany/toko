@@ -52,9 +52,10 @@ mixin class KeranjangHelper {
         .indexWhere((semua) => semua['kode_produk'] == produk['kode_produk']);
 
     if (indexKey != -1) {
-      final gambar = _productController.allProduct[indexKey]['gambar'];
+      final gambar = _productController.allProduct[indexKey]['gambar'] as List;
+      // print(gambar);
 
-      return gambar[0]['base64'];
+      return gambar.isNotEmpty ? gambar[0]['base64'] : '';
     } else {
       return '';
     }

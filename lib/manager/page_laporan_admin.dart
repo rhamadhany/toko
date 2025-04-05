@@ -4,15 +4,23 @@ import 'package:myapp/controller/biometrik.dart';
 import 'package:myapp/controller/laporan_controller.dart';
 import 'package:myapp/laporan/body_laporan.dart';
 import 'package:myapp/manager/app_bar_kalender_lapoaran.dart';
+import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/manager/pop_menu_laporan.dart';
 import 'package:myapp/manager/view_mode_laporan.dart';
+import 'package:myapp/pengaturan/settings.dart';
 
 class PageLaporanAdmin extends GetView<LaporanController> {
   PageLaporanAdmin({super.key});
   final BiometrikController _biometrikController = Get.find();
   final LaporanController _laporanController = Get.find();
+  final ManagerController _managerController = Get.find();
   @override
   Widget build(BuildContext context) {
+    if (!Settings.autentikasiAktif.value) {
+      _managerController.requestPassword();
+    } else {
+      _managerController.inisiasiAuthController();
+    }
     return Obx(() {
       return PopScope(
         canPop: !controller.showSliderScaler.value,

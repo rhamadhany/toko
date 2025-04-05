@@ -129,8 +129,9 @@ class PenjualanData extends StatelessWidget {
                                       .where((p) =>
                                           p['kode_produk'] == data.value['ID'])
                                       .first;
+                                  LihatProduk.produk.value = produk;
                                   Get.to(() => LihatProduk(
-                                        loadProduk: produk.obs,
+                                        // loadProduk: produk.obs,
                                         isManager: true,
                                       ));
                                 }
@@ -326,12 +327,14 @@ class PenjualanData extends StatelessWidget {
 
     final keyT = _transaksiController.keyTransaksi.value;
 
-    final transMap = _transaksiController.transaksiMap.where((t) {
+    final transMap = _transaksiController.transaksiMap.firstWhereOrNull((t) {
       final tK = t['kode_transaksi'];
 
       return tK == keyT;
-    }).first;
-
+    });
+    if (transMap == null) {
+      return dataRincian;
+    }
     final List<dynamic> json = jsonDecode(transMap['kode_produk']);
     final listKey = json.cast<String>();
     // print('listkey ${transMap['kode_produk']}');

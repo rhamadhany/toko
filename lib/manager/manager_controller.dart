@@ -4,30 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:myapp/controller/db_helper.dart';
-import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/controller/splash_controller.dart';
 import 'package:myapp/home/splash_login.dart';
 import 'package:myapp/controller/biometrik.dart';
+import 'package:myapp/lihat/dialog_jual_helper.dart';
 import 'package:myapp/pengaturan/settings.dart';
 import 'package:http/http.dart' as http;
 
 class ManagerController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  // TabController? tabController;
   final tabIndex = 0.obs;
-  // bool canPop = true;
+
   final skalaAnimation = 1.0.obs;
 
   final box = GetStorage();
-  final ProductController _productController = Get.find();
   final BiometrikController _biometrikController = Get.find();
-  // final hasAuthenticated = false.obs;
+
   final userName = ''.obs;
+
   @override
   void onInit() {
-    super.onInit();
-    // tabController = TabController(length: 2, vsync: this);
-    // tabListener();
+    DialogJualHelper.selectedGrosir.value = box.read('selectedGrosir') ?? {};
   }
 
   Future<void> inisiasiAuthController() async {
@@ -38,34 +35,6 @@ class ManagerController extends GetxController
           await _biometrikController.authReuired();
     }
   }
-
-  // void tabListener() {
-  //   tabController?.addListener(() async {
-  //     tabIndex.value = tabController!.index;
-  //     await inisiasiAuthController();
-  //     if (_productController.showCheckBoxRemove.value &&
-  //         tabController?.index != 0) {
-  //       _productController.showCheckBoxRemove.value = false;
-  //     }
-  //     if (tabController!.indexIsChanging) {
-  //       for (int i = 0; i < 60; i++) {
-  //         if (i < 30) {
-  //           skalaAnimation.value -= 0.01;
-  //         } else {
-  //           skalaAnimation.value += 0.01;
-  //         }
-  //         await Future.delayed(Duration(milliseconds: 10));
-  //       }
-  //     }
-  //   });
-  // }
-
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  //   tabController?.removeListener(() {});
-  //   tabController?.dispose();
-  // }
 
   Future<bool> confirmationDelete() async {
     final bool? confirm = await Get.dialog<bool?>(AlertDialog(
@@ -111,7 +80,6 @@ class ManagerController extends GetxController
                           text: userName.value,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ])),
-                // Text('Harap masukkan password untuk pengguna $username'),
                 SizedBox(
                   height: 20,
                 ),
@@ -123,12 +91,10 @@ class ManagerController extends GetxController
   }
 
   Future<void> verifikasiPassword(String value) async {
-    // print(value);
-
     final deviceId = Get.find<SplashController>().deviceId.value == ''
         ? await Get.find<SplashController>().generateDeviceId()
         : Get.find<SplashController>().deviceId.value;
-    final url = Uri.parse('$domain/login.php');
+    final url = Uri.parse('$domain/login');
     final response = await http.post(url, body: {
       'username': userName.value,
       'password': value,
@@ -137,7 +103,6 @@ class ManagerController extends GetxController
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['status'] == 'sukses') {
-        // Get.snackbar('Login', 'berhasil');
         Get.back();
         _biometrikController.hasAuthenticated.value = true;
         box.write('token', data['token']);

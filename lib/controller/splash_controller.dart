@@ -17,7 +17,7 @@ import 'package:myapp/controller/transaksi_controller.dart';
 import 'package:myapp/manager/manager_controller.dart';
 import 'package:myapp/controller/biometrik.dart';
 
-final domain = 'http://10.88.0.3:8080';
+final domain = 'http://192.168.12.228:5454';
 
 class SplashController extends GetxController {
   final box = GetStorage();
@@ -43,7 +43,7 @@ class SplashController extends GetxController {
       token.value = box.read('token') ?? '';
       username.value = box.read('username') ?? '';
       deviceId.value = box.read('deviceId') ?? '';
-      final url = Uri.parse('$domain/token.php');
+      final url = Uri.parse('$domain/token');
       if (token.value == '' || username.value == '' || deviceId.value == '') {
         isLoading.value = false;
         return;
@@ -73,37 +73,45 @@ class SplashController extends GetxController {
     isLoading.value = true;
 
     try {
-      final url = Uri.parse('$domain/login.php');
+      final url = Uri.parse('$domain/login');
       final deviceId = await generateDeviceId();
       final response = await http.post(url, body: {
         'username': usernameController.text,
         'password': passwordController.text,
         'device_id': deviceId,
       });
-      final data = jsonDecode(response.body);
 
-      if (data['status'] == 'sukses') {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
         print(data);
-        box.write('username', usernameController.text);
-        box.write('token', data['token']);
-        box.write('deviceId', data['device_id']);
 
-        username.value = box.read('username');
-        Get.snackbar('Berhasil', data['message'],
-            colorText: Colors.white,
-            backgroundColor: Colors.purple,
-            snackPosition: SnackPosition.BOTTOM);
-        initAllController();
-        Get.offAll(() => MyApp());
+        if (data['status'] == 'sukses') {
+          box.write('username', usernameController.text);
+          box.write('token', data['token']);
+          box.write('deviceId', data['device_id']);
+
+          username.value = box.read('username');
+          Get.snackbar('Berhasil', data['message'],
+              colorText: Colors.white,
+              backgroundColor: Colors.purple,
+              snackPosition: SnackPosition.BOTTOM);
+          initAllController();
+          Get.offAll(() => MyApp());
+        } else {
+          print(data['message']);
+          Get.snackbar('Error', '${data['message']}',
+              colorText: Colors.white,
+              backgroundColor: Colors.red,
+              snackPosition: SnackPosition.BOTTOM);
+        }
       } else {
-        print(data);
-        Get.snackbar('Error', '${data['message']}',
+        Get.snackbar(
+            'Error', 'Gagal untuk login, response ${response.statusCode}',
             colorText: Colors.white,
             backgroundColor: Colors.red,
             snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
-      print('error $e');
       Get.snackbar('Error', '$e',
           colorText: Colors.white,
           backgroundColor: Colors.red,
@@ -133,7 +141,6 @@ class SplashController extends GetxController {
     } else {
       final android = AndroidId();
       final id = await android.getId();
-      print('id $id');
       return id ?? generateRandom();
     }
   }

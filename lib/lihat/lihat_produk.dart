@@ -14,19 +14,21 @@ import 'package:myapp/controller/product_controller.dart';
 
 class LihatProduk extends GetView<ProductController>
     with DialogJualHelper, GrosirHelper {
-  LihatProduk({super.key, required this.loadProduk, required this.isManager});
+  LihatProduk({super.key, required this.isManager});
   final bool isManager;
-  final RxMap<String, dynamic> loadProduk;
+  // final RxMap<String, dynamic> loadProduk;
 
   final KeranjangController _keranjangController = Get.find();
-
+  static final RxMap<String, dynamic> produk = <String, dynamic>{}.obs;
   @override
   Widget build(BuildContext context) {
-    produk.value = loadProduk;
     // updateDiskon();
     loadListGrosir();
-    final sisa = produk['stok'] - produk['terjual'];
+
     return Obx(() {
+      // produk.value = loadProduk;
+
+      final sisa = produk['stok'] - produk['terjual'];
       return Scaffold(
         appBar: AppBar(
           foregroundColor: Colors.white,
@@ -100,8 +102,12 @@ class LihatProduk extends GetView<ProductController>
               final gDiskon =
                   _keranjangController.getDiskon(produk['kode_produk']);
 
-              _keranjangController.langsungtambahkeKeranjang(sisa, produk,
-                  gDiskon['diskon'], gDiskon['min_produk'], gDiskon['grosir']);
+              _keranjangController.langsungtambahkeKeranjang(
+                  sisa,
+                  produk,
+                  gDiskon['diskon'] ?? 0,
+                  gDiskon['min_produk'],
+                  gDiskon['grosir'] ?? 'Normal');
             } else if (value == 1) {
               final sisa = produk['stok'] - produk['terjual'];
               if (sisa > 0) {
@@ -152,9 +158,10 @@ class LihatProduk extends GetView<ProductController>
     }
 
     controller.kategoriAdd.value = produk['kategori'];
-    final listPictures =
-        produk.isNotEmpty ? List.from(produk['gambar'] ?? []).obs : [].obs;
-
+    final listPictures = produk.isNotEmpty && produk['gambar'] is List
+        ? List.from(produk['gambar'] ?? []).obs
+        : [].obs;
+    // print(listPictures);
     Get.to(() => NewProduct(
           listPictures: listPictures,
           produkEdit: produk,

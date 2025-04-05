@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/QRCode/qr_scanner.dart';
 import 'package:myapp/home/kategori_toko.dart';
+import 'package:myapp/lihat/dialog_jual_helper.dart';
+import 'package:myapp/lihat/grosir_helper.dart';
 
 import 'package:myapp/lihat/lihat_produk.dart';
 import 'package:myapp/lihat/logo_produk.dart';
 import 'package:myapp/controller/product_controller.dart';
 
-class HomeToko extends GetView<ProductController> {
-  const HomeToko({
+class HomeToko extends GetView<ProductController>
+    with DialogJualHelper, GrosirHelper {
+  HomeToko({
     super.key,
     required this.isManager,
   });
@@ -94,7 +97,7 @@ class HomeToko extends GetView<ProductController> {
                             itemBuilder: (context, indexProduct) {
                               final listProduk =
                                   controller.filterProduct[indexProduct].obs;
-                              final gambar = listProduk['gambar'][0]['base64'];
+                              // final gambar = listProduk['gambar'][0]['base64'];
                               final terjual = listProduk['terjual'];
                               final stok = listProduk['stok'];
                               final sisa = stok - terjual;
@@ -115,8 +118,10 @@ class HomeToko extends GetView<ProductController> {
 
                                     controller.mapCheckBoxRemove.refresh();
                                   } else {
+                                    // produk.value = listProduk;
+                                    LihatProduk.produk.value = listProduk;
                                     Get.to(() => LihatProduk(
-                                          loadProduk: listProduk,
+                                          // loadProduk: listProduk,
                                           isManager: isManager,
                                         ));
                                   }
@@ -150,10 +155,12 @@ class HomeToko extends GetView<ProductController> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: gambar.isNotEmpty
+                                              child: listProduk['gambar']
+                                                      .isNotEmpty
                                                   ? FutureBuilder(
                                                       future: logoProdukOnline(
-                                                          gambar,
+                                                          listProduk['gambar']
+                                                              [0]['base64'],
                                                           sisa,
                                                           200,
                                                           2.5),

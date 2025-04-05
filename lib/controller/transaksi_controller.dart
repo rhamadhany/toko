@@ -20,7 +20,7 @@ class TransaksiController extends GetxController {
 
   Future<void> loadDatabase() async {
     try {
-      final uri = Uri.parse('$domain/produk/load.php');
+      final uri = Uri.parse('$domain/load');
       final response = await http.post(uri, body: {'tabel': 'transaksi'});
       if (response.statusCode == 200) {
         final decode = jsonDecode(response.body);
@@ -60,7 +60,7 @@ class TransaksiController extends GetxController {
         }
       ]);
 
-      final uri = Uri.parse('$domain/produk/tambah.php');
+      final uri = Uri.parse('$domain/tambah');
 
       await http.post(uri, body: {'tabel': 'transaksi', 'produk': map});
     } catch (e) {

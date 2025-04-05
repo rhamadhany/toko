@@ -15,13 +15,13 @@ mixin GrosirHelper on DialogJualHelper {
       'kode_diskon': kodeDiskon,
     };
     final json = jsonEncode([map]);
-    final url = Uri.parse("$domain/produk/tambah.php");
+    final url = Uri.parse("$domain/tambah");
     await http.post(url, body: {'tabel': 'diskon', 'produk': json});
     loadListGrosir();
   }
 
   Future<void> loadListGrosir() async {
-    final url = Uri.parse("$domain/produk/load.php");
+    final url = Uri.parse("$domain/load");
     final response = await http.post(url, body: {
       'tabel': 'diskon',
     });
@@ -46,13 +46,13 @@ mixin GrosirHelper on DialogJualHelper {
       'kode_diskon': kode,
     };
     final json = jsonEncode(map);
-    final url = Uri.parse("$domain/produk/grosir/update.php");
+    final url = Uri.parse("$domain/update_grosir");
     await http.post(url, body: {"grosir": json});
     loadListGrosir();
   }
 
   Future<void> removeListGrosir(String kode) async {
-    final url = Uri.parse('$domain/produk/delete.php');
+    final url = Uri.parse('$domain/delete');
     await http.post(url, body: {
       'tabel': 'diskon',
       'list_kode': jsonEncode([kode])

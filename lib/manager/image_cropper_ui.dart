@@ -43,6 +43,7 @@ class ImageCropperUI extends GetView<ManagerController> {
                     key: valueKey,
                     child: Container(
                       height: Get.height * 0.25,
+                      width: Get.height * 0.25,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(
                           color: Colors.purple, shape: BoxShape.circle),
@@ -50,7 +51,9 @@ class ImageCropperUI extends GetView<ManagerController> {
                             offset: Offset(xImage.value, yImage.value),
                             child: Transform.scale(
                                 scale: scaleGambar.value,
-                                child: Image.memory(image)),
+                                child: Image.memory(
+                                  image,
+                                )),
                           )),
                     ),
                   ),
@@ -95,7 +98,7 @@ class ImageCropperUI extends GetView<ManagerController> {
     final name = '$random.$ext';
 
     final encodeGambar = base64Encode(image);
-    final uri = Uri.parse('$domain/produk/upload_gambar.php');
+    final uri = Uri.parse('$domain/upload_gambar');
     final response = await http.post(uri, body: {
       'gambar': encodeGambar,
       'nama': name,
@@ -112,10 +115,12 @@ class ImageCropperUI extends GetView<ManagerController> {
 
   Future<void> updateFotoProfil(String gambar) async {
     if (DrawerAdmin.oldImage.value != '') {
-      final urlDelete = Uri.parse('$domain/produk/hapus_gambar.php');
-      await http.post(urlDelete, body: {'gambar': DrawerAdmin.oldImage.value});
+      final urlDelete = Uri.parse('$domain/hapus_gambar');
+      await http.post(urlDelete, body: {
+        'gambar': jsonEncode([DrawerAdmin.oldImage.value])
+      });
     }
-    final url = Uri.parse('$domain/user/update_foto_profil.php');
+    final url = Uri.parse('$domain/update_foto_profil');
     final username = controller.box.read('username') ?? '';
     if (username == '') return;
     await http.post(url, body: {'gambar': gambar, 'username': username});

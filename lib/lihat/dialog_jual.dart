@@ -7,6 +7,7 @@ import 'package:myapp/controller/product_controller.dart';
 import 'package:myapp/lihat/button_dialog_jual_helper.dart';
 import 'package:myapp/lihat/dialog_jual_helper.dart';
 import 'package:myapp/lihat/dialog_list_grosir.dart';
+import 'package:myapp/lihat/lihat_produk.dart';
 
 class DialogJual extends StatelessWidget
     with DialogJualHelper, ButtonDialogJualHelper {
@@ -18,15 +19,14 @@ class DialogJual extends StatelessWidget
     jualController.value.text = '0';
     DialogJualHelper.selectedGrosir.value = Map<String, dynamic>.from(
         GetStorage().read('selectedGrosir') ?? defaultSelectedGrosir);
+    // DialogJualHelper.produk.value = loadProduk;
 
     return Obx(() {
-      produk.value = loadProduk;
-
       return AlertDialog(
         shape: RoundedRectangleBorder(
             side: BorderSide(color: Colors.blue),
             borderRadius: BorderRadius.circular(10)),
-        title: Text(produk['produk'].toUpperCase()),
+        title: Text(LihatProduk.produk['produk'].toUpperCase()),
         content: IntrinsicHeight(
           child: Column(
             children: [

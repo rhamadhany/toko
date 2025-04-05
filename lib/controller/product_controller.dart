@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/splash_controller.dart';
+import 'package:myapp/lihat/dialog_jual_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 
@@ -127,10 +128,6 @@ class ProductController extends GetxController {
     update();
   }
 
-  // void saveDaftarKategori() async {
-  //   storage.write('kategori', daftarKategori);
-  // }
-
   Future<void> saveKategori(String value, Function clearController) async {
     if (daftarKategori.any((kategori) => kategori['kategori'] == value)) {
       Get.snackbar('Error', 'Kategori sudah ada',
@@ -138,12 +135,7 @@ class ProductController extends GetxController {
           backgroundColor: Colors.red,
           snackPosition: SnackPosition.BOTTOM);
     } else {
-      // daftarKategori.add({
-      //   'kategori': value,
-      //   'icon': iconsTerpilih.value,
-      // });
-      // print(iconsTerpilih.value);
-      final url = Uri.parse('$domain/kategori/add.php');
+      final url = Uri.parse('$domain/add_kategori');
       final response = await http.post(url, body: {
         'kategori': value,
         'icon': iconsTerpilih.value.toString(),
@@ -166,30 +158,26 @@ class ProductController extends GetxController {
   }
 
   Future<void> deleteKategori(String kategori) async {
-    final url = Uri.parse('$domain/kategori/delete.php');
+    final url = Uri.parse('$domain/delete');
     await http.post(url, body: {
-      'kategori': kategori,
+      'tabel': 'kategori',
+      "list_kode": jsonEncode([kategori])
     });
     loadDaftarKategori();
-    // if ()
   }
 
   Future<void> loadDaftarKategori() async {
-    final url = Uri.parse('$domain/kategori/load.php');
-    final response = await http.get(url);
+    final url = Uri.parse('$domain/load');
+
+    final response = await http.post(url, body: {'tabel': 'kategori'});
     if (response.statusCode == 200) {
       final decode = jsonDecode(response.body);
-      // print(decode);
+
       daftarKategori.value = List<Map<String, dynamic>>.from([
         {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint},
         ...decode
       ]);
     }
-    // daftarKategori.value =
-    //     List<Map<String, dynamic>>.from(storage.read('kategori') ??
-    //         [
-    //           {'kategori': 'Semua', 'icon': Icons.grid_view.codePoint}
-    //         ]);
   }
 
   void filteringProduk() {
