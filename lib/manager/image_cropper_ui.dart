@@ -11,7 +11,9 @@ import 'package:myapp/manager/manager_controller.dart';
 import 'package:uuid/uuid.dart';
 
 class ImageCropperUI extends GetView<ManagerController> {
-  ImageCropperUI({super.key, required this.image});
+  ImageCropperUI(
+      {super.key, required this.image, required this.loadFotoProfil});
+  final Function loadFotoProfil;
   final Uint8List image;
   final scaleGambar = 1.0.obs;
   final valueKey = GlobalKey();
@@ -124,5 +126,6 @@ class ImageCropperUI extends GetView<ManagerController> {
     final username = controller.box.read('username') ?? '';
     if (username == '') return;
     await http.post(url, body: {'gambar': gambar, 'username': username});
+    loadFotoProfil();
   }
 }

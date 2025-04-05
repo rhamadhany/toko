@@ -21,136 +21,155 @@ class DrawerAdmin extends GetView<ManagerController> {
   @override
   Widget build(BuildContext context) {
     loadFotoProfil();
-    return Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-              onTap: () {
-                Get.dialog(AlertDialog(
-                    alignment: Alignment.bottomCenter,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: Colors.blue)),
-                    content: TambahGambar(
-                      singleImage: true,
-                      resultTap: resultTap,
-                      hapusGambar: hapusGambar,
-                    )));
-              },
-              child: Container(
-                height: (Get.width + Get.height) * 0.175,
-                clipBehavior: Clip.hardEdge,
-                decoration:
-                    BoxDecoration(color: Colors.purple, shape: BoxShape.circle),
-                child: Obx(() => Padding(
-                    padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
-                    child: Center(
-                      child: image.value == null
-                          ? Icon(
-                              color: Colors.white,
-                              Icons.person,
-                              size: (Get.width + Get.height) * 0.15,
-                            )
-                          : Transform.scale(
-                              scale: 1.8,
-                              child: Image.memory(
-                                image.value!,
-                                height: (Get.width + Get.height) * 0.15,
-                                width: (Get.width + Get.height) * 0.15,
-                              ),
-                            ),
-                    ))),
-              )),
-          SizedBox(
-            height: 50,
-          ),
-          IntrinsicHeight(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Card(
-                        color: Colors.white,
+    return Obx(() {
+      return Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InkWell(
+                  onTap: () {
+                    Get.dialog(AlertDialog(
+                        alignment: Alignment.bottomCenter,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            Get.find<SplashController>()
-                                .username
-                                .value
-                                .toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Settings(),
-                    Row(
+                            borderRadius: BorderRadius.circular(5),
+                            side: BorderSide(color: Colors.blue)),
+                        content: TambahGambar(
+                          singleImage: true,
+                          resultTap: resultTap,
+                          hapusGambar: hapusGambar,
+                          image: image.value,
+                        )));
+                  },
+                  child: Container(
+                    height: (Get.width + Get.height) * 0.175,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                        color: Colors.purple, shape: BoxShape.circle),
+                    child: Obx(() => Padding(
+                        padding: EdgeInsets.all(image.value == null ? 8.0 : 0),
+                        child: Center(
+                          child: image.value == null
+                              ? Icon(
+                                  color: Colors.white,
+                                  Icons.person,
+                                  size: (Get.width + Get.height) * 0.15,
+                                )
+                              : Transform.scale(
+                                  scale: 1.8,
+                                  child: Image.memory(
+                                    image.value!,
+                                    height: (Get.width + Get.height) * 0.15,
+                                    width: (Get.width + Get.height) * 0.15,
+                                  ),
+                                ),
+                        ))),
+                  )),
+              SizedBox(
+                height: 50,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.white,
-                          child: TextButton.icon(
-                            icon: Icon(
-                              Icons.shop,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Get.to(() => PageProdukAdmin());
-                            },
-                            label: Text(
-                              'PRODUK',
-                              style: TextStyle(color: Colors.black),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: IntrinsicWidth(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        Get.find<SplashController>()
+                                            .username
+                                            .value
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(
+                                        Icons.exit_to_app,
+                                        color: Colors.red,
+                                        size: 30,
+                                      )
+                                    ],
+                                  ),
+                                )),
                           ),
                         ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.white,
-                          child: TextButton.icon(
-                            icon: Icon(
-                              Icons.bar_chart,
-                              color: Colors.black,
+                        Settings(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              color: Colors.white,
+                              child: TextButton.icon(
+                                icon: Icon(
+                                  Icons.shop,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  Get.to(() => PageProdukAdmin());
+                                },
+                                label: Text(
+                                  'PRODUK',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                             ),
-                            onPressed: () {
-                              Get.to(() => PageLaporanAdmin());
-                            },
-                            label: Text(
-                              'LAPORAN',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              color: Colors.white,
+                              child: TextButton.icon(
+                                icon: Icon(
+                                  Icons.bar_chart,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  Get.to(() => PageLaporanAdmin());
+                                },
+                                label: Text(
+                                  'LAPORAN',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            )
+                          ],
                         )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   Future<void> loadFotoProfil() async {
@@ -180,11 +199,9 @@ class DrawerAdmin extends GetView<ManagerController> {
 
     Get.dialog(Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
           side: BorderSide(color: Colors.white)),
-      child: ImageCropperUI(
-        image: bytes,
-      ),
+      child: ImageCropperUI(image: bytes, loadFotoProfil: loadFotoProfil),
     ));
   }
 
