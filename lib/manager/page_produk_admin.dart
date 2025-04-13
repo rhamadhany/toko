@@ -37,6 +37,8 @@ class PageProdukAdmin extends GetView<ManagerController> {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
+            // excludeHeaderSemantics: true,
+            // toolbarHeight: 100,
             title: Row(
               children: [
                 Icon(Icons.shop),
@@ -49,7 +51,10 @@ class PageProdukAdmin extends GetView<ManagerController> {
                 ),
                 Spacer(),
                 if (!_productController.showCheckBoxRemove.value)
-                  dynamicIconAppBar(_productController, true),
+                  // dynamicIconAppBar(_productController, true),
+                  IconAppBarHome(
+                    isManager: true,
+                  ),
                 if (_productController.showCheckBoxRemove.value)
                   IconButton(
                       onPressed: () {

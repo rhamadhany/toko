@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -78,6 +77,7 @@ class TambahGambar extends StatelessWidget {
                       }
                     } else {
                       final pickedImages = await picker.pickMultiImage();
+
                       for (final XFile image in pickedImages) {
                         await resultTap(image.path);
                       }

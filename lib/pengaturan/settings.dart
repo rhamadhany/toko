@@ -88,7 +88,7 @@ class Settings extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(5),
               boxShadow: [BoxShadow(color: Colors.blue)],
               color: Colors.white),
           child: child,

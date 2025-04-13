@@ -29,6 +29,16 @@ class ImageCropperUI extends GetView<ManagerController> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Foto Profil',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Expanded(
               child: GestureDetector(
                 onScaleUpdate: (details) {
@@ -43,12 +53,32 @@ class ImageCropperUI extends GetView<ManagerController> {
                   padding: const EdgeInsets.all(8.0),
                   child: RepaintBoundary(
                     key: valueKey,
-                    child: Container(
+                    child:
+
+                        // Obx(() => CircleAvatar(
+                        //       radius: 100,
+                        //       child: Container(
+                        //         width: Get.height * 0.25,
+                        //         clipBehavior: Clip.hardEdge,
+                        //         decoration: BoxDecoration(
+                        //             color: Colors.deepPurple,
+                        //             shape: BoxShape.circle),
+                        //         child: Transform.translate(
+                        //           offset: Offset(xImage.value, yImage.value),
+                        //           child: Transform.scale(
+                        //               scale: scaleGambar.value,
+                        //               child: Image.memory(
+                        //                 image,
+                        //               )),
+                        //         ),
+                        //       ),
+                        //     ))
+                        Container(
                       height: Get.height * 0.25,
                       width: Get.height * 0.25,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(
-                          color: Colors.purple, shape: BoxShape.circle),
+                          color: Colors.deepPurple, shape: BoxShape.circle),
                       child: Obx(() => Transform.translate(
                             offset: Offset(xImage.value, yImage.value),
                             child: Transform.scale(

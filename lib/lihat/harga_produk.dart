@@ -14,6 +14,12 @@ class HargaProduk extends GetView<ProductController> {
       padding: const EdgeInsets.all(20.0),
       child: Container(
         decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 10,
+                  spreadRadius: 2.5,
+                  color: Colors.deepOrangeAccent.withAlpha(50))
+            ],
             color: Colors.deepOrangeAccent,
             borderRadius: BorderRadius.circular(5)),
         child: Padding(

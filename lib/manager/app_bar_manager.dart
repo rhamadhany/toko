@@ -33,7 +33,10 @@ class AppBarManager extends GetView<ManagerController> {
           Spacer(),
           if (!_productController.showCheckBoxRemove.value &&
               controller.tabIndex.value == 0)
-            dynamicIconAppBar(_productController, true),
+            // dynamicIconAppBar(_productController, true),
+            IconAppBarHome(
+              isManager: true,
+            ),
           if (_productController.showCheckBoxRemove.value &&
               controller.tabIndex.value == 0)
             IconButton(

@@ -28,6 +28,8 @@ Future<Card> logoProdukOnline(
 
 Card cardGambar64(int sisa, double scale, Uint8List gambarDecode, double size) {
   return Card(
+    shadowColor: Colors.black,
+    elevation: 5,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(color: Colors.blue)),

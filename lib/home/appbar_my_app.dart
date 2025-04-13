@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controller/keranjang_controller.dart';
 import 'package:myapp/controller/splash_controller.dart';
 
 import 'package:myapp/home/beranda_toko.dart';
@@ -9,26 +10,13 @@ import 'package:myapp/keranjang/halaman_keranjang.dart';
 import 'package:myapp/manager/manager_toko.dart';
 
 class AppBarMyApp extends StatelessWidget {
-  AppBarMyApp({super.key, required this.isManager});
+  const AppBarMyApp({super.key, required this.isManager});
 
-  final ProductController _productController = Get.find();
   final bool isManager;
   @override
   Widget build(BuildContext context) {
-    final name = Get.find<SplashController>().username.value.toUpperCase();
-
     return Row(
-      // mainAxisSize: MainAxisSize.min,
       children: [
-        // final name = Get.find<SplashController>().username.value;
-        // TextButton(
-        //     onPressed: () {
-        //       Get.to(() => ManagerToko());
-        //     },
-        //     child: Text(
-        //       name,
-        //       style: TextStyle(color: Colors.white),
-        //     )),
         TextButton.icon(
           onPressed: () {
             Get.to(() => MenuManager());
@@ -43,13 +31,10 @@ class AppBarMyApp extends StatelessWidget {
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
-        // Text(
-        //   "PRODUK",
-        //   style: const TextStyle(
-        //       fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-        // ),
         const Spacer(),
-        dynamicIconAppBar(_productController, isManager),
+        IconAppBarHome(
+          isManager: isManager,
+        )
       ],
     );
   }
@@ -69,30 +54,68 @@ class AppBarMyApp extends StatelessWidget {
   }
 }
 
-Row dynamicIconAppBar(ProductController productController, bool isManager) {
-  return Row(
-    children: [
-      IconButton(
-          onPressed: () {
-            productController.showSearch.value =
-                !productController.showSearch.value;
+class IconAppBarHome extends GetView<ProductController> {
+  IconAppBarHome({super.key, required this.isManager});
 
-            if (!productController.showSearch.value) {
-              productController.searchText.value = '';
-              HomeToko.focusPencarian.requestFocus();
-            }
-          },
-          icon: const Icon(Icons.search, color: Colors.white)),
-      IconButton(
-          onPressed: () {
-            Get.to(() => HalamanKeranjang(
-                  isManager: isManager,
-                ));
-          },
-          icon: const Icon(
-            Icons.shopping_cart_checkout,
-            color: Colors.white,
-          )),
-    ],
-  );
+  final bool isManager;
+  final KeranjangController _keranjangController = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+            onPressed: () {
+              controller.showSearch.value = !controller.showSearch.value;
+
+              if (!controller.showSearch.value) {
+                controller.searchText.value = '';
+                HomeToko.focusPencarian.requestFocus();
+              }
+            },
+            icon: const Icon(Icons.search, color: Colors.white)),
+        IconButton(
+            onPressed: () {
+              Get.to(() => HalamanKeranjang(
+                    isManager: isManager,
+                  ));
+            },
+            icon: Stack(
+              alignment: Alignment.topRight,
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(
+                  Icons.shopping_cart_checkout,
+                  color: Colors.white,
+                ),
+                Positioned(
+                  top: -5,
+                  right: _keranjangController.keranjangProduk.length > 99
+                      ? -5
+                      : -0,
+                  child: Container(
+                    // constraints: BoxConstraints(minHeight: 30, minWidth: 30),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Obx(() => Text(
+                            (_keranjangController.keranjangProduk.length > 99
+                                    ? '99+'
+                                    : _keranjangController
+                                        .keranjangProduk.length)
+                                .toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500),
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+      ],
+    );
+  }
 }

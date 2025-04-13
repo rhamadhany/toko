@@ -68,6 +68,12 @@ class BodyLihatProduk extends GetView<ProductController> {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.blue.withAlpha(50),
+                              spreadRadius: 5,
+                              blurRadius: 10)
+                        ],
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.blue,
                       ),

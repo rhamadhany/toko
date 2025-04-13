@@ -138,6 +138,8 @@ class HomeToko extends GetView<ProductController>
                                 child: Stack(
                                   children: [
                                     Card(
+                                      elevation: 2.5,
+                                      shadowColor: Colors.black,
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
                                               width: 1.5,
