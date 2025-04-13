@@ -24,6 +24,7 @@ class ManagerController extends GetxController
 
   @override
   void onInit() {
+    super.onInit();
     DialogJualHelper.selectedGrosir.value = box.read('selectedGrosir') ?? {};
   }
 

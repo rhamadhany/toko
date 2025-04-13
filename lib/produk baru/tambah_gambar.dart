@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/controller/product_controller.dart';
 
-class TambahGambar extends StatelessWidget {
-  TambahGambar({
+class TambahGambar extends GetView<ProductController> {
+  const TambahGambar({
     super.key,
     required this.resultTap,
     required this.singleImage,
@@ -13,7 +14,7 @@ class TambahGambar extends StatelessWidget {
     this.image,
   });
 
-  final ImagePicker picker = ImagePicker();
+  // final ImagePicker picker = ImagePicker();
   final Function(String) resultTap;
   final Function? hapusGambar;
   final bool singleImage;
@@ -49,8 +50,8 @@ class TambahGambar extends StatelessWidget {
             children: [
               IconButton(
                   onPressed: () async {
-                    final XFile? images =
-                        await picker.pickImage(source: ImageSource.camera);
+                    final XFile? images = await controller.imagePicker
+                        .pickImage(source: ImageSource.camera);
                     if (images != null) {
                       await resultTap(images.path);
                     }
@@ -70,13 +71,14 @@ class TambahGambar extends StatelessWidget {
               IconButton(
                   onPressed: () async {
                     if (singleImage) {
-                      final pickedImages =
-                          await picker.pickImage(source: ImageSource.gallery);
+                      final pickedImages = await controller.imagePicker
+                          .pickImage(source: ImageSource.gallery);
                       if (pickedImages != null) {
                         await resultTap(pickedImages.path);
                       }
                     } else {
-                      final pickedImages = await picker.pickMultiImage();
+                      final pickedImages =
+                          await controller.imagePicker.pickMultiImage();
 
                       for (final XFile image in pickedImages) {
                         await resultTap(image.path);

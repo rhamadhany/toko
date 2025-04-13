@@ -99,14 +99,14 @@ mixin ButtonDialogJualHelper on DialogJualHelper {
 
       Get.back(closeOverlays: true);
       HomeToko.focusPencarian.unfocus();
-      final diskon = int.parse(totalHargaPotongan().value);
+      final diskon = int.parse(totalHargaPotongan().value.toString());
 
       await DBHelper.updateTerjual(key, terjualBaru, diskon);
       final item = _productController.allProduct
           .where((im) => im['kode_produk'] == key)
           .first;
       final hBeli = int.tryParse(item['harga_beli'])!;
-      final hJual = int.tryParse(item['harga_jual'])!;
+      // final hJual = int.tryParse(item['harga_jual'])!;
       final modal = hBeli * terjualBaru;
       final omset = int.parse(totalHargaSetelahDiskon().value);
       // final diskon = (hJual * terjualBaru) - omset;

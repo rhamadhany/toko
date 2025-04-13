@@ -131,9 +131,10 @@ class QRScanner extends StatelessWidget {
                     child: IconButton(
                         onPressed: () async {
                           _qrScannerController.fromGallery.value = true;
-                          final ImagePicker picker = ImagePicker();
-                          final XFile? image = await picker.pickImage(
-                              source: ImageSource.gallery);
+                          // final ImagePicker picker = ImagePicker();
+                          final XFile? image = await _productController
+                              .imagePicker
+                              .pickImage(source: ImageSource.gallery);
 
                           if (image != null) {
                             final data = await _qrScannerController

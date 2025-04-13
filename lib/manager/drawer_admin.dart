@@ -45,21 +45,24 @@ class DrawerAdmin extends GetView<ManagerController> {
                         image: image.value,
                       )));
                 },
-                child: image.value == null
-                    ? Icon(
-                        color: Colors.white,
-                        Icons.person,
-                        size: (Get.width + Get.height) * 0.15,
-                      )
-                    : Container(
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withAlpha(50),
-                              blurRadius: 10,
-                              spreadRadius: 5),
-                        ]),
-                        child: CircleAvatar(
+                child: Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(50),
+                        blurRadius: 10,
+                        spreadRadius: 5),
+                  ]),
+                  child: image.value == null
+                      ? CircleAvatar(
+                          backgroundColor: Colors.black.withAlpha(50),
+                          radius: 100,
+                          child: Icon(
+                            color: Colors.white,
+                            Icons.person,
+                            size: 150,
+                          ),
+                        )
+                      : CircleAvatar(
                           radius: 100,
                           backgroundImage: MemoryImage(image.value!),
                           // child: image.value == null
@@ -78,7 +81,7 @@ class DrawerAdmin extends GetView<ManagerController> {
                           //         ),
                           //       ),
                         ),
-                      ),
+                ),
               ),
               // Container(
               //   height: (Get.width + Get.height) * 0.175,

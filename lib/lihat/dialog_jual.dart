@@ -51,6 +51,7 @@ class DialogJual extends StatelessWidget
                     onTap: () async {
                       final count = jualController.value.text;
                       int countInt = int.tryParse(count) ?? 0;
+                      if (countInt <= 0) return;
                       countInt--;
                       await countJual(countInt);
                     },
@@ -132,13 +133,23 @@ class DialogJual extends StatelessWidget
               SizedBox(
                 height: 10,
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  'Rp ${totalHargaSetelahDiskon().value.regexNominal()}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
+              Obx(() => Row(
+                    children: [
+                      Spacer(),
+                      if (totalHargaPotongan().value > 0)
+                        Text(
+                          'Rp ${hargaNormal().value.toString().regexNominal()}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              decoration: TextDecoration.lineThrough),
+                        ),
+                      Spacer(),
+                      Text(
+                        'Rp ${totalHargaSetelahDiskon().value.regexNominal()}',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),

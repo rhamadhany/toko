@@ -30,21 +30,24 @@ mixin DialogJualHelper {
     'controller': TextEditingController(),
     'label': 'Nama Grosir'
   };
+  RxInt hargaNormal() {
+    final hargaJual = int.parse(LihatProduk.produk['harga_jual']);
+    final jumlahTextField = int.parse(jualController.value.text);
+    final hargaNormal = (hargaJual * jumlahTextField);
+    return hargaNormal.obs;
+  }
 
-  RxString totalHargaPotongan() {
+  RxInt totalHargaPotongan() {
     if (int.tryParse(totalHargaSetelahDiskon().value) == null ||
         int.tryParse(LihatProduk.produk['harga_jual']) == null ||
         int.tryParse(jualController.value.text) == null ||
         selectedGrosir.isEmpty) {
-      return '0'.obs;
+      return 0.obs;
     }
 
-    final hargaJual = int.parse(LihatProduk.produk['harga_jual']);
-    final jumlahTextField = int.parse(jualController.value.text);
-    final hargaNormal = (hargaJual * jumlahTextField);
     final hargaDiskon =
-        hargaNormal - int.parse(totalHargaSetelahDiskon().value);
-    return hargaDiskon.toString().obs;
+        hargaNormal().value - int.parse(totalHargaSetelahDiskon().value);
+    return hargaDiskon.obs;
   }
 
   RxString totalHargaSetelahDiskon() {

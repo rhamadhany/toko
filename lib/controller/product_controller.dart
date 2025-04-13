@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/controller/db_helper.dart';
 import 'package:myapp/controller/splash_controller.dart';
-import 'package:myapp/lihat/dialog_jual_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 
@@ -65,6 +65,7 @@ class ProductController extends GetxController {
   final tanggalHarian = DateTime.now().toString().split(' ')[0].obs;
   final isNeedRefreshProduk = false.obs;
   final storage = GetStorage();
+  final imagePicker = ImagePicker();
 
   dynamic refreshProdukUpdate(String kodeProduk) {
     final produk =

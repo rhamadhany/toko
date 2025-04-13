@@ -84,7 +84,7 @@ class KeranjangController extends GetxController {
         final decode = jsonDecode(response.body);
         keranjangProduk.value = List<Map<String, dynamic>>.from(decode);
         // keranjangProduk.refresh();
-        print(keranjangProduk.length);
+        // print(keranjangProduk.length);
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed load produk keranjang',

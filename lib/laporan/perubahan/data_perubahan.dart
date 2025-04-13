@@ -295,7 +295,7 @@ class DataPerubahan extends StatelessWidget {
       final hargaBeliBaru = int.tryParse(item['harga_beli_baru']) ?? 0;
       final hargaJualBaru = int.tryParse(item['harga_jual_baru']) ?? 0;
       final modalBaru = stokBaru * hargaBeliBaru;
-      final omsetBaru = stokBaru * hargaJualBaru!;
+      final omsetBaru = stokBaru * hargaJualBaru;
       final labaBaru = omsetBaru - modalBaru;
 
       final dataBaru = dataPerubahanBaru[formatBulan];
@@ -311,8 +311,8 @@ class DataPerubahan extends StatelessWidget {
       final terjualLama = item['terjual_lama'];
       final hargaBeliLama = int.tryParse(item['harga_beli_lama']) ?? 0;
       final hargaJualLama = int.tryParse(item['harga_jual_lama']) ?? 0;
-      final modalLama = stokLama * hargaBeliLama!;
-      final omsetLama = stokLama * hargaJualLama!;
+      final modalLama = stokLama * hargaBeliLama;
+      final omsetLama = stokLama * hargaJualLama;
       final labaLama = omsetLama - modalLama;
       dataLama!['STOK'] += stokLama;
       dataLama['TERJUAL'] += terjualLama;

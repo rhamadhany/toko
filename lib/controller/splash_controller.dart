@@ -83,7 +83,7 @@ class SplashController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
+        // print(data);
 
         if (data['status'] == 'sukses') {
           box.write('username', usernameController.text);
@@ -98,7 +98,7 @@ class SplashController extends GetxController {
           initAllController();
           Get.offAll(() => MyApp());
         } else {
-          print(data['message']);
+          // print(data['message']);
           Get.snackbar('Error', '${data['message']}',
               colorText: Colors.white,
               backgroundColor: Colors.red,
